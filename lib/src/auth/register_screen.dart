@@ -15,30 +15,35 @@ class RegisterScreen extends GetView<AuthController> {
       appBar: AppBar(
         title: Text('Registration Screen'),
       ),
-      body: Center(
-        child: Padding(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextField(
-                controller: emailController,
-                decoration: InputDecoration(labelText: 'Email'),
+      body: SingleChildScrollView(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 500),
+            child: Padding(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextField(
+                    controller: emailController,
+                    decoration: InputDecoration(labelText: 'Email'),
+                  ),
+                  TextField(
+                    controller: passwordController,
+                    decoration: InputDecoration(labelText: 'Password'),
+                    obscureText: true,
+                  ),
+                  ElevatedButton(
+                    onPressed: () => controller.register(emailController.text, passwordController.text),
+                    child: Text('Register'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => Get.toNamed(Routes.login),
+                    child: Text('Login'),
+                  ),
+                ],
               ),
-              TextField(
-                controller: passwordController,
-                decoration: InputDecoration(labelText: 'Password'),
-                obscureText: true,
-              ),
-              ElevatedButton(
-                onPressed: () => controller.register(emailController.text, passwordController.text),
-                child: Text('Register'),
-              ),
-              ElevatedButton(
-                onPressed: () => Get.toNamed(Routes.login),
-                child: Text('Login'),
-              ),
-            ],
+            ),
           ),
         ),
       ),

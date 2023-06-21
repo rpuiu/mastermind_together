@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/auth_controller.dart';
+import 'package:mastermind_together/src/routes.dart';
 
 class HomeScreen extends StatelessWidget {
   final AuthController authController = Get.find();
@@ -18,7 +19,10 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: Text('Welcome to the home screen!'),
+        child: ElevatedButton(
+          onPressed: () => Get.toNamed(Routes.goal),
+          child: Text("+ Goal"),
+        ),
       ),
     );
   }
