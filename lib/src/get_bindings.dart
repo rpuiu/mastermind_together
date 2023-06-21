@@ -12,7 +12,7 @@ class GetBindings {
 //TODO extract secrets!!!
 
     SupabaseClient supaClient = Supabase.instance.client;
-    Get.lazyPut(() => supaClient);
+    Get.lazyPut(() => supaClient, fenix: true);
     Get.lazyPut(() => AuthController(supaClient), fenix: true);
     Get.lazyPut(() => GoalController(), fenix: true);
   }
