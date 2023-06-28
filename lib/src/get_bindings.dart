@@ -19,7 +19,7 @@ class GetBindings {
     Get.lazyPut(() => supaClient, fenix: true);
     Get.lazyPut(() => AuthController(supaClient), fenix: true);
     Get.lazyPut(() => GoalController(), fenix: true);
-    Get.lazyPut(() => AvailabilityController());
+    Get.lazyPut(() => AvailabilityController(), fenix: true);
     Get.lazyPut(() => AvailabilityService());
     Get.lazyPut(() => AuthService());
   }

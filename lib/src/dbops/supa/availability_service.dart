@@ -1,20 +1,39 @@
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/availability/day_model.dart';
-import 'package:supabase/supabase.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AvailabilityService extends GetxService {
   final SupabaseClient _client = Get.find();
 
   AvailabilityService();
 
-  Future<void> createAvailability(String userId, DayModel day) async {
-    final Map<String, dynamic> data = day.toJson(); // Convert the day model to JSON
-    data['user_id'] = userId; // Add the userId to the data
+  Future<List<DayModel>> getAvailability(String userId) async {
+    try {
+      final List<dynamic> data = await _client.from('availability').select().eq('user_id', userId);
 
-    final response = await _client.from('availability').insert(data);
+      // if (response.error != null) {
+      //   throw Exception('Error fetching availability: ${response.error!.message}');
+      // } //TODO handle errors
 
-    // if (response.error != null) {
-    //   throw Exception('Failed to create availability: ${response.error!.message}');
-    // } //TODO treat errors and show snackbar when success!
+      return data.map((json) => DayModel.fromJson(json)).toList();
+    } catch (e) {
+      // Handle exception
+      rethrow;
+    }
+  }
+
+  Future<void> saveAvailability(String userId, DayModel dayModel) async {
+    try {
+      await _client.from('availability').upsert(
+            dayModel.toJson()..['user_id'] = userId,
+            onConflict: 'id',
+          );
+    } catch (e) {
+      //TODO handle errors
+      // Get.snackbar('Error', 'Error saving availability: $e',
+      //     backgroundColor: Colors.red, colorText: Colors.white);
+      print(e);
+      rethrow;
+    }
   }
 }
