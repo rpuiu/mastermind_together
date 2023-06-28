@@ -27,6 +27,12 @@ class HomeScreen extends GetView<HomeController> {
             icon: Icon(Icons.logout),
             onPressed: authController.logout,
           ),
+          IconButton(
+            icon: Icon(Icons.event_available),
+            onPressed: () {
+              Get.toNamed(Routes.availability);
+            },
+          ),
         ],
       ),
       body: Obx(

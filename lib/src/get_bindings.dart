@@ -1,7 +1,11 @@
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/auth_controller.dart';
+import 'package:mastermind_together/src/availability/availability_controller.dart';
+import 'package:mastermind_together/src/dbops/supa/auth_service.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'dbops/supa/availability_service.dart';
 
 class GetBindings {
   static Future init() async {
@@ -15,5 +19,8 @@ class GetBindings {
     Get.lazyPut(() => supaClient, fenix: true);
     Get.lazyPut(() => AuthController(supaClient), fenix: true);
     Get.lazyPut(() => GoalController(), fenix: true);
+    Get.lazyPut(() => AvailabilityController());
+    Get.lazyPut(() => AvailabilityService());
+    Get.lazyPut(() => AuthService());
   }
 }
