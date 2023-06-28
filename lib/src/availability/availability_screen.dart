@@ -43,6 +43,14 @@ class SetAvailabilityScreen extends GetView<AvailabilityController> {
 
                           if (toTime == null) return;
 
+                          final fromDuration = Duration(hours: fromTime.hour, minutes: fromTime.minute);
+                          final toDuration = Duration(hours: toTime.hour, minutes: toTime.minute);
+
+                          if (fromDuration.compareTo(toDuration) >= 0) {
+                            Get.snackbar('Error', 'End time should be greater than start time', backgroundColor: Colors.red, colorText: Colors.white);
+                            return;
+                          }
+
                           day.fromTime = fromTime;
                           day.toTime = toTime;
 
