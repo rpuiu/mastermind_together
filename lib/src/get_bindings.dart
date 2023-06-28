@@ -18,7 +18,7 @@ class GetBindings {
 
     SupabaseClient supaClient = Supabase.instance.client;
     Get.lazyPut(() => supaClient, fenix: true);
-    Get.lazyPut(() => AuthController(supaClient), fenix: true);
+    Get.lazyPut(() => AuthController(), fenix: true);
     Get.lazyPut(() => GoalController(), fenix: true);
     Get.lazyPut(() => AvailabilityController(), fenix: true);
     Get.lazyPut(() => AvailabilityService());
