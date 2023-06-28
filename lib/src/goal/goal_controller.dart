@@ -2,13 +2,14 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/dbops/supa/auth_service.dart';
+import 'package:mastermind_together/src/dbops/supa/goal_service.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class GoalController extends GetxController {
-  final SupabaseClient client = Get.find();
-  final AuthService _authService = Get.find();
+  final AuthService _authService = Get.find<AuthService>();
+  final GoalService _goalService = Get.find<GoalService>();
 
   // This is just a placeholder. You might want to fetch these from your database.
   final List<String> goalAreas = ['Please select...', 'Health', 'Career', 'Education', 'Others'];
@@ -16,7 +17,6 @@ class GoalController extends GetxController {
   RxString? selectedArea = 'Please select...'.obs;
   RxBool autoSelectGroup = false.obs;
 
-  StreamSubscription? _goalsSubscription;
   final RxList<Goal> goals = <Goal>[].obs;
 
   @override
@@ -28,40 +28,23 @@ class GoalController extends GetxController {
 
   void fetchUserGoals() async {
     final User user = _authService.getCurrentUser();
-    final List<dynamic> data = await client.from('goals').select().eq('user_id', user!.id);
-    goals.value = data.map((e) => Goal.fromJson(e)).toList();
+    goals.value = await _goalService.readUserGoals(user.id);
   }
 
   Future<void> saveGoal(String goal) async {
     final User user = _authService.getCurrentUser();
 
-    if (user != null) {
-      final response = await client.from('goals').insert({
-        'user_id': user.id,
-        'goal': goal,
-        'goal_area': selectedArea!.value,
-        'auto_select': autoSelectGroup.value,
-      });
-      Get.toNamed(Routes.home);
-    } else {
-      Get.toNamed(Routes.login);
-    }
+    await _goalService.createGoal(user.id, goal, selectedArea!.value, autoSelectGroup.value);
+    Get.toNamed(Routes.home);
   }
 
   void listenToGoalChanges() {
-    client.channel('public:goals').on(
-      RealtimeListenTypes.postgresChanges,
-      ChannelFilter(event: 'INSERT', schema: 'public', table: 'goals'),
-      (payload, [ref]) {
-        print('Change received: ${payload.toString()}');
-        goals.add(Goal.fromJson(payload["new"]));
-      },
-    ).subscribe();
+    _goalService.subscribeToGoalChanges((newGoal) => goals.add(newGoal));
   }
 
   @override
   void onClose() {
-    _goalsSubscription?.cancel(); // Stop listening to changes
     super.onClose();
+    _goalService.unsubscribeFromGoalChanges();
   }
 }

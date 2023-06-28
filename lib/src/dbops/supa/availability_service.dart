@@ -3,7 +3,7 @@ import 'package:mastermind_together/src/availability/day_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AvailabilityService extends GetxService {
-  final SupabaseClient _client = Get.find();
+  final SupabaseClient _client = Get.find<SupabaseClient>();
 
   AvailabilityService();
 
