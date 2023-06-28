@@ -3,6 +3,7 @@ import 'package:mastermind_together/src/auth/auth_controller.dart';
 import 'package:mastermind_together/src/availability/availability_controller.dart';
 import 'package:mastermind_together/src/dbops/supa/auth_service.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
+import 'package:mastermind_together/src/timezone/timezone_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'dbops/supa/availability_service.dart';
@@ -22,5 +23,6 @@ class GetBindings {
     Get.lazyPut(() => AvailabilityController(), fenix: true);
     Get.lazyPut(() => AvailabilityService());
     Get.lazyPut(() => AuthService());
+    Get.lazyPut(() => TimezoneService());
   }
 }

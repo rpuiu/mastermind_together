@@ -3,16 +3,22 @@ import 'package:intl/intl.dart';
 import 'package:mastermind_together/src/availability/day_model.dart';
 import 'package:mastermind_together/src/dbops/supa/auth_service.dart';
 import 'package:mastermind_together/src/dbops/supa/availability_service.dart';
+import 'package:mastermind_together/src/timezone/timezone_service.dart';
 
 class AvailabilityController extends GetxController {
   final _availabilityService = Get.find<AvailabilityService>();
   final AuthService _authService = Get.find<AuthService>();
+  final TimezoneService _tzService = Get.find<TimezoneService>();
   final RxList<DayModel> days = RxList<DayModel>();
+
+  final RxString selectedTimezone = ''.obs;
+  final RxList<String> allTimezones = <String>[].obs;
 
   @override
   void onInit() {
     super.onInit();
     initDays();
+    fetchTimeZones();
     fetchAvailability();
   }
 
@@ -35,7 +41,8 @@ class AvailabilityController extends GetxController {
       try {
         await _availabilityService.saveAvailability(userId, day);
       } catch (e) {
-        Get.snackbar( //TODO refactor
+        Get.snackbar(
+          //TODO refactor
           'Error saving availability',
           e.toString(),
           snackPosition: SnackPosition.BOTTOM,
@@ -53,5 +60,10 @@ class AvailabilityController extends GetxController {
     );
 
     days.addAll(tempDays);
+  }
+
+  void fetchTimeZones() async {
+    selectedTimezone.value = await _tzService.getCurrentTimezone();
+    allTimezones.value = await _tzService.getAllTimeZonesWithOffset();
   }
 }

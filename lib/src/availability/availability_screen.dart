@@ -15,6 +15,26 @@ class SetAvailabilityScreen extends GetView<AvailabilityController> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
+            Obx(
+              () => ListTile(
+                title: Text('Select Timezone'),
+                subtitle: DropdownButton<String>(
+                  value: controller.selectedTimezone.value,
+                  isExpanded: true,
+                  items: controller.allTimezones.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    if (newValue != null) {
+                      controller.selectedTimezone.value = newValue;
+                    }
+                  },
+                ),
+              ),
+            ),
             Expanded(
               child: Obx(
                 () => ListView.builder(
