@@ -21,7 +21,7 @@ class TimezoneService extends GetxService {
   }
 
 
-  Future<String> getCurrentTimezone() async {
+  Future<String> getCurrentTimezoneWithOffset() async {
     final currentTimeZoneName = await FlutterNativeTimezone.getLocalTimezone();
     final currentTimezoneLocation = tz.getLocation(currentTimeZoneName);
     final currentTime = tz.TZDateTime.now(currentTimezoneLocation);
