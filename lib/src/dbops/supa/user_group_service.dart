@@ -26,15 +26,45 @@ class UserGroupService {
   }
 
   Future<void> joinGroup(String userId, String groupId) async {
+    final groupResponse = await _client.from('groups').select().eq('id', groupId).single();
+
+    if (!groupResponse.isEmpty) {
+      final group = GroupModel.fromJson(groupResponse);
+
+      if (isGroupFull(group)) {
+        throw Exception('Group is already full.');
+      }
+
+      bool isAlreadyInGroup = await isAlreadyMember(userId, groupId);
+      if (isAlreadyInGroup) {
+        throw Exception('You are already a member of this group.');
+      }
+      await addUserToGroup(userId, groupId);
+      await incrementGroupMembers(group, groupId);
+    } else {
+      throw Exception('Group not found.');
+    }
+  }
+
+  Future<void> incrementGroupMembers(GroupModel group, String groupId) async {
+    await _client.from('groups').update({
+      'current_members': group.currentMembers + 1,
+    }).eq('id', groupId);
+  }
+
+  Future<void> addUserToGroup(String userId, String groupId) async {
     final response = await _client.from('group_members').insert({
       'user_id': userId,
       'group_id': groupId,
     });
-
-    // if (response.error != null) {
-    //   throw Exception('Failed to join group: ${response.error!.message}');
-    // }
   }
+
+  Future<bool> isAlreadyMember(String userId, String groupId) async {
+    Map<String, dynamic>? membershipCheckResponse = await _client.from('group_members').select().eq('user_id', userId).eq('group_id', groupId).maybeSingle();
+    return membershipCheckResponse != null;
+  }
+
+  bool isGroupFull(GroupModel group) => group.currentMembers >= group.maxMembers;
 
   Future<void> leaveGroup(String userId, String groupId) async {
     final response = await _client.from('group_members').delete().eq('user_id', userId).eq('group_id', groupId);

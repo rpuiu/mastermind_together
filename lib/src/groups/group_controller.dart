@@ -1,12 +1,15 @@
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/dbops/supa/auth_service.dart';
 import 'package:mastermind_together/src/dbops/supa/category_service.dart';
 import 'package:mastermind_together/src/dbops/supa/user_group_service.dart';
 import 'package:mastermind_together/src/goal/category_model.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class GroupController extends GetxController {
   final UserGroupService _groupService = Get.find<UserGroupService>();
   final CategoryService _categoryService = Get.find<CategoryService>();
+  final AuthService _authService = Get.find<AuthService>();
 
   final RxList<GroupModel> groups = RxList<GroupModel>();
   final GroupModel group = GroupModel.empty();
@@ -62,6 +65,25 @@ class GroupController extends GetxController {
     } catch (e) {
       print('Error fetching goal areas: $e');
       // Handle error as needed.
+    }
+  }
+
+  void joinGroup(String groupId) async {
+    final User user = _authService.getCurrentUser();
+    try {
+      await _groupService.joinGroup(user.id, groupId);
+      Get.snackbar(
+        'Success',
+        'Successfully joined group',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } catch (e) {
+      print(e);
+      Get.snackbar(
+        'Error joining group',
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+      );
     }
   }
 }

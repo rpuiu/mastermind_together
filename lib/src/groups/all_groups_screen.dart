@@ -27,8 +27,12 @@ class AllGroupsScreen extends GetView<GroupController> {
                       final group = controller.groups.value[index];
                       return ListTile(
                         title: Text(group.name),
-                        subtitle: Text(group.category),
-                        trailing: Text('Max Members: ${group.maxMembers}\nCurrent Members: ${group.currentMembers}'),
+                        leading: Text(group.category),
+                        subtitle: Text('Max Members: ${group.maxMembers}\nCurrent Members: ${group.currentMembers}'),
+                        trailing: ElevatedButton(
+                          child: Text('Join'),
+                          onPressed: () => controller.joinGroup(group.id),
+                        ),
                       );
                     },
                   );

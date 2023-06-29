@@ -6,7 +6,7 @@ class AuthService extends GetxService {
   final SupabaseClient _client = Get.find<SupabaseClient>();
   final UserExtendedService _userExtendedService = Get.find<UserExtendedService>();
 
-//TODO handle errors
+//TODO handle errors //TODO wrap in UserModel
   User getCurrentUser() {
     final User? user = _client.auth.currentUser; //TODO user null?
     return user!;
