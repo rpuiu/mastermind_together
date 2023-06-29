@@ -24,6 +24,12 @@ class HomeScreen extends GetView<HomeController> {
             },
           ),
           IconButton(
+            icon: Icon(Icons.groups),
+            onPressed: () {
+              Get.toNamed(Routes.allGroups);
+            },
+          ),
+          IconButton(
             icon: Icon(Icons.logout),
             onPressed: authController.logout,
           ),
