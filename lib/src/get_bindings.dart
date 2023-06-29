@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/auth_controller.dart';
 import 'package:mastermind_together/src/availability/availability_controller.dart';
 import 'package:mastermind_together/src/dbops/supa/auth_service.dart';
+import 'package:mastermind_together/src/dbops/supa/category_service.dart';
 import 'package:mastermind_together/src/dbops/supa/goal_service.dart';
 import 'package:mastermind_together/src/dbops/supa/user_extended_service.dart';
 import 'package:mastermind_together/src/dbops/supa/user_group_service.dart';
@@ -32,5 +33,6 @@ class GetBindings {
     Get.lazyPut(() => UserExtendedService());
     Get.lazyPut(() => GroupController(), fenix: true);
     Get.lazyPut(() => UserGroupService());
+    Get.lazyPut(() => CategoryService());
   }
 }

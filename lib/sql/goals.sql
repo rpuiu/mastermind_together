@@ -7,3 +7,10 @@ CREATE TABLE goals (
     created_at timestamptz DEFAULT now(),
     updated_at timestamptz DEFAULT now()
 );
+
+CREATE TABLE categories (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE
+);
+
+INSERT INTO categories (name) VALUES ('Health'), ('Career'), ('Education'), ('Others');

@@ -30,11 +30,11 @@ class AddGoalScreen extends GetView<GoalController> {
                   ),
                   SizedBox(height: 20), // adds some spacing
                   Obx(() => DropdownButton<String>(
-                        value: controller.selectedArea!.value,
+                        value: controller.selectedCategory!.value,
                         onChanged: (String? newValue) {
-                          controller.selectedArea!.value = newValue!;
+                          controller.selectedCategory!.value = newValue!;
                         },
-                        items:controller.goalAreas.map<DropdownMenuItem<String>>((String value) {
+                        items:controller.categories.map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
                             child: Text(value),

@@ -21,15 +21,27 @@ class CreateGroupScreen extends GetView<GroupController> {
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                TextFormField(
+                DropdownButtonFormField<String>(
                   decoration: InputDecoration(labelText: 'Category'),
+                  value: controller.selectedCategory!.value,
+                  items: controller.categories.map((area) {
+                    return DropdownMenuItem<String>(
+                      value: area,
+                      child: Text(area),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    controller.selectedCategory!.value = value!;
+                  },
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a category';
+                    if (value == null || value.isEmpty || value == 'Please select...') {
+                      return 'Please select a category';
                     }
                     return null;
                   },
-                  onSaved: (value) => controller.group.category = value!,
+                  onSaved: (value) {
+                    controller.group.category = value!;
+                  },
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Name'),
