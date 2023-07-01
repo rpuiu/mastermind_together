@@ -64,6 +64,16 @@ class CreateGroupScreen extends GetView<GroupController> {
                   onSaved: (value) => controller.group.meetingTime = value!,
                 ),
                 TextFormField(
+                  decoration: InputDecoration(labelText: 'Meeting URL'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a meeting URL';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) => controller.group.meetingUrl = value!,
+                ),
+                TextFormField(
                   decoration: InputDecoration(labelText: 'Max Number of Members'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {

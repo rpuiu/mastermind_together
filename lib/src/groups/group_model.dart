@@ -5,6 +5,7 @@ class GroupModel {
   String meetingTime;
   int maxMembers;
   int currentMembers;
+  String meetingUrl;  // New field
 
   GroupModel({
     required this.id,
@@ -13,6 +14,7 @@ class GroupModel {
     required this.meetingTime,
     required this.maxMembers,
     required this.currentMembers,
+    required this.meetingUrl, // New field
   });
 
   GroupModel.empty({
@@ -22,6 +24,7 @@ class GroupModel {
     this.meetingTime = "00:00",
     this.maxMembers = 0,
     this.currentMembers = 0,
+    this.meetingUrl = '', // New field
   });
 
   factory GroupModel.fromJson(Map<String, dynamic> json) {
@@ -32,6 +35,7 @@ class GroupModel {
       meetingTime: json['meeting_time'],
       maxMembers: json['max_members'],
       currentMembers: json['current_members'],
+      meetingUrl: json['meeting_url'], // New field
     );
   }
 
@@ -42,6 +46,7 @@ class GroupModel {
       'meeting_time': meetingTime,
       'max_members': maxMembers,
       'current_members': currentMembers,
+      'meeting_url': meetingUrl, // New field
     };
   }
 }

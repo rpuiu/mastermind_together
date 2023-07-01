@@ -20,6 +20,8 @@ class GroupCard extends StatelessWidget {
             children: <Widget>[
               Text(group.name, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
               Text(group.category),
+              Text(group.meetingTime),
+              Text(group.meetingUrl),
               Text('Max Members: ${group.maxMembers}'),
               Text('Current Members: ${group.currentMembers}'),
               ElevatedButton(

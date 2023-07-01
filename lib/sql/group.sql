@@ -4,7 +4,8 @@ CREATE TABLE groups (
     name text,
     meeting_time time with time zone,
     max_members int,
-    current_members int DEFAULT 0
+    current_members int DEFAULT 0,
+    meeting_url text
 );
 
 CREATE TABLE group_members (
