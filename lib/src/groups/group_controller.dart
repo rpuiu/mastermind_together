@@ -13,6 +13,8 @@ class GroupController extends GetxController {
   final AuthService _authService = Get.find<AuthService>();
 
   final RxList<GroupModel> groups = RxList<GroupModel>();
+  final RxList<GroupModel> userGroups = RxList<GroupModel>();
+
   final GroupModel group = GroupModel.empty();
   final isLoading = Rx<bool>(true);
 
@@ -23,6 +25,7 @@ class GroupController extends GetxController {
   void onInit() {
     super.onInit();
     fetchGroups();
+    fetchUserGroups();
     fetchCategories();
   }
 
@@ -122,6 +125,15 @@ class GroupController extends GetxController {
     } catch (e) {
       print(e);
       return [];
+    }
+  }
+
+  void fetchUserGroups() async {
+    final User user = _authService.getCurrentUser();
+    try {
+      userGroups.value = await _groupService.getUserGroups(user.id);
+    } catch (e) {
+      print('Error fetching user groups: $e');
     }
   }
 }

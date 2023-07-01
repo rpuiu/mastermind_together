@@ -95,14 +95,13 @@ class UserGroupService {
   bool isGroupFull(GroupModel group) => group.currentMembers >= group.maxMembers;
 
   Future<List<GroupModel>> getUserGroups(String userId) async {
-    //TODO MAIN-T-14
-    final response = await _client.from('group_members').select('group_id').eq('user_id', userId).execute();
-
+    final List<dynamic> response = await _client.from('group_members').select('group_id:group_id (*)').eq('user_id', userId);
+    //
     // if (response.error != null) {
     //   throw Exception('Failed to get user groups: ${response.error!.message}');
     // }
 
-    return (response.data as List).map((group) => GroupModel.fromJson(group)).toList();
+    return response.map((group) => GroupModel.fromJson(group['group_id'])).toList();
   }
 
   Future<List<UserModel>> getGroupMembers(String groupId) async {
