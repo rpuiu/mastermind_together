@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
-import 'get_bindings.dart';
+import 'src/get_bindings.dart';
 
 Future<void> main() async {
   await GetBindings.init();

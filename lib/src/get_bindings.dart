@@ -26,13 +26,13 @@ class GetBindings {
     Get.lazyPut(() => AuthController(), fenix: true);
     Get.lazyPut(() => GoalController(), fenix: true);
     Get.lazyPut(() => AvailabilityController(), fenix: true);
-    Get.lazyPut(() => AvailabilityService());
-    Get.lazyPut(() => AuthService());
-    Get.lazyPut(() => TimezoneService());
-    Get.lazyPut(() => GoalService());
-    Get.lazyPut(() => UserExtendedService());
+    Get.lazyPut(() => AvailabilityService(), fenix: true);
+    Get.lazyPut(() => AuthService(), fenix: true);
+    Get.lazyPut(() => TimezoneService(), fenix: true);
+    Get.lazyPut(() => GoalService(), fenix: true);
+    Get.lazyPut(() => UserExtendedService(), fenix: true);
     Get.lazyPut(() => GroupController(), fenix: true);
-    Get.lazyPut(() => UserGroupService());
-    Get.lazyPut(() => CategoryService());
+    Get.lazyPut(() => UserGroupService(), fenix: true);
+    Get.lazyPut(() => CategoryService(), fenix: true);
   }
 }
