@@ -4,6 +4,7 @@ import 'package:mastermind_together/src/dbops/supa/category_service.dart';
 import 'package:mastermind_together/src/dbops/supa/user_group_service.dart';
 import 'package:mastermind_together/src/goal/category_model.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
+import 'package:mastermind_together/src/user/user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class GroupController extends GetxController {
@@ -112,6 +113,15 @@ class GroupController extends GetxController {
       return groupResponse;
     } else {
       throw Exception('Group not found.');
+    }
+  }
+
+  Future<List<UserModel>> getGroupMembers(String groupId) async {
+    try {
+      return await _groupService.getGroupMembers(groupId);
+    } catch (e) {
+      print(e);
+      return [];
     }
   }
 }

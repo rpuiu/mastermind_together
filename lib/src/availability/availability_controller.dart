@@ -3,14 +3,14 @@ import 'package:intl/intl.dart';
 import 'package:mastermind_together/src/availability/day_model.dart';
 import 'package:mastermind_together/src/dbops/supa/auth_service.dart';
 import 'package:mastermind_together/src/dbops/supa/availability_service.dart';
-import 'package:mastermind_together/src/dbops/supa/user_extended_service.dart';
+import 'package:mastermind_together/src/dbops/supa/users_extended_service.dart';
 import 'package:mastermind_together/src/timezone/timezone_service.dart';
 
 class AvailabilityController extends GetxController {
   final _availabilityService = Get.find<AvailabilityService>();
   final AuthService _authService = Get.find<AuthService>();
   final TimezoneService _tzService = Get.find<TimezoneService>();
-  final UserExtendedService _ueService = Get.find<UserExtendedService>();
+  final UsersExtendedService _ueService = Get.find<UsersExtendedService>();
   final RxList<DayModel> days = RxList<DayModel>();
 
   final RxString selectedTimezone = ''.obs;

@@ -10,7 +10,7 @@ CREATE TABLE groups (
 
 CREATE TABLE group_members (
     id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
-    user_id uuid REFERENCES auth.users (id) ON DELETE CASCADE,
+    user_id uuid REFERENCES users_extended (user_id) ON DELETE CASCADE,
     group_id uuid REFERENCES groups (id) ON DELETE CASCADE,
     joined_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
 );

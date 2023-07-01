@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/dbops/supa/user_extended_service.dart';
+import 'package:mastermind_together/src/dbops/supa/users_extended_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService extends GetxService {
   final SupabaseClient _client = Get.find<SupabaseClient>();
-  final UserExtendedService _userExtendedService = Get.find<UserExtendedService>();
+  final UsersExtendedService _userExtendedService = Get.find<UsersExtendedService>();
 
 //TODO handle errors //TODO wrap in UserModel
   User getCurrentUser() {
@@ -18,8 +18,8 @@ class AuthService extends GetxService {
     if (response.user == null) {
       throw Exception('Failed to register $email, please try again');
     } else {
-      final String userId = response.user!.id;
-      final List<Map<String, dynamic>> responseExtended = await _userExtendedService.createUserExtended(userId);
+      final User user = response.user!;
+      final List<Map<String, dynamic>> responseExtended = await _userExtendedService.createUserExtended(user.id, user.email!);
 
       if (responseExtended.isEmpty) {
         throw Exception('Failed to save user extended data');

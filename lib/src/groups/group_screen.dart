@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
+import 'package:mastermind_together/src/user/user_model.dart';
 
 class GroupScreen extends GetView<GroupController> {
   final String groupId = Get.parameters['groupId']!;
@@ -16,24 +17,43 @@ class GroupScreen extends GetView<GroupController> {
       ),
       body: FutureBuilder<GroupModel>(
         future: controller.fetchGroup(groupId),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+        builder: (context, groupSnapshot) {
+          if (groupSnapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (groupSnapshot.hasError) {
+            return Center(child: Text('Error: ${groupSnapshot.error}'));
           } else {
-            final group = snapshot.data!;
-            return ListView(
-              padding: EdgeInsets.all(16.0),
-              children: <Widget>[
-                Text(group.name, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-                Text('Category: ${group.category}'),
-                Text(group.meetingTime),
-                Text(group.meetingUrl),
-                Text('Max Members: ${group.maxMembers}'),
-                Text('Current Members: ${group.currentMembers}'),
-                // Add more details about the group as needed
-              ],
+            final group = groupSnapshot.data!;
+            return FutureBuilder<List<UserModel>>(
+              future: controller.getGroupMembers(groupId),
+              builder: (context, membersSnapshot) {
+                if (membersSnapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (membersSnapshot.hasError) {
+                  return Center(child: Text('Error: ${membersSnapshot.error}'));
+                } else {
+                  final members = membersSnapshot.data!;
+                  return ListView(
+                    padding: EdgeInsets.all(16.0),
+                    children: <Widget>[
+                      Text(group.name, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                      Text('Category: ${group.category}'),
+                      Text(group.meetingTime),
+                      Text(group.meetingUrl),
+                      Text('Max Members: ${group.maxMembers}'),
+                      Text('Current Members: ${group.currentMembers}'),
+                      Divider(),
+                      Text('Members:', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                      ...members
+                          .map((member) => ListTile(
+                                title: Text(member.email),
+                                // Add more details about the member as needed
+                              ))
+                          .toList(),
+                    ],
+                  );
+                }
+              },
             );
           }
         },
