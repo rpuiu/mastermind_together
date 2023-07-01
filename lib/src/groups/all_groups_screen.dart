@@ -26,10 +26,7 @@ class AllGroupsScreen extends GetView<GroupController> {
                     itemCount: controller.groups.value.length,
                     itemBuilder: (_, index) {
                       final group = controller.groups.value[index];
-                      return GroupCard(
-                        group: group,
-                        onJoin: () => controller.joinGroup(group.id),
-                      );
+                      return GroupCard(group: group);
                     },
                   );
                 },

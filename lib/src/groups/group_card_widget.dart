@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
 import 'package:mastermind_together/src/routes.dart';
 
-class GroupCard extends StatelessWidget {
+class GroupCard extends GetView<GroupController> {
   final GroupModel group;
-  final VoidCallback onJoin;
 
-  GroupCard({required this.group, required this.onJoin});
+  const GroupCard({super.key, required this.group});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,11 @@ class GroupCard extends StatelessWidget {
               Text('Current Members: ${group.currentMembers}'),
               ElevatedButton(
                 child: Text('Join'),
-                onPressed: onJoin,
+                onPressed: () => controller.joinGroup(group.id),
+              ),
+              ElevatedButton(
+                child: Text('Leave group'),
+                onPressed: () => controller.leaveGroup(group.id),
               ),
             ],
           ),

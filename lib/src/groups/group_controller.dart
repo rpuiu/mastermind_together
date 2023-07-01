@@ -86,6 +86,26 @@ class GroupController extends GetxController {
     }
   }
 
+  void leaveGroup(String groupId) async {
+    final User user = _authService.getCurrentUser();
+    try {
+      await _groupService.leaveGroup(user.id, groupId);
+      Get.snackbar(
+        'Success',
+        'Successfully left group',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      fetchGroups(); // Fetch groups again to reflect changes in UI //TODO replace with realtime
+    } catch (e) {
+      print(e);
+      Get.snackbar(
+        'Error leaving group',
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
+  }
+
   Future<GroupModel> fetchGroup(String groupId) async {
     final groupResponse = await _groupService.readGroup(groupId);
     if (groupResponse != null) {

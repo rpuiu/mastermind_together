@@ -46,6 +46,34 @@ class UserGroupService {
     }
   }
 
+  Future<void> leaveGroup(String userId, String groupId) async {
+    final groupResponse = await _client.from('groups').select().eq('id', groupId).single();
+
+    if (!groupResponse.isEmpty) {
+      final group = GroupModel.fromJson(groupResponse);
+
+      bool isAlreadyInGroup = await isAlreadyMember(userId, groupId);
+      if (!isAlreadyInGroup) {
+        throw Exception('You are not a member of this group.');
+      }
+
+      await removeUserFromGroup(userId, groupId);
+      await decrementGroupMembers(group, groupId);
+    } else {
+      throw Exception('Group not found.');
+    }
+  }
+
+  Future<void> decrementGroupMembers(GroupModel group, String groupId) async {
+    await _client.from('groups').update({
+      'current_members': group.currentMembers - 1,
+    }).eq('id', groupId);
+  }
+
+  Future<void> removeUserFromGroup(String userId, String groupId) async {
+    final response = await _client.from('group_members').delete().eq('user_id', userId).eq('group_id', groupId);
+  }
+
   Future<void> incrementGroupMembers(GroupModel group, String groupId) async {
     await _client.from('groups').update({
       'current_members': group.currentMembers + 1,
@@ -66,15 +94,7 @@ class UserGroupService {
 
   bool isGroupFull(GroupModel group) => group.currentMembers >= group.maxMembers;
 
-  Future<void> leaveGroup(String userId, String groupId) async {
-    final response = await _client.from('group_members').delete().eq('user_id', userId).eq('group_id', groupId);
-
-    // if (response.error != null) {
-    //   throw Exception('Failed to leave group: ${response.error!.message}');
-    // }
-  }
-
-  Future<List<GroupModel>> getUserGroups(String userId) async {
+  Future<List<GroupModel>> getUserGroups(String userId) async { //TODO MAIN-T-14
     final response = await _client.from('group_members').select('group_id').eq('user_id', userId).execute();
 
     // if (response.error != null) {
@@ -84,7 +104,7 @@ class UserGroupService {
     return (response.data as List).map((group) => GroupModel.fromJson(group)).toList();
   }
 
-  Future<List<UserModel>> getGroupMembers(String groupId) async {
+  Future<List<UserModel>> getGroupMembers(String groupId) async { //TODO MAIN-T-15
     final response = await _client.from('group_members').select('user_id').eq('group_id', groupId);
 
     // if (response.error != null) {
