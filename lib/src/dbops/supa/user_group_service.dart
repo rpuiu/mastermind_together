@@ -93,4 +93,9 @@ class UserGroupService {
 
     return (response.data as List).map((user) => UserModel.fromJson(user)).toList();
   }
+
+  Future<GroupModel> readGroup(String groupId) async {
+    final groupResponse = await _client.from('groups').select().eq('id', groupId).single();
+    return GroupModel.fromJson(groupResponse);
+  }
 }

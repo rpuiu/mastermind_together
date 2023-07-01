@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/groups/group_card_widget.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
 
@@ -25,14 +26,9 @@ class AllGroupsScreen extends GetView<GroupController> {
                     itemCount: controller.groups.value.length,
                     itemBuilder: (_, index) {
                       final group = controller.groups.value[index];
-                      return ListTile(
-                        title: Text(group.name),
-                        leading: Text(group.category),
-                        subtitle: Text('Max Members: ${group.maxMembers}\nCurrent Members: ${group.currentMembers}'),
-                        trailing: ElevatedButton(
-                          child: Text('Join'),
-                          onPressed: () => controller.joinGroup(group.id),
-                        ),
+                      return GroupCard(
+                        group: group,
+                        onJoin: () => controller.joinGroup(group.id),
                       );
                     },
                   );

@@ -5,6 +5,7 @@ import 'package:mastermind_together/src/availability/availability_screen.dart';
 import 'package:mastermind_together/src/goal/add_goal_screen.dart';
 import 'package:mastermind_together/src/groups/all_groups_screen.dart';
 import 'package:mastermind_together/src/groups/create_group_screen.dart';
+import 'package:mastermind_together/src/groups/group_screen.dart';
 import 'package:mastermind_together/src/home/home_screen.dart';
 
 class Routes {
@@ -15,6 +16,7 @@ class Routes {
   static const String availability = '/set-availability';
   static const String createGroup = '/create-group';
   static const String allGroups = '/view-groups';
+  static const String group = '/group';
 
   static List<GetPage> routes = [
     GetPage(name: home, page: () => HomeScreen()),
@@ -25,5 +27,8 @@ class Routes {
     GetPage(name: createGroup, page: () => CreateGroupScreen()),
     GetPage(name: createGroup, page: () => CreateGroupScreen()),
     GetPage(name: allGroups, page: () => AllGroupsScreen()),
+    GetPage(name: '$group/:groupId', page: () => GroupScreen()),
   ];
+
+  static String groupRoute(String groupId) => '$group/$groupId';
 }

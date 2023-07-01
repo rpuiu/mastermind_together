@@ -25,7 +25,6 @@ class GroupController extends GetxController {
     fetchCategories();
   }
 
-  // This will be called when the 'Create Group' button is pressed
   Future<void> createGroup() async {
     try {
       await _groupService.createGroup(group);
@@ -84,6 +83,15 @@ class GroupController extends GetxController {
         e.toString(),
         snackPosition: SnackPosition.BOTTOM,
       );
+    }
+  }
+
+  Future<GroupModel> fetchGroup(String groupId) async {
+    final groupResponse = await _groupService.readGroup(groupId);
+    if (groupResponse != null) {
+      return groupResponse;
+    } else {
+      throw Exception('Group not found.');
     }
   }
 }
