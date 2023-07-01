@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/groups/chat/chat_widget.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
 import 'package:mastermind_together/src/user/user_model.dart';
@@ -33,23 +34,34 @@ class GroupScreen extends GetView<GroupController> {
                   return Center(child: Text('Error: ${membersSnapshot.error}'));
                 } else {
                   final members = membersSnapshot.data!;
-                  return ListView(
-                    padding: EdgeInsets.all(16.0),
-                    children: <Widget>[
-                      Text(group.name, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-                      Text('Category: ${group.category}'),
-                      Text(group.meetingTime),
-                      Text(group.meetingUrl),
-                      Text('Max Members: ${group.maxMembers}'),
-                      Text('Current Members: ${group.currentMembers}'),
+                  return Column(
+                    children: [
+                      Expanded(
+                        child: ListView(
+                          padding: EdgeInsets.all(16.0),
+                          children: <Widget>[
+                            Text(group.name, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                            Text('Category: ${group.category}'),
+                            Text(group.meetingTime),
+                            Text(group.meetingUrl),
+                            Text('Max Members: ${group.maxMembers}'),
+                            Text('Current Members: ${group.currentMembers}'),
+                            Divider(),
+                            Text('Members:', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                            ...members
+                                .map((member) => ListTile(
+                                      title: Text(member.email),
+                                      // Add more details about the member as needed
+                                    ))
+                                .toList(),
+                          ],
+                        ),
+                      ),
                       Divider(),
-                      Text('Members:', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-                      ...members
-                          .map((member) => ListTile(
-                                title: Text(member.email),
-                                // Add more details about the member as needed
-                              ))
-                          .toList(),
+                      Text('Chat:', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                      Expanded(
+                        child: ChatWidget(groupId: groupId),
+                      ),
                     ],
                   );
                 }
