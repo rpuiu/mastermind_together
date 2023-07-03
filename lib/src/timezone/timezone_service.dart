@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:get/get.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -7,29 +8,100 @@ class TimezoneService extends GetxService {
     final allLocations = tz.timeZoneDatabase.locations.keys.toList();
     List<String> allLocationsWithOffset = [];
 
-    for(var locationName in allLocations) {
+    for (var locationName in allLocations) {
       final location = tz.getLocation(locationName);
       final currentTime = tz.TZDateTime.now(location);
       final offsetHours = currentTime.timeZoneOffset.inHours;
-      final offsetMinutes = currentTime.timeZoneOffset.inMinutes.remainder(60);
+      final offsetMinutes = currentTime.timeZoneOffset.inMinutes.remainder(60).abs();
 
-      allLocationsWithOffset.add('UTC${offsetHours > 0 ? '+' : ''}$offsetHours:$offsetMinutes $locationName');
+      final minutesString = offsetMinutes < 10 ? '0$offsetMinutes' : '$offsetMinutes';
+
+      allLocationsWithOffset.add('$locationName (UTC${offsetHours >= 0 ? '+' : ''}$offsetHours:$minutesString)');
     }
 
     print('All timezones with offset: $allLocationsWithOffset');
     return allLocationsWithOffset;
   }
 
-
   Future<String> getCurrentTimezoneWithOffset() async {
     final currentTimeZoneName = await FlutterNativeTimezone.getLocalTimezone();
     final currentTimezoneLocation = tz.getLocation(currentTimeZoneName);
     final currentTime = tz.TZDateTime.now(currentTimezoneLocation);
     final offsetHours = currentTime.timeZoneOffset.inHours;
-    final offsetMinutes = currentTime.timeZoneOffset.inMinutes.remainder(60);
+    final offsetMinutes = currentTime.timeZoneOffset.inMinutes.remainder(60).abs();
 
-    final currentTimeZone = 'UTC${offsetHours > 0 ? '+' : ''}$offsetHours:$offsetMinutes $currentTimeZoneName';
+    final minutesString = offsetMinutes < 10 ? '0$offsetMinutes' : '$offsetMinutes';
+
+    final currentTimeZone = '$currentTimeZoneName (UTC${offsetHours >= 0 ? '+' : ''}$offsetHours:$minutesString)';
     return currentTimeZone;
   }
 
+  Future<TimeOfDay?> convertToUTC(TimeOfDay? time, String timezone) async {
+    if (time == null) return null;
+
+    // Get the offset in minutes for the timezone.
+    final offsetMinutes = _getOffsetMinutesForTimezone(timezone);
+
+    // Convert the time to DateTime using today's date
+    var dateTime = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, time.hour, time.minute);
+
+    // Subtract the offset
+    dateTime = dateTime.subtract(Duration(minutes: offsetMinutes));
+
+    // Return the time part
+    return TimeOfDay(hour: dateTime.hour, minute: dateTime.minute);
+  }
+
+  Future<TimeOfDay> convertFromUTC(TimeOfDay utcTime, String timezone) async {
+    // Get the offset in minutes for the timezone.
+    final offsetMinutes = _getOffsetMinutesForTimezone(timezone);
+
+    // Convert the TimeOfDay to a DateTime object for today's date.
+    var utcDate = DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day, utcTime.hour, utcTime.minute);
+
+    // Add the offset
+    utcDate = utcDate.add(Duration(minutes: offsetMinutes));
+
+    // Return the time part
+    return TimeOfDay(hour: utcDate.hour, minute: utcDate.minute);
+  }
+
+  int _getOffsetMinutesForTimezone(String timezone) {
+    // Split the timezone string to get the offset part.
+    final parts = timezone.split(' ');
+
+    // Error checking: if there is no offset part in the input, throw an exception.
+    if (parts.length < 2) {
+      throw FormatException('The input timezone string does not contain an offset: $timezone');
+    }
+
+    // The second part is the offset part, not the first one.
+    String offsetPart = parts[1];
+
+    // Remove 'UTC' and parentheses from the start of the offsetPart
+    if (offsetPart.startsWith('(UTC')) {
+      offsetPart = offsetPart.substring(4);
+      offsetPart = offsetPart.substring(0, offsetPart.length - 1); // Remove the closing parenthesis
+    }
+
+    // Split the offset part to get hours and minutes.
+    final offsetParts = offsetPart.split(':');
+
+    if (offsetParts.length != 2) {
+      throw FormatException('Invalid timezone offset format: $offsetPart');
+    }
+
+    final offsetHours = double.tryParse(offsetParts[0])?.round();
+    final offsetMinutes = double.tryParse(offsetParts[1])?.round();
+
+    // Error checking: if parsing failed, throw an exception.
+    if (offsetHours == null || offsetMinutes == null) {
+      throw FormatException('Invalid timezone offset values: $offsetPart');
+    }
+
+    // Calculate the total offset in minutes.
+    final totalOffsetMinutes = offsetHours * 60 + (offsetHours.isNegative ? -offsetMinutes : offsetMinutes);
+
+    return totalOffsetMinutes;
+  }
 }

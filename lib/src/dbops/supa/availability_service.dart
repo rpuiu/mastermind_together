@@ -24,10 +24,13 @@ class AvailabilityService extends GetxService {
 
   Future<void> saveAvailability(String userId, DayModel dayModel) async {
     try {
-      await _client.from('availability').upsert(
-            dayModel.toJson()..['user_id'] = userId,
-            onConflict: 'id',
-          );
+      final response = await availabilityExists(userId, dayModel);
+
+      if (response == null) {
+        await insertAvailability(dayModel, userId);
+      } else {
+        await updateAvailability(dayModel, userId);
+      }
     } catch (e) {
       //TODO handle errors
       // Get.snackbar('Error', 'Error saving availability: $e',
@@ -36,4 +39,12 @@ class AvailabilityService extends GetxService {
       rethrow;
     }
   }
+
+  Future<void> updateAvailability(DayModel dayModel, String userId) async {
+     await _client.from('availability').update(dayModel.toJson()..['user_id'] = userId).eq('user_id', userId).eq('day', dayModel.dayName);
+  }
+
+  Future<dynamic> insertAvailability(DayModel dayModel, String userId) async => await _client.from('availability').insert(dayModel.toJson()..['user_id'] = userId);
+
+  Future<dynamic> availabilityExists(String userId, DayModel dayModel) async => await _client.from('availability').select().eq('user_id', userId).eq('day', dayModel.dayName).maybeSingle();
 }

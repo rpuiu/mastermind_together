@@ -13,6 +13,12 @@ class DayModel {
     this.toTime,
   });
 
+  DayModel.fromDayModel(DayModel dayModel)
+      : id = dayModel.id,
+        dayName = dayModel.dayName,
+        fromTime = dayModel.fromTime != null ? TimeOfDay(hour: dayModel.fromTime!.hour, minute: dayModel.fromTime!.minute) : null,
+        toTime = dayModel.toTime != null ? TimeOfDay(hour: dayModel.toTime!.hour, minute: dayModel.toTime!.minute) : null;
+
   Map<String, dynamic> toJson() {
     final json = {
       'day': dayName,
