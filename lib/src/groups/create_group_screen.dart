@@ -54,14 +54,25 @@ class CreateGroupScreen extends GetView<GroupController> {
                   onSaved: (value) => controller.group.name = value!,
                 ),
                 TextFormField(
+                  readOnly: true,
                   decoration: InputDecoration(labelText: 'Meeting Time'),
+                  controller: TextEditingController(text: controller.group.meetingTime.format(context)),
+                  onTap: () async {
+                    final timeOfDay = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay.now(),
+                    );
+
+                    if (timeOfDay != null) {
+                      controller.group.meetingTime = timeOfDay;
+                    }
+                  },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a meeting time';
+                      return 'Please select a meeting time';
                     }
                     return null;
                   },
-                  onSaved: (value) => controller.group.meetingTime = value!,
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Meeting URL'),

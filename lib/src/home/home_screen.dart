@@ -66,7 +66,7 @@ class HomeScreen extends GetView<HomeController> {
               ],
             ),
           ),
-          VerticalDivider(), // Added a vertical divider for visual clarity
+          VerticalDivider(),
           Expanded(
             child: Column(
               children: [
@@ -80,6 +80,25 @@ class HomeScreen extends GetView<HomeController> {
                         itemCount: groupController.userGroups.length,
                         itemBuilder: (context, index) {
                           final group = groupController.userGroups[index];
+                          return ListTile(
+                            title: Text(group.name),
+                            // More group properties...
+                          );
+                        },
+                      );
+                    }
+                  }),
+                ),
+                Text("Matching Groups", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Expanded(
+                  child: Obx(() {
+                    if (groupController.matchingGroups.isEmpty) {
+                      return Center(child: Text('No matching groups found.'));
+                    } else {
+                      return ListView.builder(
+                        itemCount: groupController.matchingGroups.length,
+                        itemBuilder: (context, index) {
+                          final group = groupController.matchingGroups[index];
                           return ListTile(
                             title: Text(group.name),
                             // More group properties...

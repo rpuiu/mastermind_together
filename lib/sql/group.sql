@@ -3,6 +3,7 @@ CREATE TABLE groups (
     category text,
     name text,
     meeting_time time with time zone,
+    meeting_day text,
     max_members int,
     current_members int DEFAULT 0,
     meeting_url text

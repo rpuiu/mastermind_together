@@ -42,7 +42,7 @@ class GroupScreen extends GetView<GroupController> {
                           children: <Widget>[
                             Text(group.name, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
                             Text('Category: ${group.category}'),
-                            Text(group.meetingTime),
+                            Text('${group.meetingTime.hour}:${group.meetingTime.minute}'),
                             Text(group.meetingUrl),
                             Text('Max Members: ${group.maxMembers}'),
                             Text('Current Members: ${group.currentMembers}'),
