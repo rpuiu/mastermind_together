@@ -33,13 +33,19 @@ class LoginScreen extends GetView<AuthController> {
                     decoration: InputDecoration(labelText: 'Password'),
                     obscureText: true,
                   ),
-                  ElevatedButton(
-                    onPressed: () => controller.login(emailController.text, passwordController.text),
-                    child: Text('Log In'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => Get.toNamed(Routes.register),
-                    child: Text('Go to Register'),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Change this as per your requirement
+                    children: [
+                      ElevatedButton(
+                        onPressed: () => controller.login(emailController.text, passwordController.text),
+                        child: Text('Log In'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => Get.toNamed(Routes.register),
+                        child: Text('Register'),
+                      ),
+                    ],
                   ),
                 ],
               ),

@@ -1,19 +1,19 @@
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/auth_controller.dart';
 import 'package:mastermind_together/src/availability/availability_controller.dart';
-import 'package:mastermind_together/src/dbops/supa/auth_service.dart';
-import 'package:mastermind_together/src/dbops/supa/category_service.dart';
-import 'package:mastermind_together/src/dbops/supa/goal_service.dart';
-import 'package:mastermind_together/src/dbops/supa/message_service.dart';
-import 'package:mastermind_together/src/dbops/supa/users_extended_service.dart';
-import 'package:mastermind_together/src/dbops/supa/user_group_service.dart';
+import 'package:mastermind_together/src/services/supa/auth_service.dart';
+import 'package:mastermind_together/src/services/supa/category_service.dart';
+import 'package:mastermind_together/src/services/supa/goal_service.dart';
+import 'package:mastermind_together/src/services/supa/message_service.dart';
+import 'package:mastermind_together/src/services/supa/users_extended_service.dart';
+import 'package:mastermind_together/src/services/supa/user_group_service.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:mastermind_together/src/groups/chat/message_controller.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
-import 'package:mastermind_together/src/timezone/timezone_service.dart';
+import 'package:mastermind_together/src/services/timezone/timezone_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'dbops/supa/availability_service.dart';
+import 'services/supa/availability_service.dart';
 
 class GetBindings {
   static Future init() async {

@@ -54,7 +54,7 @@ class TimezoneService extends GetxService {
 
   Future<TimeOfDay> convertFromUTC(TimeOfDay utcTime, String timezone) async {
     // Get the offset in minutes for the timezone.
-    final offsetMinutes = _getOffsetMinutesForTimezone(timezone);
+    final offsetMinutes = "UTC (UTC+0:00)" == timezone ? 0 : _getOffsetMinutesForTimezone(timezone);
 
     // Convert the TimeOfDay to a DateTime object for today's date.
     var utcDate = DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day, utcTime.hour, utcTime.minute);

@@ -8,6 +8,9 @@ CREATE TABLE goals (
     updated_at timestamptz DEFAULT now()
 );
 
+-- *** Add tables to the publication to enable real time subscription ***
+alter publication supabase_realtime add table public.goals;
+
 CREATE TABLE categories (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL UNIQUE

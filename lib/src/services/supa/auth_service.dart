@@ -1,12 +1,12 @@
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/dbops/supa/users_extended_service.dart';
+import 'package:mastermind_together/src/services/supa/users_extended_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService extends GetxService {
   final SupabaseClient _client = Get.find<SupabaseClient>();
   final UsersExtendedService _userExtendedService = Get.find<UsersExtendedService>();
 
-//TODO handle errors //TODO wrap in UserModel
+  //TODO handle errors //TODO wrap in UserModel
   User getCurrentUser() {
     final User? user = _client.auth.currentUser; //TODO user null?
     return user!;

@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/login_screen.dart';
-import 'package:mastermind_together/src/dbops/supa/auth_service.dart';
 import 'package:mastermind_together/src/routes.dart';
+import 'package:mastermind_together/src/services/supa/auth_service.dart';
 
 class AuthController extends GetxController {
   final AuthService _authService = Get.find<AuthService>();

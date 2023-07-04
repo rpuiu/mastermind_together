@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/dbops/supa/auth_service.dart';
-import 'package:mastermind_together/src/dbops/supa/category_service.dart';
-import 'package:mastermind_together/src/dbops/supa/goal_service.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
 import 'package:mastermind_together/src/routes.dart';
+import 'package:mastermind_together/src/services/supa/auth_service.dart';
+import 'package:mastermind_together/src/services/supa/category_service.dart';
+import 'package:mastermind_together/src/services/supa/goal_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class GoalController extends GetxController {

@@ -1,13 +1,14 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/availability/availability_controller.dart';
-import 'package:mastermind_together/src/dbops/supa/auth_service.dart';
-import 'package:mastermind_together/src/dbops/supa/category_service.dart';
-import 'package:mastermind_together/src/dbops/supa/goal_service.dart';
-import 'package:mastermind_together/src/dbops/supa/user_group_service.dart';
 import 'package:mastermind_together/src/goal/category_model.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
-import 'package:mastermind_together/src/user/user_model.dart';
+import 'package:mastermind_together/src/services/supa/auth_service.dart';
+import 'package:mastermind_together/src/services/supa/category_service.dart';
+import 'package:mastermind_together/src/services/supa/goal_service.dart';
+import 'package:mastermind_together/src/services/supa/user_group_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class GroupController extends GetxController {
@@ -21,11 +22,13 @@ class GroupController extends GetxController {
   final RxList<GroupModel> userGroups = RxList<GroupModel>();
   final RxList<GroupModel> matchingGroups = RxList<GroupModel>();
 
-  final GroupModel group = GroupModel.empty();
+  final Rx<GroupModel> group = GroupModel.empty().obs;
   final isLoading = Rx<bool>(true);
 
+  final meetingTimeController = TextEditingController(text: "Please select...").obs;
   RxList<String> categories = <String>[].obs;
-  RxString? selectedCategory = 'Please select...'.obs;
+  RxString? selectedCategory = 'Please select...'.obs; //TODO
+  RxString? selectedDay = 'Please select...'.obs; //TODO?
 
   @override
   void onInit() {
@@ -42,7 +45,7 @@ class GroupController extends GetxController {
 
   Future<void> createGroup() async {
     try {
-      await _groupService.createGroup(group);
+      await _groupService.createGroup(group.value);
       Get.snackbar(
         'Group Created',
         'The group has been successfully created!',
@@ -177,6 +180,15 @@ class GroupController extends GetxController {
       }
     } catch (e) {
       print('Error fetching available groups: $e');
+    }
+  }
+
+  bool isUserMemberOfGroup(String groupId) {
+    try {
+      return userGroups.value.any((group) => group.id == groupId);
+    } catch (e) {
+      print('Error determining if user is a member of the group: $e');
+      return false;
     }
   }
 }

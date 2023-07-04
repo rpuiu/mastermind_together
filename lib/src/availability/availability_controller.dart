@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:mastermind_together/src/availability/day_model.dart';
-import 'package:mastermind_together/src/dbops/supa/auth_service.dart';
-import 'package:mastermind_together/src/dbops/supa/availability_service.dart';
-import 'package:mastermind_together/src/dbops/supa/users_extended_service.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
-import 'package:mastermind_together/src/timezone/timezone_service.dart';
+import 'package:mastermind_together/src/services/supa/auth_service.dart';
+import 'package:mastermind_together/src/services/supa/availability_service.dart';
+import 'package:mastermind_together/src/services/supa/users_extended_service.dart';
+import 'package:mastermind_together/src/services/timezone/timezone_service.dart';
+import 'package:mastermind_together/src/util/date_time_util.dart';
 
 class AvailabilityController extends GetxController {
   final _availabilityService = Get.find<AvailabilityService>();
@@ -80,13 +80,7 @@ class AvailabilityController extends GetxController {
   }
 
   void initDays() {
-    final tempDays = List.generate(
-      7,
-      (index) => DayModel(
-        dayName: DateFormat.E().format(DateTime(2022, 1, index + 1)), // Get weekday names
-      ),
-    );
-
+    final tempDays = List.generate(7, (index) => DayModel(dayName: getDayName(index)));
     days.addAll(tempDays);
   }
 

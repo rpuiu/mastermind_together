@@ -41,10 +41,12 @@ class AvailabilityService extends GetxService {
   }
 
   Future<void> updateAvailability(DayModel dayModel, String userId) async {
-     await _client.from('availability').update(dayModel.toJson()..['user_id'] = userId).eq('user_id', userId).eq('day', dayModel.dayName);
+    await _client.from('availability').update(dayModel.toJson()..['user_id'] = userId).eq('user_id', userId).eq('day', dayModel.dayName);
   }
 
-  Future<dynamic> insertAvailability(DayModel dayModel, String userId) async => await _client.from('availability').insert(dayModel.toJson()..['user_id'] = userId);
+  Future<dynamic> insertAvailability(DayModel dayModel, String userId) async =>
+      await _client.from('availability').insert(dayModel.toJson()..['user_id'] = userId);
 
-  Future<dynamic> availabilityExists(String userId, DayModel dayModel) async => await _client.from('availability').select().eq('user_id', userId).eq('day', dayModel.dayName).maybeSingle();
+  Future<dynamic> availabilityExists(String userId, DayModel dayModel) async =>
+      await _client.from('availability').select().eq('user_id', userId).eq('day', dayModel.dayName).maybeSingle();
 }

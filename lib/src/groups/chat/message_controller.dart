@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/dbops/supa/message_service.dart';
 import 'package:mastermind_together/src/groups/chat/message_model.dart';
+import 'package:mastermind_together/src/services/supa/message_service.dart';
 
 class MessageController extends GetxController {
   final String groupId = Get.parameters['groupId']!;

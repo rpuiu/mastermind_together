@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/dbops/supa/auth_service.dart';
 import 'package:mastermind_together/src/groups/chat/message_controller.dart';
+import 'package:mastermind_together/src/services/supa/auth_service.dart';
 
 class ChatWidget extends GetView<MessageController> {
   final String groupId;

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/auth_controller.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
+import 'package:mastermind_together/src/groups/group_card_widget.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/home/home_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
@@ -57,8 +58,11 @@ class HomeScreen extends GetView<HomeController> {
                       itemBuilder: (_, index) {
                         final goal = goalController.goals[index];
                         return ListTile(
-                          title: Text(goal.goal),
-                          subtitle: Text(goal.category),
+                          title: Text(
+                            '$index: ${goal.goal}',
+                            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Text('Category: ${goal.category}'),
                         );
                       },
                     ),
@@ -81,10 +85,7 @@ class HomeScreen extends GetView<HomeController> {
                         itemCount: groupController.userGroups.length,
                         itemBuilder: (context, index) {
                           final group = groupController.userGroups[index];
-                          return ListTile(
-                            title: Text(group.name),
-                            // More group properties...
-                          );
+                          return GroupCard(group: group);
                         },
                       );
                     }
@@ -121,6 +122,7 @@ class HomeScreen extends GetView<HomeController> {
                             },
                             child: Text('Create new group'),
                           ),
+                          SizedBox(height: 10),
                           ElevatedButton(
                             onPressed: () {
                               // Navigate to the same category groups screen
@@ -135,10 +137,7 @@ class HomeScreen extends GetView<HomeController> {
                         itemCount: groupController.matchingGroups.length,
                         itemBuilder: (context, index) {
                           final group = groupController.matchingGroups[index];
-                          return ListTile(
-                            title: Text(group.name),
-                            // More group properties...
-                          );
+                          return GroupCard(group: group);
                         },
                       );
                     }

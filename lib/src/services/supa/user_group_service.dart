@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
-import 'package:mastermind_together/src/user/user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UserGroupService {
@@ -130,20 +130,20 @@ class UserGroupService {
     return response.map((group) => GroupModel.fromJson(group)).toList();
   }
 
-  // void subscribeToGroupChanges(Function(GroupModel) onGroupChanges) {
-  //   groupSubscription = _client.channel('public:groups').on(
-  //     RealtimeListenTypes.postgresChanges,
-  //     ChannelFilter(event: '*', schema: 'public', table: 'groups'),
-  //     (payload, [ref]) {
-  //       print('Group change received: ${payload.toString()}');
-  //       onGroupChanges(GroupModel.fromJson(payload["new"]));
-  //     },
-  //   );
-  //
-  //   groupSubscription.subscribe();
-  // }
-  //
-  // Future<void> unsubscribeFromGroupChanges() async {
-  //   await _client.removeChannel(groupSubscription);
-  // }
+// void subscribeToGroupChanges(Function(GroupModel) onGroupChanges) {
+//   groupSubscription = _client.channel('public:groups').on(
+//     RealtimeListenTypes.postgresChanges,
+//     ChannelFilter(event: '*', schema: 'public', table: 'groups'),
+//     (payload, [ref]) {
+//       print('Group change received: ${payload.toString()}');
+//       onGroupChanges(GroupModel.fromJson(payload["new"]));
+//     },
+//   );
+//
+//   groupSubscription.subscribe();
+// }
+//
+// Future<void> unsubscribeFromGroupChanges() async {
+//   await _client.removeChannel(groupSubscription);
+// }
 }
