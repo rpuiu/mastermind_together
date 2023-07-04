@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/auth_controller.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
+import 'package:mastermind_together/src/goal/goal_model.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/home/home_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
@@ -22,7 +23,7 @@ class HomeScreen extends GetView<HomeController> {
           IconButton(
             icon: Icon(Icons.add),
             onPressed: () {
-              Get.toNamed(Routes.goal);
+              Get.toNamed(Routes.createGoal);
             },
           ),
           IconButton(
@@ -57,7 +58,7 @@ class HomeScreen extends GetView<HomeController> {
                         final goal = goalController.goals[index];
                         return ListTile(
                           title: Text(goal.goal),
-                          subtitle: Text(goal.goalArea),
+                          subtitle: Text(goal.category),
                         );
                       },
                     ),
@@ -92,7 +93,23 @@ class HomeScreen extends GetView<HomeController> {
                 Text("Matching Groups", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 Expanded(
                   child: Obx(() {
-                    if (groupController.matchingGroups.isEmpty) {
+                    List<GoalModel> userGoals = goalController.goals.value;
+                    // Check if userGoal is null or empty
+                    if (userGoals.isEmpty) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Please set a goal in order to view matching groups.'),
+                          ElevatedButton(
+                            onPressed: () {
+                              // Navigate to the create goal screen
+                              Get.toNamed(Routes.createGoal);
+                            },
+                            child: Text('Set a Goal'),
+                          ),
+                        ],
+                      );
+                    } else if (groupController.matchingGroups.isEmpty) {
                       return Center(child: Text('No matching groups found.'));
                     } else {
                       return ListView.builder(

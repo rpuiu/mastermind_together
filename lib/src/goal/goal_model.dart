@@ -1,15 +1,15 @@
-class Goal {
+class GoalModel {
   final String id;
   final String userId;
   final String goal;
-  final String goalArea;
+  final String category;
   final bool autoSelectGroup;
 
-  Goal({
+  GoalModel({
     required this.id,
     required this.userId,
     required this.goal,
-    required this.goalArea,
+    required this.category,
     required this.autoSelectGroup,
   });
 
@@ -18,17 +18,17 @@ class Goal {
       'id': id,
       'user_id': userId,
       'goal': goal,
-      'goal_area': goalArea,
+      'goal_area': category,
       'auto_select': autoSelectGroup,
     };
   }
 
-  factory Goal.fromJson(Map<String, dynamic> json) {
-    return Goal(
+  factory GoalModel.fromJson(Map<String, dynamic> json) {
+    return GoalModel(
       id: json['id'],
       userId: json['user_id'],
       goal: json['goal'],
-      goalArea: json['goal_area'],
+      category: json['goal_area'],
       autoSelectGroup: json['auto_select'],
     );
   }

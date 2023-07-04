@@ -6,9 +6,9 @@ class GoalService extends GetxService {
   final SupabaseClient _client = Get.find<SupabaseClient>();
   late RealtimeChannel insertGoalSubscription;
 
-  Future<List<Goal>> readUserGoals(String userId) async {
+  Future<List<GoalModel>> readUserGoals(String userId) async {
     final List<dynamic> data = await _client.from('goals').select().eq('user_id', userId);
-    return data.map((e) => Goal.fromJson(e)).toList();
+    return data.map((e) => GoalModel.fromJson(e)).toList();
   }
 
   Future<void> createGoal(String userId, String goal, String goalArea, bool autoSelectGroup) async {
@@ -20,13 +20,13 @@ class GoalService extends GetxService {
     });
   }
 
-  void subscribeToGoalChanges(Function(Goal) onNewGoal) {
+  void subscribeToGoalChanges(Function(GoalModel) onNewGoal) {
     insertGoalSubscription = _client.channel('public:goals').on(
       RealtimeListenTypes.postgresChanges,
       ChannelFilter(event: 'INSERT', schema: 'public', table: 'goals'),
       (payload, [ref]) {
         print('Change received: ${payload.toString()}');
-        onNewGoal(Goal.fromJson(payload["new"]));
+        onNewGoal(GoalModel.fromJson(payload["new"]));
       },
     );
 

@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UserGroupService {
   final SupabaseClient _client = Get.find<SupabaseClient>();
+  late RealtimeChannel groupSubscription;
 
   Future<List<GroupModel>?> readAllGroups() async {
     final List<dynamic> data = await _client.from('groups').select();
@@ -118,4 +119,31 @@ class UserGroupService {
     final groupResponse = await _client.from('groups').select().eq('id', groupId).single();
     return GroupModel.fromJson(groupResponse);
   }
+
+  Future<List<GroupModel>> getGroupsByCategory(String category) async {
+    List<dynamic> response = await _client.from('groups').select().eq('category', category);
+
+    // if (response.error != null) {
+    //   throw Exception('Failed to get groups: ${response.error!.message}');
+    // }
+
+    return response.map((group) => GroupModel.fromJson(group)).toList();
+  }
+
+  // void subscribeToGroupChanges(Function(GroupModel) onGroupChanges) {
+  //   groupSubscription = _client.channel('public:groups').on(
+  //     RealtimeListenTypes.postgresChanges,
+  //     ChannelFilter(event: '*', schema: 'public', table: 'groups'),
+  //     (payload, [ref]) {
+  //       print('Group change received: ${payload.toString()}');
+  //       onGroupChanges(GroupModel.fromJson(payload["new"]));
+  //     },
+  //   );
+  //
+  //   groupSubscription.subscribe();
+  // }
+  //
+  // Future<void> unsubscribeFromGroupChanges() async {
+  //   await _client.removeChannel(groupSubscription);
+  // }
 }

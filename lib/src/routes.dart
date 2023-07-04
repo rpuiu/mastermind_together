@@ -12,7 +12,7 @@ class Routes {
   static const String home = '/home';
   static const String login = '/login';
   static const String register = '/register';
-  static const String goal = '/add-goal';
+  static const String createGoal = '/create-goal';
   static const String availability = '/set-availability';
   static const String createGroup = '/create-group';
   static const String allGroups = '/view-groups';
@@ -22,7 +22,7 @@ class Routes {
     GetPage(name: home, page: () => HomeScreen()),
     GetPage(name: login, page: () => LoginScreen()),
     GetPage(name: register, page: () => RegisterScreen()),
-    GetPage(name: goal, page: () => AddGoalScreen()),
+    GetPage(name: createGoal, page: () => AddGoalScreen()),
     GetPage(name: availability, page: () => SetAvailabilityScreen()),
     GetPage(name: createGroup, page: () => CreateGroupScreen()),
     GetPage(name: createGroup, page: () => CreateGroupScreen()),

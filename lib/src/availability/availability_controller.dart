@@ -1,9 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mastermind_together/src/availability/day_model.dart';
 import 'package:mastermind_together/src/dbops/supa/auth_service.dart';
 import 'package:mastermind_together/src/dbops/supa/availability_service.dart';
 import 'package:mastermind_together/src/dbops/supa/users_extended_service.dart';
+import 'package:mastermind_together/src/groups/group_model.dart';
 import 'package:mastermind_together/src/timezone/timezone_service.dart';
 
 class AvailabilityController extends GetxController {
@@ -100,5 +102,40 @@ class AvailabilityController extends GetxController {
     }
 
     allTimezones.value = _tzService.getAllTimeZonesWithOffset();
+  }
+
+  Future<bool> checkMatchingAvailability(String userId, GroupModel group) async {
+    // Fetch user availability
+    List<DayModel> availabilityList = await _availabilityService.getAvailability(userId);
+
+    // Fetch group meeting time
+    var groupMeetingTime = group.meetingTime;
+
+    // Convert the group meeting time to user's local timezone
+    var userTimezone = await _ueService.readTimezone(userId);
+    TimeOfDay groupMeetingLocalTime = await _tzService.convertFromUTC(groupMeetingTime, userTimezone);
+
+    // Get the day of the week of the meeting
+    var meetingDay = group.meetingDay;
+
+    // Find the availability for that day
+    DayModel? dayAvailability = availabilityList.firstWhereOrNull((day) => day.dayName == meetingDay);
+
+    // If there's no availability for that day, the group doesn't match
+    if (dayAvailability == null) {
+      return false;
+    }
+
+    // Convert the user's availability times to user's local timezone
+    var fromTimeLocal = await _tzService.convertFromUTC(dayAvailability.fromTime!, userTimezone);
+    var toTimeLocal = await _tzService.convertFromUTC(dayAvailability.toTime!, userTimezone);
+
+    // If the group's meeting time is not within the user's availability time, the group doesn't match
+    if (groupMeetingLocalTime.hour < fromTimeLocal.hour || groupMeetingLocalTime.hour > toTimeLocal.hour) {
+      return false;
+    }
+
+    // The group's meeting time matches the user's availability
+    return true;
   }
 }

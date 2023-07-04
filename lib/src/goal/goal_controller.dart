@@ -18,7 +18,7 @@ class GoalController extends GetxController {
   RxString? selectedCategory = 'Please select...'.obs;
   RxBool autoSelectGroup = false.obs;
 
-  final RxList<Goal> goals = <Goal>[].obs;
+  final RxList<GoalModel> goals = <GoalModel>[].obs;
 
   @override
   void onInit() {

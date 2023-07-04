@@ -1,8 +1,11 @@
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/availability/availability_controller.dart';
 import 'package:mastermind_together/src/dbops/supa/auth_service.dart';
 import 'package:mastermind_together/src/dbops/supa/category_service.dart';
+import 'package:mastermind_together/src/dbops/supa/goal_service.dart';
 import 'package:mastermind_together/src/dbops/supa/user_group_service.dart';
 import 'package:mastermind_together/src/goal/category_model.dart';
+import 'package:mastermind_together/src/goal/goal_model.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
 import 'package:mastermind_together/src/user/user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -11,9 +14,12 @@ class GroupController extends GetxController {
   final UserGroupService _groupService = Get.find<UserGroupService>();
   final CategoryService _categoryService = Get.find<CategoryService>();
   final AuthService _authService = Get.find<AuthService>();
+  final GoalService _goalService = Get.find<GoalService>();
+  final AvailabilityController _availabilityController = Get.find<AvailabilityController>();
 
   final RxList<GroupModel> groups = RxList<GroupModel>();
   final RxList<GroupModel> userGroups = RxList<GroupModel>();
+  final RxList<GroupModel> matchingGroups = RxList<GroupModel>();
 
   final GroupModel group = GroupModel.empty();
   final isLoading = Rx<bool>(true);
@@ -27,7 +33,12 @@ class GroupController extends GetxController {
     fetchGroups();
     fetchUserGroups();
     fetchCategories();
+    fetchAvailableGroups();
   }
+
+  // void listenToGoalChanges() { //TODO
+  //   _groupService.subscribeToGroupChanges((newGoal) => groups.add(newGoal));
+  // }
 
   Future<void> createGroup() async {
     try {
@@ -134,6 +145,38 @@ class GroupController extends GetxController {
       userGroups.value = await _groupService.getUserGroups(user.id);
     } catch (e) {
       print('Error fetching user groups: $e');
+    }
+  }
+
+  void fetchAvailableGroups() async {
+    final User user = _authService.getCurrentUser();
+
+    try {
+      final List<GoalModel> userGoals = await _goalService.readUserGoals(user.id);
+      if (userGoals.isNotEmpty) {
+        final String category = userGoals.first.category; //TODO Only first goal gets taken into account
+        List<GroupModel> allGroups = await _groupService.getGroupsByCategory(category);
+        final userGroups = await _groupService.getUserGroups(user.id);
+
+        if (allGroups.isNotEmpty) {
+          final availableGroups = allGroups
+              .where(
+                (group) => !userGroups.any((userGroup) => userGroup.id == group.id),
+              )
+              .toList();
+
+          // Filter groups based on the availability match
+          final matchingAvailableGroups = (await Future.wait(
+            availableGroups.map((group) async => await _availabilityController.checkMatchingAvailability(user.id, group) ? group : null),
+          ))
+              .whereType<GroupModel>()
+              .toList();
+
+          matchingGroups.value = matchingAvailableGroups;
+        }
+      }
+    } catch (e) {
+      print('Error fetching available groups: $e');
     }
   }
 }
