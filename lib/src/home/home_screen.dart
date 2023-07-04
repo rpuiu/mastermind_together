@@ -110,7 +110,26 @@ class HomeScreen extends GetView<HomeController> {
                         ],
                       );
                     } else if (groupController.matchingGroups.isEmpty) {
-                      return Center(child: Text('No matching groups found.'));
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('No matching groups found.'),
+                          ElevatedButton(
+                            onPressed: () {
+                              // Navigate to the create group screen
+                              Get.toNamed(Routes.createGroup);
+                            },
+                            child: Text('Create new group'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              // Navigate to the same category groups screen
+                              Get.toNamed(Routes.allGroups); //TODO all groups with filter.
+                            },
+                            child: Text('View groups in the same category'),
+                          ),
+                        ],
+                      );
                     } else {
                       return ListView.builder(
                         itemCount: groupController.matchingGroups.length,
