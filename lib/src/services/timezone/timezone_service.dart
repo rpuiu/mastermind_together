@@ -19,7 +19,6 @@ class TimezoneService extends GetxService {
       allLocationsWithOffset.add('$locationName (UTC${offsetHours >= 0 ? '+' : ''}$offsetHours:$minutesString)');
     }
 
-    print('All timezones with offset: $allLocationsWithOffset');
     return allLocationsWithOffset;
   }
 

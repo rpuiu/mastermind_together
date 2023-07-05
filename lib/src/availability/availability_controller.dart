@@ -28,10 +28,18 @@ class AvailabilityController extends GetxController {
   }
 
   Future<void> fetchAvailability() async {
-    final availability = await _availabilityService.getAvailability(_authService.getCurrentUser().id);
+    List<DayModel> availability;
+    try {
+      String userId = _authService.getCurrentUser().id;
+      availability = await _availabilityService.getAvailability(userId);
+    } catch (e, s) {
+      showErrorSnackBar(message: 'Error fetching availability: ${e.toString()}');
+      return;
+    }
 
     // Replace the current days with the fetched data
     for (var day in availability) {
+      //TODO refactor!
       final index = days.indexWhere((d) => d.dayName == day.dayName);
       if (index != -1) {
         var fetchedDay = DayModel.fromDayModel(day);
@@ -50,11 +58,11 @@ class AvailabilityController extends GetxController {
   }
 
   void saveAvailability() async {
-    String userId = _authService.getCurrentUser().id;
-    await _ueService.updateTimezone(userId, selectedTimezone.value);
+    try {
+      String userId = _authService.getCurrentUser().id;
+      await _ueService.updateTimezone(userId, selectedTimezone.value);
 
-    for (var day in days) {
-      try {
+      for (var day in days) {
         // Create a copy of the day model to avoid changing the times in the UI.
         var dayToSave = DayModel.fromDayModel(day);
 
@@ -66,16 +74,15 @@ class AvailabilityController extends GetxController {
         if (day.id != null) {
           dayToSave.id = day.id;
         }
-
         await _availabilityService.saveAvailability(userId, dayToSave);
-      } catch (e) {
-        print(e);
-        showErrorSnackBar(message: 'Error saving availability: ${e.toString()}');
       }
-    }
 
-    // Fetch current availability data after making updates
-    await fetchAvailability();
+      // Fetch current availability data after making updates
+      await fetchAvailability();
+    } catch (e, s) {
+      print('$e $s');;
+      showErrorSnackBar(message: 'Error saving availability: ${e.toString()}');
+    }
     showSuccessSnackBar(message: 'Your availability has been updated');
   }
 
@@ -85,17 +92,21 @@ class AvailabilityController extends GetxController {
   }
 
   void fetchTimeZones() async {
-    final user = _authService.getCurrentUser();
+    try {
+      final user = _authService.getCurrentUser();
 
-    String dbTimezone = await _ueService.readTimezone(user.id);
-    if (dbTimezone.isEmpty) {
-      selectedTimezone.value = await _tzService.getCurrentTimezoneWithOffset();
-      _ueService.updateTimezone(user.id, selectedTimezone.value);
-    } else {
-      selectedTimezone.value = dbTimezone;
+      String dbTimezone = await _ueService.readTimezone(user.id);
+      if (dbTimezone.isEmpty) {
+        selectedTimezone.value = await _tzService.getCurrentTimezoneWithOffset();
+        _ueService.updateTimezone(user.id, selectedTimezone.value);
+      } else {
+        selectedTimezone.value = dbTimezone;
+      }
+
+      allTimezones.value = _tzService.getAllTimeZonesWithOffset();
+    } catch (e, s) {
+      showErrorSnackBar(message: 'Unable to fetch your timezone. Please try again');
     }
-
-    allTimezones.value = _tzService.getAllTimeZonesWithOffset();
   }
 
   Future<bool> checkMatchingAvailability(String userId, GroupModel group) async {
@@ -113,10 +124,10 @@ class AvailabilityController extends GetxController {
     var meetingDay = group.meetingDay;
 
     // Find the availability for that day
-    DayModel? dayAvailability = availabilityList.firstWhereOrNull((day) => day.dayName == meetingDay);
+    DayModel? dayAvailability = availabilityList.firstWhereOrNull((day) => day.dayName == meetingDay); //TODO day.fromTime?
 
     // If there's no availability for that day, the group doesn't match
-    if (dayAvailability == null) {
+    if (dayAvailability == null || dayAvailability.fromTime == null || dayAvailability.toTime == null) {
       return false;
     }
 

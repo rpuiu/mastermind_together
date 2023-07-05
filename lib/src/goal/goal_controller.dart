@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/common/widgets/snackbar.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';
@@ -41,7 +42,11 @@ class GoalController extends GetxController {
   }
 
   void listenToGoalChanges() {
-    _goalService.subscribeToGoalChanges((newGoal) => goals.add(newGoal));
+    try {
+      _goalService.subscribeToGoalChanges((newGoal) => goals.add(newGoal));
+    } catch (e, s) {
+      showErrorSnackBar(message: "Unable to listen to any goal changes.");
+    }
   }
 
   @override
@@ -55,9 +60,8 @@ class GoalController extends GetxController {
       final allCategories = await _categoryService.getAllCategories();
       categories.assignAll(['Please select...']);
       categories.addAll(allCategories.map((c) => c.name));
-    } catch (e) {
-      print('Error fetching categories: $e');
-      // Handle error as needed.
+    } catch (e, s) {
+      showErrorSnackBar(message: 'Error fetching categories: $e');
     }
   }
 }

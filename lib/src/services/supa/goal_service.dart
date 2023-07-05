@@ -21,19 +21,29 @@ class GoalService extends GetxService {
   }
 
   void subscribeToGoalChanges(Function(GoalModel) onNewGoal) {
-    insertGoalSubscription = _client.channel('public:goals').on(
-      RealtimeListenTypes.postgresChanges,
-      ChannelFilter(event: 'INSERT', schema: 'public', table: 'goals'),
-      (payload, [ref]) {
-        print('Change received: ${payload.toString()}');
-        onNewGoal(GoalModel.fromJson(payload["new"]));
-      },
-    );
+    try {
+      insertGoalSubscription = _client.channel('public:goals').on(
+        RealtimeListenTypes.postgresChanges,
+        ChannelFilter(event: 'INSERT', schema: 'public', table: 'goals'),
+        (payload, [ref]) {
+          print('Change received: ${payload.toString()}');
+          onNewGoal(GoalModel.fromJson(payload["new"]));
+        },
+      );
 
-    insertGoalSubscription.subscribe();
+      insertGoalSubscription.subscribe();
+    } catch (e, s) {
+      print('Unable to initialize subscription: ${e.toString()}');
+      rethrow;
+    }
   }
 
   Future<void> unsubscribeFromGoalChanges() async {
-    await _client.removeChannel(insertGoalSubscription);
+    try {
+      await _client.removeChannel(insertGoalSubscription);
+    } catch (e, s) {
+      print('$e $s');;
+      rethrow;
+    }
   }
 }

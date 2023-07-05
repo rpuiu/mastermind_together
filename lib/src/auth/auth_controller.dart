@@ -8,19 +8,32 @@ class AuthController extends GetxController {
   final AuthService _authService = Get.find<AuthService>();
 
   Future<void> register(String email, String password) async {
-    await _authService.signUp(email, password);
-    showSuccessSnackBar(message: 'Congratulations, your account has been successfully created');
-    Get.offAllNamed(Routes.login);
+    try {
+      await _authService.signUp(email, password);
+      showSuccessSnackBar(message: 'Congratulations, your account has been successfully created');
+      Get.offAllNamed(Routes.login);
+    } catch (e, s) {
+      showErrorSnackBar(message: e.toString());
+    }
   }
 
   Future<void> login(String email, String password) async {
-    await _authService.signInWithPassword(email, password);
-    Get.offAllNamed(Routes.home);
+    try {
+      await _authService.signInWithPassword(email, password);
+      showSuccessSnackBar(message: 'Logged in successfully');
+      Get.offAllNamed(Routes.home);
+    } catch (e, s) {
+      showErrorSnackBar(message: e.toString());
+    }
   }
 
   Future<void> logout() async {
-    await _authService.signOut();
-    showSuccessSnackBar(message: 'Logged out successfully');
-    Get.offAll(LoginScreen());
+    try {
+      await _authService.signOut();
+      showSuccessSnackBar(message: 'Logged out successfully');
+      Get.offAll(LoginScreen());
+    } catch (e, s) {
+      showErrorSnackBar(message: e.toString());
+    }
   }
 }

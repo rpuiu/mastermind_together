@@ -8,129 +8,172 @@ class UserGroupService {
   late RealtimeChannel groupSubscription;
 
   Future<List<GroupModel>?> readAllGroups() async {
-    final List<dynamic> data = await _client.from('groups').select();
+    try {
+      final List<dynamic> data = await _client.from('groups').select();
 
-    if (data.isEmpty) {
-      print("No groups available");
-      return null;
+      if (data.isEmpty) {
+        print("No groups available");
+        return null;
+      }
+      List<GroupModel> groups = data.map((g) => GroupModel.fromJson(g)).toList();
+      return groups;
+    } catch (e, s) {
+      print('$e $s');;
+      rethrow;
     }
-    List<GroupModel> groups = data.map((g) => GroupModel.fromJson(g)).toList();
-    return groups;
   }
 
   Future<void> createGroup(GroupModel groupModel) async {
-    final response = await _client.from('groups').insert(groupModel.toJson());
-
-    // if (response.error != null) {
-    //   print('Error creating group: ${response.error!.message}');
-    // }
+    try {
+      await _client.from('groups').insert(groupModel.toJson());
+    } catch (e, s) {
+      print('$e $s');;
+      rethrow;
+    }
   }
 
   Future<void> joinGroup(String userId, String groupId) async {
-    final groupResponse = await _client.from('groups').select().eq('id', groupId).single();
+    try {
+      final groupResponse = await _client.from('groups').select().eq('id', groupId).single();
 
-    if (!groupResponse.isEmpty) {
-      final group = GroupModel.fromJson(groupResponse);
+      if (!groupResponse.isEmpty) {
+        final group = GroupModel.fromJson(groupResponse);
 
-      if (isGroupFull(group)) {
-        throw Exception('Group is already full.');
+        if (isGroupFull(group)) {
+          throw Exception('Group is already full.');
+        }
+
+        bool isAlreadyInGroup = await isAlreadyMember(userId, groupId);
+        if (isAlreadyInGroup) {
+          throw Exception('You are already a member of this group.');
+        }
+        await addUserToGroup(userId, groupId);
+        await incrementGroupMembers(group, groupId);
+      } else {
+        throw Exception('Group not found.');
       }
-
-      bool isAlreadyInGroup = await isAlreadyMember(userId, groupId);
-      if (isAlreadyInGroup) {
-        throw Exception('You are already a member of this group.');
-      }
-      await addUserToGroup(userId, groupId);
-      await incrementGroupMembers(group, groupId);
-    } else {
-      throw Exception('Group not found.');
+    } catch (e, s) {
+      print('$e $s');;
+      rethrow;
     }
   }
 
   Future<void> leaveGroup(String userId, String groupId) async {
-    final groupResponse = await _client.from('groups').select().eq('id', groupId).single();
+    try {
+      final groupResponse = await _client.from('groups').select().eq('id', groupId).single();
 
-    if (!groupResponse.isEmpty) {
-      final group = GroupModel.fromJson(groupResponse);
+      if (!groupResponse.isEmpty) {
+        final group = GroupModel.fromJson(groupResponse);
 
-      bool isAlreadyInGroup = await isAlreadyMember(userId, groupId);
-      if (!isAlreadyInGroup) {
-        throw Exception('You are not a member of this group.');
+        bool isAlreadyInGroup = await isAlreadyMember(userId, groupId);
+        if (!isAlreadyInGroup) {
+          throw Exception('You are not a member of this group.');
+        }
+
+        await removeUserFromGroup(userId, groupId);
+        await _decrementGroupMembers(group, groupId);
+      } else {
+        throw Exception('Group not found.');
       }
-
-      await removeUserFromGroup(userId, groupId);
-      await decrementGroupMembers(group, groupId);
-    } else {
-      throw Exception('Group not found.');
+    } catch (e, s) {
+      print('$e $s');;
+      rethrow;
     }
   }
 
-  Future<void> decrementGroupMembers(GroupModel group, String groupId) async {
-    await _client.from('groups').update({
-      'current_members': group.currentMembers - 1,
-    }).eq('id', groupId);
+  Future<void> _decrementGroupMembers(GroupModel group, String groupId) async {
+    try {
+      await _client.from('groups').update({
+        'current_members': group.currentMembers - 1,
+      }).eq('id', groupId);
+    } catch (e, s) {
+      print('$e $s');;
+      rethrow;
+    }
   }
 
   Future<void> removeUserFromGroup(String userId, String groupId) async {
-    final response = await _client.from('group_members').delete().eq('user_id', userId).eq('group_id', groupId);
+    try {
+      await _client.from('group_members').delete().eq('user_id', userId).eq('group_id', groupId);
+    } catch (e, s) {
+      print('$e $s');;
+      rethrow;
+    }
   }
 
   Future<void> incrementGroupMembers(GroupModel group, String groupId) async {
-    await _client.from('groups').update({
-      'current_members': group.currentMembers + 1,
-    }).eq('id', groupId);
+    try {
+      await _client.from('groups').update({
+        'current_members': group.currentMembers + 1,
+      }).eq('id', groupId);
+    } catch (e, s) {
+      print('$e $s');;
+      rethrow;
+    }
   }
 
   Future<void> addUserToGroup(String userId, String groupId) async {
-    final response = await _client.from('group_members').insert({
-      'user_id': userId,
-      'group_id': groupId,
-    });
+    try {
+      await _client.from('group_members').insert({'user_id': userId, 'group_id': groupId});
+    } catch (e, s) {
+      print('$e $s');;
+      rethrow;
+    }
   }
 
   Future<bool> isAlreadyMember(String userId, String groupId) async {
-    Map<String, dynamic>? membershipCheckResponse = await _client.from('group_members').select().eq('user_id', userId).eq('group_id', groupId).maybeSingle();
-    return membershipCheckResponse != null;
+    try {
+      Map<String, dynamic>? membershipCheckResponse = await _client.from('group_members').select().eq('user_id', userId).eq('group_id', groupId).maybeSingle();
+      return membershipCheckResponse != null;
+    } catch (e, s) {
+      print('$e $s');;
+      rethrow;
+    }
   }
 
   bool isGroupFull(GroupModel group) => group.currentMembers >= group.maxMembers;
 
   Future<List<GroupModel>> getUserGroups(String userId) async {
-    final List<dynamic> response = await _client.from('group_members').select('group_id:group_id (*)').eq('user_id', userId);
-    //
-    // if (response.error != null) {
-    //   throw Exception('Failed to get user groups: ${response.error!.message}');
-    // }
-
-    return response.map((group) => GroupModel.fromJson(group['group_id'])).toList();
+    try {
+      final List<dynamic> response = await _client.from('group_members').select('group_id:group_id (*)').eq('user_id', userId);
+      return response.map((group) => GroupModel.fromJson(group['group_id'])).toList();
+    } catch (e, s) {
+      print('$e $s');;
+      rethrow;
+    }
   }
 
   Future<List<UserModel>> getGroupMembers(String groupId) async {
-    final List<dynamic> data = await _client.from('group_members').select('users_extended:users_extended (*)').eq('group_id', groupId);
-
-    // if (response.error != null) {
-    //   throw Exception('Failed to get group members: ${response.error!.message}');
-    // }
-
-    return data.map((user) => UserModel.fromJson(user['users_extended'])).toList();
+    try {
+      final List<dynamic> data = await _client.from('group_members').select('users_extended:users_extended (*)').eq('group_id', groupId);
+      return data.map((user) => UserModel.fromJson(user['users_extended'])).toList();
+    } catch (e, s) {
+      print('$e $s');;
+      rethrow;
+    }
   }
 
   Future<GroupModel> readGroup(String groupId) async {
-    final groupResponse = await _client.from('groups').select().eq('id', groupId).single();
-    return GroupModel.fromJson(groupResponse);
+    try {
+      final groupResponse = await _client.from('groups').select().eq('id', groupId).single();
+      return GroupModel.fromJson(groupResponse);
+    } catch (e, s) {
+      print('$e $s');;
+      rethrow;
+    }
   }
 
   Future<List<GroupModel>> getGroupsByCategory(String category) async {
-    List<dynamic> response = await _client.from('groups').select().eq('category', category);
-
-    // if (response.error != null) {
-    //   throw Exception('Failed to get groups: ${response.error!.message}');
-    // }
-
-    return response.map((group) => GroupModel.fromJson(group)).toList();
+    try {
+      List<dynamic> response = await _client.from('groups').select().eq('category', category);
+      return response.map((group) => GroupModel.fromJson(group)).toList();
+    } catch (e, s) {
+      print('$e $s');;
+      rethrow;
+    }
   }
 
-// void subscribeToGroupChanges(Function(GroupModel) onGroupChanges) {
+// void subscribeToGroupChanges(Function(GroupModel) onGroupChanges) { //TODO MAIN-T-19
 //   groupSubscription = _client.channel('public:groups').on(
 //     RealtimeListenTypes.postgresChanges,
 //     ChannelFilter(event: '*', schema: 'public', table: 'groups'),

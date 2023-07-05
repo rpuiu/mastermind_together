@@ -13,32 +13,39 @@ class AuthService extends GetxService {
   }
 
   Future<void> signUp(String email, String password) async {
-    final AuthResponse response = await _client.auth.signUp(email: email, password: password);
-
-    if (response.user == null) {
-      throw Exception('Failed to register $email, please try again');
-    } else {
+    try {
+      final AuthResponse response = await _client.auth.signUp(email: email, password: password);
       final User user = response.user!;
-      final List<Map<String, dynamic>> responseExtended = await _userExtendedService.createUserExtended(user.id, user.email!);
-
-      if (responseExtended.isEmpty) {
-        throw Exception('Failed to save user extended data');
-      }
+      await _userExtendedService.createUserExtended(user.id, user.email!);
+    } on AuthException catch (err, s) {
+      print(err);
+      throw ('Failed to register $email: ${err.message}');
+    } catch (err, s) {
+      print(err);
+      throw ('An unexpected error occurred when registering $email, please try again');
     }
   }
 
   Future<void> signInWithPassword(String email, String password) async {
-    final AuthResponse response = await _client.auth.signInWithPassword(email: email, password: password);
-
-    // if (response.error != null) {
-    //   showErrorSnackBar(message: 'Unable to log in, please try again')'
-    // } else if (response.data != null) {
-    // showSuccessSnackBar(message: 'Logged in successfully.');
-    // You can use Get.offAll() to navigate to a new screen and remove all previous routes.
-    // }
+    try {
+      await _client.auth.signInWithPassword(email: email, password: password);
+    } on AuthException catch (err, s) {
+      print(err);
+      throw ('Failed to login $email: ${err.message}');
+    } catch (e, srr) {
+      throw ('An unexpected error occurred when logging in $email, please try again');
+    }
   }
 
   Future<void> signOut() async {
-    await _client.auth.signOut();
+    try {
+      await _client.auth.signOut();
+    } on AuthException catch (e, s) {
+      print('$e $s');
+      throw ('An error occurred: ${e.message}');
+    } catch (e, s) {
+      print('$e $s');
+      throw ('An error occurred, please try again');
+    }
   }
 }

@@ -49,8 +49,7 @@ class GroupController extends GetxController {
       await _groupService.createGroup(group.value);
       showSuccessSnackBar(message: 'The group has been created!');
       update();
-    } catch (e) {
-      print(e);
+    } catch (e, s) {
       showErrorSnackBar(message: 'Error creating group, please try again');
     }
   }
@@ -62,6 +61,8 @@ class GroupController extends GetxController {
       if (response != null) {
         groups.value = response;
       }
+    } catch (e, s) {
+      showErrorSnackBar(message: 'Unable to fetch groups. Please try again');
     } finally {
       isLoading(false);
     }
@@ -72,20 +73,18 @@ class GroupController extends GetxController {
       List<CategoryModel> allCategories = await _categoryService.getAllCategories();
       categories.assignAll(['Please select...']);
       categories.addAll(allCategories.map((c) => c.name));
-    } catch (e) {
-      print('Error fetching goal areas: $e');
-      // Handle error as needed.
+    } catch (e, s) {
+      showErrorSnackBar(message: 'Error fetching goal areas: $e');
     }
   }
 
   void joinGroup(String groupId) async {
-    final User user = _authService.getCurrentUser();
     try {
+      final User user = _authService.getCurrentUser();
       await _groupService.joinGroup(user.id, groupId);
       showSuccessSnackBar(message: 'Successfully joined group');
-    } catch (e) {
-      print(e);
-      showErrorSnackBar(message: 'Error joining group, please try again');
+    } catch (e, s) {
+      showErrorSnackBar(message: 'Unable to join group due to: ${e.toString()}');
     }
   }
 
@@ -95,26 +94,27 @@ class GroupController extends GetxController {
       await _groupService.leaveGroup(user.id, groupId);
       showSuccessSnackBar(message: 'Successfully left group');
       fetchGroups(); // Fetch groups again to reflect changes in UI //TODO replace with realtime
-    } catch (e) {
-      print(e);
-      showErrorSnackBar(message: 'Error leaving group');
+    } catch (e, s) {
+      print('$e $s');;
+      showErrorSnackBar(message: 'Unable to leave group due to: ${e.toString()}');
     }
   }
 
   Future<GroupModel> fetchGroup(String groupId) async {
-    final groupResponse = await _groupService.readGroup(groupId);
-    if (groupResponse != null) {
+    try {
+      final groupResponse = await _groupService.readGroup(groupId);
       return groupResponse;
-    } else {
-      throw Exception('Group not found.');
+    } catch (e, s) {
+      showErrorSnackBar(message: 'Group not found');
+      rethrow;
     }
   }
 
   Future<List<UserModel>> getGroupMembers(String groupId) async {
     try {
       return await _groupService.getGroupMembers(groupId);
-    } catch (e) {
-      print(e);
+    } catch (e, s) {
+      showErrorSnackBar(message: 'Unable to fetch group members');
       return [];
     }
   }
@@ -123,8 +123,8 @@ class GroupController extends GetxController {
     final User user = _authService.getCurrentUser();
     try {
       userGroups.value = await _groupService.getUserGroups(user.id);
-    } catch (e) {
-      print('Error fetching user groups: $e');
+    } catch (e, s) {
+      showErrorSnackBar(message: 'Failed to get user groups');
     }
   }
 
@@ -155,15 +155,17 @@ class GroupController extends GetxController {
           matchingGroups.value = matchingAvailableGroups;
         }
       }
-    } catch (e) {
-      print('Error fetching available groups: $e');
+    } catch (e, s) {
+      print('$e $s');;
+      print(s);
+      showErrorSnackBar(message: 'Failed to fetch available groups');
     }
   }
 
   bool isUserMemberOfGroup(String groupId) {
     try {
       return userGroups.value.any((group) => group.id == groupId);
-    } catch (e) {
+    } catch (e, s) {
       print('Error determining if user is a member of the group: $e');
       return false;
     }
