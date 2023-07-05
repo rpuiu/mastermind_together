@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/availability/day_model.dart';
+import 'package:mastermind_together/src/common/widgets/snackbar.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';
 import 'package:mastermind_together/src/services/supa/availability_service.dart';
@@ -69,14 +70,13 @@ class AvailabilityController extends GetxController {
         await _availabilityService.saveAvailability(userId, dayToSave);
       } catch (e) {
         print(e);
-        Get.snackbar('Error saving availability', e.toString(), snackPosition: SnackPosition.BOTTOM); //TODO refactor
+        showErrorSnackBar(message: 'Error saving availability: ${e.toString()}');
       }
     }
 
     // Fetch current availability data after making updates
     await fetchAvailability();
-
-    Get.snackbar('Success', 'Your availability has been updated', snackPosition: SnackPosition.BOTTOM);
+    showSuccessSnackBar(message: 'Your availability has been updated');
   }
 
   void initDays() {

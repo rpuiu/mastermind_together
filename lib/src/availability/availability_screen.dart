@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/availability/availability_controller.dart';
+import 'package:mastermind_together/src/common/widgets/snackbar.dart';
 
 class SetAvailabilityScreen extends GetView<AvailabilityController> {
   SetAvailabilityScreen({Key? key}) : super(key: key);
@@ -67,7 +68,7 @@ class SetAvailabilityScreen extends GetView<AvailabilityController> {
                           final toDuration = Duration(hours: toTime.hour, minutes: toTime.minute);
 
                           if (fromDuration.compareTo(toDuration) >= 0) {
-                            Get.snackbar('Error', 'End time should be greater than start time', backgroundColor: Colors.red, colorText: Colors.white);
+                            showErrorSnackBar(message: 'End time should be greater than start time');
                             return;
                           }
 

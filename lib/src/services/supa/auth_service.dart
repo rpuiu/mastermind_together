@@ -31,9 +31,9 @@ class AuthService extends GetxService {
     final AuthResponse response = await _client.auth.signInWithPassword(email: email, password: password);
 
     // if (response.error != null) {
-    //   Get.snackbar('Error', response.error!.message);
+    //   showErrorSnackBar(message: 'Unable to log in, please try again')'
     // } else if (response.data != null) {
-    // Get.snackbar('Success', 'Logged in successfully.');
+    // showSuccessSnackBar(message: 'Logged in successfully.');
     // You can use Get.offAll() to navigate to a new screen and remove all previous routes.
     // }
   }

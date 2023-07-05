@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/login_screen.dart';
+import 'package:mastermind_together/src/common/widgets/snackbar.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';
 
@@ -8,6 +9,7 @@ class AuthController extends GetxController {
 
   Future<void> register(String email, String password) async {
     await _authService.signUp(email, password);
+    showSuccessSnackBar(message: 'Congratulations, your account has been successfully created');
     Get.offAllNamed(Routes.login);
   }
 
@@ -18,8 +20,7 @@ class AuthController extends GetxController {
 
   Future<void> logout() async {
     await _authService.signOut();
-    Get.snackbar('Success', 'Logged out successfully.');
-    // Redirect to login page after logging out
+    showSuccessSnackBar(message: 'Logged out successfully');
     Get.offAll(LoginScreen());
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/availability/availability_controller.dart';
+import 'package:mastermind_together/src/common/widgets/snackbar.dart';
 import 'package:mastermind_together/src/goal/category_model.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
@@ -46,19 +47,11 @@ class GroupController extends GetxController {
   Future<void> createGroup() async {
     try {
       await _groupService.createGroup(group.value);
-      Get.snackbar(
-        'Group Created',
-        'The group has been successfully created!',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      showSuccessSnackBar(message: 'The group has been created!');
       update();
     } catch (e) {
       print(e);
-      Get.snackbar(
-        'Error creating group',
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      showErrorSnackBar(message: 'Error creating group, please try again');
     }
   }
 
@@ -89,18 +82,10 @@ class GroupController extends GetxController {
     final User user = _authService.getCurrentUser();
     try {
       await _groupService.joinGroup(user.id, groupId);
-      Get.snackbar(
-        'Success',
-        'Successfully joined group',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      showSuccessSnackBar(message: 'Successfully joined group');
     } catch (e) {
       print(e);
-      Get.snackbar(
-        'Error joining group',
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      showErrorSnackBar(message: 'Error joining group, please try again');
     }
   }
 
@@ -108,19 +93,11 @@ class GroupController extends GetxController {
     final User user = _authService.getCurrentUser();
     try {
       await _groupService.leaveGroup(user.id, groupId);
-      Get.snackbar(
-        'Success',
-        'Successfully left group',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      showSuccessSnackBar(message: 'Successfully left group');
       fetchGroups(); // Fetch groups again to reflect changes in UI //TODO replace with realtime
     } catch (e) {
       print(e);
-      Get.snackbar(
-        'Error leaving group',
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      showErrorSnackBar(message: 'Error leaving group');
     }
   }
 

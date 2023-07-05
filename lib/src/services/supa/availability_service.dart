@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/availability/day_model.dart';
+import 'package:mastermind_together/src/common/widgets/snackbar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AvailabilityService extends GetxService {
@@ -32,10 +33,8 @@ class AvailabilityService extends GetxService {
         await updateAvailability(dayModel, userId);
       }
     } catch (e) {
-      //TODO handle errors
-      // Get.snackbar('Error', 'Error saving availability: $e',
-      //     backgroundColor: Colors.red, colorText: Colors.white);
       print(e);
+      showErrorSnackBar(message: 'Error saving availability: $e');
       rethrow;
     }
   }
