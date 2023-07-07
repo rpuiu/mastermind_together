@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/auth_controller.dart';
 import 'package:mastermind_together/src/availability/availability_controller.dart';
+import 'package:mastermind_together/src/services/sharedprefs/local_storage.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';
 import 'package:mastermind_together/src/services/supa/category_service.dart';
 import 'package:mastermind_together/src/services/supa/goal_service.dart';
@@ -11,6 +12,7 @@ import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:mastermind_together/src/groups/chat/message_controller.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/services/timezone/timezone_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'services/supa/availability_service.dart';
@@ -24,6 +26,8 @@ class GetBindings {
 //TODO extract secrets!!!
 
     SupabaseClient supaClient = Supabase.instance.client;
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
     Get.lazyPut(() => supaClient, fenix: true);
     Get.lazyPut(() => AuthController(), fenix: true);
     Get.lazyPut(() => GoalController(), fenix: true);
@@ -38,5 +42,7 @@ class GetBindings {
     Get.lazyPut(() => CategoryService(), fenix: true);
     Get.lazyPut(() => MessageController(), fenix: true);
     Get.lazyPut(() => MessageService(), fenix: true);
+    Get.lazyPut(() => sharedPreferences, fenix: true);
+    Get.lazyPut(() => LocalStorageService(), fenix: true);
   }
 }

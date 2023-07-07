@@ -1,10 +1,12 @@
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/services/supa/users_extended_service.dart';
+import 'package:mastermind_together/src/services/timezone/timezone_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService extends GetxService {
   final SupabaseClient _client = Get.find<SupabaseClient>();
   final UsersExtendedService _userExtendedService = Get.find<UsersExtendedService>();
+  final TimezoneService _timezoneService = Get.find<TimezoneService>();
 
   //TODO handle errors //TODO wrap in UserModel
   User getCurrentUser() {
@@ -16,7 +18,9 @@ class AuthService extends GetxService {
     try {
       final AuthResponse response = await _client.auth.signUp(email: email, password: password);
       final User user = response.user!;
-      await _userExtendedService.createUserExtended(user.id, user.email!);
+
+      String timezone = await _timezoneService.getCurrentTimezoneWithOffset();
+      await _userExtendedService.createUserExtended(user.id, user.email!, timezone); //TODO move into controller.
     } on AuthException catch (err, s) {
       print(err);
       throw ('Failed to register $email: ${err.message}');
@@ -26,9 +30,10 @@ class AuthService extends GetxService {
     }
   }
 
-  Future<void> signInWithPassword(String email, String password) async {
+  Future<String> signInWithPassword(String email, String password) async {
     try {
-      await _client.auth.signInWithPassword(email: email, password: password);
+      AuthResponse authResponse = await _client.auth.signInWithPassword(email: email, password: password);
+      return authResponse.user!.id;
     } on AuthException catch (err, s) {
       print(err);
       throw ('Failed to login $email: ${err.message}');

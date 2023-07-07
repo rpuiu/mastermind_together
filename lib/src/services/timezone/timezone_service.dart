@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/services/sharedprefs/local_storage.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class TimezoneService extends GetxService {
@@ -35,7 +36,7 @@ class TimezoneService extends GetxService {
     return currentTimeZone;
   }
 
-  Future<TimeOfDay?> convertToUTC(TimeOfDay? time, String timezone) async {
+  TimeOfDay? convertToUTC(TimeOfDay? time, String timezone) {
     if (time == null) return null;
 
     // Get the offset in minutes for the timezone.
@@ -51,7 +52,7 @@ class TimezoneService extends GetxService {
     return TimeOfDay(hour: dateTime.hour, minute: dateTime.minute);
   }
 
-  Future<TimeOfDay> convertFromUTC(TimeOfDay utcTime, String timezone) async {
+  TimeOfDay convertFromUTC(TimeOfDay utcTime, String timezone) {
     // Get the offset in minutes for the timezone.
     final offsetMinutes = "UTC (UTC+0:00)" == timezone ? 0 : _getOffsetMinutesForTimezone(timezone);
 
@@ -102,5 +103,17 @@ class TimezoneService extends GetxService {
     final totalOffsetMinutes = offsetHours * 60 + (offsetHours.isNegative ? -offsetMinutes : offsetMinutes);
 
     return totalOffsetMinutes;
+  }
+
+  TimeOfDay convertToLocalTime(TimeOfDay utcTime) {
+    String userTimezone = Get.find<LocalStorageService>().getUserTimezone();
+    TimeOfDay userTime = convertFromUTC(utcTime, userTimezone);
+    return userTime;
+  }
+
+  TimeOfDay convertLocalTimeToUTC(TimeOfDay localTime) {
+    String userTimezone = Get.find<LocalStorageService>().getUserTimezone();
+    TimeOfDay utcTime = convertToUTC(localTime, userTimezone)!;
+    return utcTime;
   }
 }

@@ -42,7 +42,7 @@ class GoalService extends GetxService {
     try {
       await _client.removeChannel(insertGoalSubscription);
     } catch (e, s) {
-      print('$e $s');;
+      print('$e $s');
       rethrow;
     }
   }

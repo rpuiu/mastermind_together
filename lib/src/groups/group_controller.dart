@@ -10,6 +10,7 @@ import 'package:mastermind_together/src/services/supa/auth_service.dart';
 import 'package:mastermind_together/src/services/supa/category_service.dart';
 import 'package:mastermind_together/src/services/supa/goal_service.dart';
 import 'package:mastermind_together/src/services/supa/user_group_service.dart';
+import 'package:mastermind_together/src/services/timezone/timezone_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class GroupController extends GetxController {
@@ -17,6 +18,8 @@ class GroupController extends GetxController {
   final CategoryService _categoryService = Get.find<CategoryService>();
   final AuthService _authService = Get.find<AuthService>();
   final GoalService _goalService = Get.find<GoalService>();
+  final TimezoneService _tzService = Get.find<TimezoneService>();
+
   final AvailabilityController _availabilityController = Get.find<AvailabilityController>();
 
   final RxList<GroupModel> groups = RxList<GroupModel>();
@@ -46,10 +49,15 @@ class GroupController extends GetxController {
 
   Future<void> createGroup() async {
     try {
-      await _groupService.createGroup(group.value);
+      GroupModel groupCopy = group.value;
+      groupCopy.meetingTimeUTC = _tzService.convertLocalTimeToUTC(group.value.meetingTimeUTC);
+
+      await _groupService.createGroup(groupCopy);
+
       showSuccessSnackBar(message: 'The group has been created!');
-      update();
+      update(); //TODO try to refactor when implementing realtime
     } catch (e, s) {
+      print('$e: $s');
       showErrorSnackBar(message: 'Error creating group, please try again');
     }
   }
@@ -95,7 +103,7 @@ class GroupController extends GetxController {
       showSuccessSnackBar(message: 'Successfully left group');
       fetchGroups(); // Fetch groups again to reflect changes in UI //TODO replace with realtime
     } catch (e, s) {
-      print('$e $s');;
+      print('$e $s');
       showErrorSnackBar(message: 'Unable to leave group due to: ${e.toString()}');
     }
   }
@@ -156,8 +164,7 @@ class GroupController extends GetxController {
         }
       }
     } catch (e, s) {
-      print('$e $s');;
-      print(s);
+      print('$e $s');
       showErrorSnackBar(message: 'Failed to fetch available groups');
     }
   }

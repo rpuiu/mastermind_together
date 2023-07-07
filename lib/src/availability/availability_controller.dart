@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:mastermind_together/src/availability/day_model.dart';
 import 'package:mastermind_together/src/common/widgets/snackbar.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
+import 'package:mastermind_together/src/services/sharedprefs/local_storage.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';
 import 'package:mastermind_together/src/services/supa/availability_service.dart';
 import 'package:mastermind_together/src/services/supa/users_extended_service.dart';
@@ -14,6 +15,7 @@ class AvailabilityController extends GetxController {
   final AuthService _authService = Get.find<AuthService>();
   final TimezoneService _tzService = Get.find<TimezoneService>();
   final UsersExtendedService _ueService = Get.find<UsersExtendedService>();
+  final LocalStorageService _localStorage = Get.find<LocalStorageService>();
   final RxList<DayModel> days = RxList<DayModel>();
 
   final RxString selectedTimezone = ''.obs;
@@ -22,12 +24,56 @@ class AvailabilityController extends GetxController {
   @override
   Future<void> onInit() async {
     super.onInit();
-    initDays();
-    fetchTimeZones();
-    await fetchAvailability();
+    _initDays();
+    _fetchTimeZones();
+    await _fetchAvailability();
   }
 
-  Future<void> fetchAvailability() async {
+  void saveAvailability() async {
+    try {
+      String userId = _authService.getCurrentUser().id;
+      await _updateTimezone(userId);
+      _localStorage.saveUserTimezone(selectedTimezone.value);
+
+      for (var day in days) {
+        await _saveDayAvailability(userId, day);
+      }
+
+      await _fetchAvailability();
+    } catch (e) {
+      print('$e');
+      showErrorSnackBar(message: 'Error saving availability: ${e.toString()}');
+    }
+
+    showSuccessSnackBar(message: 'Your availability has been updated');
+  }
+
+  Future<bool> checkMatchingAvailability(String userId, GroupModel group) async {
+    List<DayModel> availabilityList = await _availabilityService.getAvailability(userId);
+
+    // Find the availability for that day
+    var meetingDay = group.meetingDay;
+    DayModel? dayAvailability = availabilityList.firstWhereOrNull((day) => day.dayName == meetingDay);
+
+    // If there's no availability for that day, the group doesn't match
+    if (dayAvailability == null || dayAvailability.fromTime == null || dayAvailability.toTime == null) {
+      return false;
+    }
+
+    // User's availability times are in UTC
+    var fromTimeUTC = dayAvailability.fromTime!;
+    var toTimeUTC = dayAvailability.toTime!;
+
+    TimeOfDay groupMeetingTimeUTC = group.meetingTimeUTC;
+
+    // Subtract 30 minutes from the user's end time
+    TimeOfDay endTimeMinus30 = _subtract30Min(toTimeUTC);
+
+    // If the group's meeting time is not within the user's availability time, the group doesn't match
+    return _isMeetingWithinAvailability(fromTimeUTC, endTimeMinus30, groupMeetingTimeUTC);
+  }
+
+  Future<void> _fetchAvailability() async {
     List<DayModel> availability;
     try {
       String userId = _authService.getCurrentUser().id;
@@ -37,68 +83,62 @@ class AvailabilityController extends GetxController {
       return;
     }
 
-    // Replace the current days with the fetched data
+    _updateAvailabilityWithFetchedData(availability);
+  }
+
+  void _updateAvailabilityWithFetchedData(List<DayModel> availability) {
     for (var day in availability) {
-      //TODO refactor!
       final index = days.indexWhere((d) => d.dayName == day.dayName);
       if (index != -1) {
-        var fetchedDay = DayModel.fromDayModel(day);
-
-        // Convert the times from UTC to the user's timezone
-        if (day.fromTime != null) {
-          fetchedDay.fromTime = await _tzService.convertFromUTC(day.fromTime!, selectedTimezone.value);
-        }
-        if (day.toTime != null) {
-          fetchedDay.toTime = await _tzService.convertFromUTC(day.toTime!, selectedTimezone.value);
-        }
-
-        days[index] = fetchedDay;
+        days[index] = _convertDayTimesFromUTC(day, selectedTimezone.value);
       }
     }
   }
 
-  void saveAvailability() async {
+  DayModel _convertDayTimesFromUTC(DayModel day, String timezone) {
+    if (day.fromTime != null) {
+      day.fromTime = _tzService.convertFromUTC(day.fromTime!, timezone);
+    }
+    if (day.toTime != null) {
+      day.toTime = _tzService.convertFromUTC(day.toTime!, timezone);
+    }
+    return day;
+  }
+
+  Future<void> _saveDayAvailability(String userId, DayModel day) async {
     try {
-      String userId = _authService.getCurrentUser().id;
-      await _ueService.updateTimezone(userId, selectedTimezone.value);
+      // Create a copy of the day model to avoid changing the times in the UI.
+      var dayToSave = DayModel.fromDayModel(day);
 
-      for (var day in days) {
-        // Create a copy of the day model to avoid changing the times in the UI.
-        var dayToSave = DayModel.fromDayModel(day);
+      // Convert the times to UTC using the selected timezone.
+      dayToSave.fromTime = _tzService.convertToUTC(day.fromTime, selectedTimezone.value);
+      dayToSave.toTime = _tzService.convertToUTC(day.toTime, selectedTimezone.value);
 
-        // Convert the times to UTC using the selected timezone.
-        dayToSave.fromTime = await _tzService.convertToUTC(day.fromTime, selectedTimezone.value);
-        dayToSave.toTime = await _tzService.convertToUTC(day.toTime, selectedTimezone.value);
-
-        // If day.id is not null, set it to dayToSave.id
-        if (day.id != null) {
-          dayToSave.id = day.id;
-        }
-        await _availabilityService.saveAvailability(userId, dayToSave);
+      // If day.id is not null, set it to dayToSave.id
+      if (day.id != null) {
+        dayToSave.id = day.id;
       }
 
-      // Fetch current availability data after making updates
-      await fetchAvailability();
-    } catch (e, s) {
-      print('$e $s');;
+      await _availabilityService.saveAvailability(userId, dayToSave);
+    } catch (e) {
+      print('$e');
       showErrorSnackBar(message: 'Error saving availability: ${e.toString()}');
     }
-    showSuccessSnackBar(message: 'Your availability has been updated');
   }
 
-  void initDays() {
+  void _initDays() {
     final tempDays = List.generate(7, (index) => DayModel(dayName: getDayName(index)));
     days.addAll(tempDays);
   }
 
-  void fetchTimeZones() async {
+  Future<void> _fetchTimeZones() async {
     try {
       final user = _authService.getCurrentUser();
-
       String dbTimezone = await _ueService.readTimezone(user.id);
+
       if (dbTimezone.isEmpty) {
         selectedTimezone.value = await _tzService.getCurrentTimezoneWithOffset();
-        _ueService.updateTimezone(user.id, selectedTimezone.value);
+        await _updateTimezone(user.id);
       } else {
         selectedTimezone.value = dbTimezone;
       }
@@ -109,38 +149,28 @@ class AvailabilityController extends GetxController {
     }
   }
 
-  Future<bool> checkMatchingAvailability(String userId, GroupModel group) async {
-    // Fetch user availability
-    List<DayModel> availabilityList = await _availabilityService.getAvailability(userId);
-
-    // Fetch group meeting time
-    var groupMeetingTime = group.meetingTime;
-
-    // Convert the group meeting time to user's local timezone
-    var userTimezone = await _ueService.readTimezone(userId);
-    TimeOfDay groupMeetingLocalTime = await _tzService.convertFromUTC(groupMeetingTime, userTimezone);
-
-    // Get the day of the week of the meeting
-    var meetingDay = group.meetingDay;
-
-    // Find the availability for that day
-    DayModel? dayAvailability = availabilityList.firstWhereOrNull((day) => day.dayName == meetingDay); //TODO day.fromTime?
-
-    // If there's no availability for that day, the group doesn't match
-    if (dayAvailability == null || dayAvailability.fromTime == null || dayAvailability.toTime == null) {
-      return false;
+  Future<void> _updateTimezone(String userId) async {
+    try {
+      await _ueService.updateTimezone(userId, selectedTimezone.value);
+    } catch (e, s) {
+      showErrorSnackBar(message: 'Unable to fetch your timezone. Please try again');
     }
+  }
 
-    // Convert the user's availability times to user's local timezone
-    var fromTimeLocal = await _tzService.convertFromUTC(dayAvailability.fromTime!, userTimezone);
-    var toTimeLocal = await _tzService.convertFromUTC(dayAvailability.toTime!, userTimezone);
-
-    // If the group's meeting time is not within the user's availability time, the group doesn't match
-    if (groupMeetingLocalTime.hour < fromTimeLocal.hour || groupMeetingLocalTime.hour > toTimeLocal.hour) {
-      return false;
+  TimeOfDay _subtract30Min(TimeOfDay time) {
+    int newMinute = time.minute - 30;
+    int newHour = time.hour;
+    if (newMinute < 0) {
+      newHour -= 1;
+      newMinute += 60;
     }
+    return TimeOfDay(hour: newHour, minute: newMinute);
+  }
 
-    // The group's meeting time matches the user's availability
-    return true;
+  bool _isMeetingWithinAvailability(TimeOfDay fromTime, TimeOfDay endTimeMinus30, TimeOfDay meetingTime) {
+    return !(meetingTime.hour < fromTime.hour ||
+        (meetingTime.hour == fromTime.hour && meetingTime.minute < fromTime.minute) ||
+        meetingTime.hour > endTimeMinus30.hour ||
+        (meetingTime.hour == endTimeMinus30.hour && meetingTime.minute > endTimeMinus30.minute));
   }
 }

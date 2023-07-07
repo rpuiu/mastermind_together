@@ -10,7 +10,7 @@ class CategoryService {
       final List<dynamic> data = await _client.from('categories').select();
       return data.map((json) => CategoryModel.fromJson(json)).toList();
     } catch (e, s) {
-      print('$e $s');;
+      print('$e $s');
       rethrow;
     }
   }

@@ -36,7 +36,7 @@ class GroupCard extends GetView<GroupController> {
                 ],
               ),
               Center(
-                child: Text('${group.meetingDay}: ${group.meetingTime.format(context)}',
+                child: Text('${group.meetingDay}: ${group.meetingTimeLocal.format(context)}',
                   textAlign: TextAlign.center,
                 ),
               ),

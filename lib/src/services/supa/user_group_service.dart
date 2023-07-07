@@ -7,34 +7,43 @@ class UserGroupService {
   final SupabaseClient _client = Get.find<SupabaseClient>();
   late RealtimeChannel groupSubscription;
 
-  Future<List<GroupModel>?> readAllGroups() async {
-    try {
-      final List<dynamic> data = await _client.from('groups').select();
+  static const String groupsTable = 'groups';
+  static const String groupMembersTable = 'group_members';
+  static const String userIdField = 'user_id';
+  static const String groupIdField = 'group_id';
+  static const String currentMembersField = 'current_members';
+  static const String idField = 'id';
+  static const String categoryField = 'category';
 
+  Future<T> _runQuery<T>(Future<T> Function() query) async {
+    try {
+      return await query();
+    } catch (e, s) {
+      print('$e $s');
+      rethrow;
+    }
+  }
+
+  Future<List<GroupModel>?> readAllGroups() async {
+    return _runQuery(() async {
+      final List<dynamic> data = await _client.from(groupsTable).select();
       if (data.isEmpty) {
         print("No groups available");
         return null;
       }
-      List<GroupModel> groups = data.map((g) => GroupModel.fromJson(g)).toList();
-      return groups;
-    } catch (e, s) {
-      print('$e $s');;
-      rethrow;
-    }
+      return data.map((g) => GroupModel.fromJson(g)).toList();
+    });
   }
 
   Future<void> createGroup(GroupModel groupModel) async {
-    try {
-      await _client.from('groups').insert(groupModel.toJson());
-    } catch (e, s) {
-      print('$e $s');;
-      rethrow;
-    }
+    return _runQuery(() async {
+      await _client.from(groupsTable).insert(groupModel.toJson());
+    });
   }
 
   Future<void> joinGroup(String userId, String groupId) async {
-    try {
-      final groupResponse = await _client.from('groups').select().eq('id', groupId).single();
+    return _runQuery(() async {
+      final groupResponse = await _client.from(groupsTable).select().eq(idField, groupId).single();
 
       if (!groupResponse.isEmpty) {
         final group = GroupModel.fromJson(groupResponse);
@@ -52,15 +61,12 @@ class UserGroupService {
       } else {
         throw Exception('Group not found.');
       }
-    } catch (e, s) {
-      print('$e $s');;
-      rethrow;
-    }
+    });
   }
 
   Future<void> leaveGroup(String userId, String groupId) async {
-    try {
-      final groupResponse = await _client.from('groups').select().eq('id', groupId).single();
+    return _runQuery(() async {
+      final groupResponse = await _client.from(groupsTable).select().eq(idField, groupId).single();
 
       if (!groupResponse.isEmpty) {
         final group = GroupModel.fromJson(groupResponse);
@@ -75,118 +81,92 @@ class UserGroupService {
       } else {
         throw Exception('Group not found.');
       }
-    } catch (e, s) {
-      print('$e $s');;
-      rethrow;
-    }
+    });
   }
 
   Future<void> _decrementGroupMembers(GroupModel group, String groupId) async {
-    try {
-      await _client.from('groups').update({
-        'current_members': group.currentMembers - 1,
-      }).eq('id', groupId);
-    } catch (e, s) {
-      print('$e $s');;
-      rethrow;
-    }
+    return _runQuery(() async {
+      await _client.from(groupsTable).update({
+        currentMembersField: group.currentMembers - 1,
+      }).eq(idField, groupId);
+    });
   }
 
   Future<void> removeUserFromGroup(String userId, String groupId) async {
-    try {
-      await _client.from('group_members').delete().eq('user_id', userId).eq('group_id', groupId);
-    } catch (e, s) {
-      print('$e $s');;
-      rethrow;
-    }
+    return _runQuery(() async {
+      await _client.from(groupMembersTable).delete().eq(userIdField, userId).eq(groupIdField, groupId);
+    });
   }
 
   Future<void> incrementGroupMembers(GroupModel group, String groupId) async {
-    try {
-      await _client.from('groups').update({
-        'current_members': group.currentMembers + 1,
-      }).eq('id', groupId);
-    } catch (e, s) {
-      print('$e $s');;
-      rethrow;
-    }
+    return _runQuery(() async {
+      await _client.from(groupsTable).update({
+        currentMembersField: group.currentMembers + 1,
+      }).eq(idField, groupId);
+    });
   }
 
   Future<void> addUserToGroup(String userId, String groupId) async {
-    try {
-      await _client.from('group_members').insert({'user_id': userId, 'group_id': groupId});
-    } catch (e, s) {
-      print('$e $s');;
-      rethrow;
-    }
+    return _runQuery(() async {
+      await _client.from(groupMembersTable).insert({userIdField: userId, groupIdField: groupId});
+    });
   }
 
   Future<bool> isAlreadyMember(String userId, String groupId) async {
-    try {
-      Map<String, dynamic>? membershipCheckResponse = await _client.from('group_members').select().eq('user_id', userId).eq('group_id', groupId).maybeSingle();
+    return _runQuery(() async {
+      Map<String, dynamic>? membershipCheckResponse =
+          await _client.from(groupMembersTable).select().eq(userIdField, userId).eq(groupIdField, groupId).maybeSingle();
       return membershipCheckResponse != null;
-    } catch (e, s) {
-      print('$e $s');;
-      rethrow;
-    }
+    });
   }
 
   bool isGroupFull(GroupModel group) => group.currentMembers >= group.maxMembers;
 
   Future<List<GroupModel>> getUserGroups(String userId) async {
-    try {
-      final List<dynamic> response = await _client.from('group_members').select('group_id:group_id (*)').eq('user_id', userId);
-      return response.map((group) => GroupModel.fromJson(group['group_id'])).toList();
-    } catch (e, s) {
-      print('$e $s');;
-      rethrow;
-    }
+    return _runQuery(() async {
+      final List<dynamic> response = await _client.from(groupMembersTable).select('$groupIdField:$groupIdField (*)').eq(userIdField, userId);
+      return response.map((group) => GroupModel.fromJson(group[groupIdField])).toList();
+    });
   }
 
   Future<List<UserModel>> getGroupMembers(String groupId) async {
-    try {
-      final List<dynamic> data = await _client.from('group_members').select('users_extended:users_extended (*)').eq('group_id', groupId);
+    return _runQuery(() async {
+      final List<dynamic> data = await _client.from(groupMembersTable).select('users_extended:users_extended (*)').eq(groupIdField, groupId);
       return data.map((user) => UserModel.fromJson(user['users_extended'])).toList();
-    } catch (e, s) {
-      print('$e $s');;
-      rethrow;
-    }
+    });
   }
 
   Future<GroupModel> readGroup(String groupId) async {
-    try {
-      final groupResponse = await _client.from('groups').select().eq('id', groupId).single();
+    return _runQuery(() async {
+      final groupResponse = await _client.from(groupsTable).select().eq(idField, groupId).single();
       return GroupModel.fromJson(groupResponse);
-    } catch (e, s) {
-      print('$e $s');;
-      rethrow;
-    }
+    });
   }
 
   Future<List<GroupModel>> getGroupsByCategory(String category) async {
-    try {
-      List<dynamic> response = await _client.from('groups').select().eq('category', category);
+    return _runQuery(() async {
+      List<dynamic> response = await _client.from(groupsTable).select().eq(categoryField, category);
       return response.map((group) => GroupModel.fromJson(group)).toList();
-    } catch (e, s) {
-      print('$e $s');;
-      rethrow;
-    }
+    });
   }
 
-// void subscribeToGroupChanges(Function(GroupModel) onGroupChanges) { //TODO MAIN-T-19
-//   groupSubscription = _client.channel('public:groups').on(
-//     RealtimeListenTypes.postgresChanges,
-//     ChannelFilter(event: '*', schema: 'public', table: 'groups'),
-//     (payload, [ref]) {
-//       print('Group change received: ${payload.toString()}');
-//       onGroupChanges(GroupModel.fromJson(payload["new"]));
-//     },
-//   );
-//
-//   groupSubscription.subscribe();
-// }
-//
-// Future<void> unsubscribeFromGroupChanges() async {
-//   await _client.removeChannel(groupSubscription);
-// }
+// TODO: Uncomment once realtime feature is implemented
+/*
+  void subscribeToGroupChanges(Function(GroupModel) onGroupChanges) {
+    groupSubscription = _client.channel('public:groups').on(
+      RealtimeListenTypes.postgresChanges,
+      ChannelFilter(event: '*', schema: 'public', table: groupsTable),
+      (payload, [ref]) {
+        print('Group change received: ${payload.toString()}');
+        onGroupChanges(GroupModel.fromJson(payload["new"]));
+      },
+    );
+
+    groupSubscription.subscribe();
+  }
+
+  Future<void> unsubscribeFromGroupChanges() async {
+    await _client.removeChannel(groupSubscription);
+  }
+  */
 }

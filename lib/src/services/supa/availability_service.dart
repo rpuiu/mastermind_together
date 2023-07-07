@@ -12,7 +12,7 @@ class AvailabilityService extends GetxService {
       final List<dynamic> data = await _client.from('availability').select().eq('user_id', userId);
       return data.map((json) => DayModel.fromJson(json)).toList();
     } catch (e, s) {
-      print('$e $s');;
+      print('$e $s');
       rethrow;
     }
   }
@@ -26,7 +26,7 @@ class AvailabilityService extends GetxService {
         await _updateAvailability(dayModel, userId);
       }
     } catch (e, s) {
-      print('$e $s');;
+      print('$e $s');
       rethrow;
     }
   }
@@ -35,7 +35,7 @@ class AvailabilityService extends GetxService {
     try {
       await _client.from('availability').update(dayModel.toJson()..['user_id'] = userId).eq('user_id', userId).eq('day', dayModel.dayName);
     } catch (e, s) {
-      print('$e $s');;
+      print('$e $s');
       rethrow;
     }
   }
@@ -44,7 +44,7 @@ class AvailabilityService extends GetxService {
     try {
       return await _client.from('availability').insert(dayModel.toJson()..['user_id'] = userId);
     } catch (e, s) {
-      print('$e $s');;
+      print('$e $s');
       rethrow;
     }
   }
@@ -53,7 +53,7 @@ class AvailabilityService extends GetxService {
     try {
       return await _client.from('availability').select().eq('user_id', userId).eq('day', dayModel.dayName).maybeSingle();
     } catch (e, s) {
-      print('$e $s');;
+      print('$e $s');
       rethrow;
     }
   }

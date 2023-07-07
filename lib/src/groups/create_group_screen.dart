@@ -94,7 +94,7 @@ class CreateGroupScreen extends GetView<GroupController> {
             initialTime: TimeOfDay.now(),
           );
           if (timeOfDay != null) {
-            controller.group.value.meetingTime = timeOfDay;
+            controller.group.value.meetingTimeUTC = timeOfDay;
             controller.meetingTimeController.value.text = timeOfDay.format(context);
           }
         },

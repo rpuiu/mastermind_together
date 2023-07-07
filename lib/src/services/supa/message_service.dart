@@ -21,7 +21,7 @@ class MessageService {
 
       _chatChannel.subscribe();
     } catch (e, s) {
-      print('$e $s');;
+      print('$e $s');
       rethrow;
     }
   }
@@ -30,7 +30,7 @@ class MessageService {
     try {
       await _client.removeChannel(_chatChannel);
     } catch (e, s) {
-      print('$e $s');;
+      print('$e $s');
     }
   }
 
@@ -39,7 +39,7 @@ class MessageService {
       final List<dynamic> response = await _client.from('messages').select().eq('group_id', groupId).order('timestamp', ascending: true);
       return response.map((json) => MessageModel.fromJson(json)).toList();
     } catch (e, s) {
-      print('$e $s');;
+      print('$e $s');
       rethrow;
     }
   }
@@ -53,7 +53,7 @@ class MessageService {
         'content': content,
       });
     } catch (e, s) {
-      print('$e $s');;
+      print('$e $s');
       rethrow;
     }
   }
