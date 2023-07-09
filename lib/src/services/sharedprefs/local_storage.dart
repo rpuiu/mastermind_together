@@ -11,7 +11,6 @@ class LocalStorageService {
   }
 
   String getUserTimezone() {
-    String userTimezone = prefs.getString(userTimeZone) ?? 'UTC';
-    return userTimezone;
+    return prefs.getString(userTimeZone) ?? '';
   }
 }

@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/common/widgets/snackbar.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
 import 'package:mastermind_together/src/groups/categories/category_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';
 import 'package:mastermind_together/src/services/supa/goal_service.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class GoalController extends GetxController {
   final AuthService _authService = Get.find<AuthService>();
@@ -28,12 +28,12 @@ class GoalController extends GetxController {
   }
 
   void fetchUserGoals() async {
-    final User user = _authService.getCurrentUser();
+    final UserModel user = _authService.getCurrentUser();
     goals.value = await _goalService.readUserGoals(user.id);
   }
 
   Future<void> saveGoal(String goal) async {
-    final User user = _authService.getCurrentUser();
+    final UserModel user = _authService.getCurrentUser();
 
     await _goalService.createGoal(user.id, goal, selectedCategory!.value, autoSelectGroup.value);
     Get.toNamed(Routes.home);
@@ -42,7 +42,7 @@ class GoalController extends GetxController {
   void _listenToCurrentUserGoalChanges() {
     try {
       _goalService.subscribeToGoalChanges((newGoal) {
-        final User user = _authService.getCurrentUser();
+        final UserModel user = _authService.getCurrentUser();
         if (newGoal.userId == user.id) {
           goals.add(newGoal);
         }

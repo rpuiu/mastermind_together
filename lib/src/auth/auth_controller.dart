@@ -23,7 +23,9 @@ class AuthController extends GetxController {
 
   Future<void> login(String email, String password) async {
     try {
-      String userId = await _authService.signInWithPassword(email, password);
+      await _authService.signInWithPassword(email, password);
+      String userId = _authService.getCurrentUser().id; //Throws exception if the user is null
+
       showSuccessSnackBar(message: 'Logged in successfully');
 
       String timezone = await _userExtendedService.readTimezone(userId);
@@ -31,6 +33,7 @@ class AuthController extends GetxController {
       Get.offAllNamed(Routes.home);
     } catch (e, s) {
       showErrorSnackBar(message: e.toString());
+      logout();
     }
   }
 

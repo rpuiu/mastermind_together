@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/auth/auth_middleware.dart';
 import 'package:mastermind_together/src/auth/login_screen.dart';
 import 'package:mastermind_together/src/auth/register_screen.dart';
 import 'package:mastermind_together/src/availability/availability_screen.dart';
@@ -19,15 +20,14 @@ class Routes {
   static const String group = '/group';
 
   static List<GetPage> routes = [
-    GetPage(name: home, page: () => HomeScreen()),
+    GetPage(name: home, page: () => HomeScreen(), middlewares: [AuthMiddleware()]),
     GetPage(name: login, page: () => LoginScreen()),
     GetPage(name: register, page: () => RegisterScreen()),
-    GetPage(name: createGoal, page: () => AddGoalScreen()),
-    GetPage(name: availability, page: () => SetAvailabilityScreen()),
-    GetPage(name: createGroup, page: () => CreateGroupScreen()),
-    GetPage(name: createGroup, page: () => CreateGroupScreen()),
-    GetPage(name: allGroups, page: () => AllGroupsScreen()),
-    GetPage(name: '$group/:groupId', page: () => GroupScreen()),
+    GetPage(name: createGoal, page: () => AddGoalScreen(), middlewares: [AuthMiddleware()]),
+    GetPage(name: availability, page: () => SetAvailabilityScreen(), middlewares: [AuthMiddleware()]),
+    GetPage(name: createGroup, page: () => CreateGroupScreen(), middlewares: [AuthMiddleware()]),
+    GetPage(name: allGroups, page: () => AllGroupsScreen(), middlewares: [AuthMiddleware()]),
+    GetPage(name: '$group/:groupId', page: () => GroupScreen(), middlewares: [AuthMiddleware()]),
   ];
 
   static String groupRoute(String groupId) => '$group/$groupId';

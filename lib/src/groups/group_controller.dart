@@ -10,7 +10,6 @@ import 'package:mastermind_together/src/services/supa/auth_service.dart';
 import 'package:mastermind_together/src/services/supa/goal_service.dart';
 import 'package:mastermind_together/src/services/supa/user_group_service.dart';
 import 'package:mastermind_together/src/services/timezone/timezone_service.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class GroupController extends GetxController {
   final UserGroupService _groupService = Get.find<UserGroupService>();
@@ -65,7 +64,7 @@ class GroupController extends GetxController {
   }
 
   void joinGroup(String groupId) async {
-    final User user = _authService.getCurrentUser();
+    final UserModel user = _authService.getCurrentUser();
     try {
       await _groupService.joinGroup(user.id, groupId);
       showSuccessSnackBar(message: 'Successfully joined group');
@@ -82,7 +81,7 @@ class GroupController extends GetxController {
   }
 
   void leaveGroup(String groupId) async {
-    final User user = _authService.getCurrentUser();
+    final UserModel user = _authService.getCurrentUser();
     try {
       await _groupService.leaveGroup(user.id, groupId);
       showSuccessSnackBar(message: 'Successfully left group');
@@ -137,7 +136,7 @@ class GroupController extends GetxController {
   }
 
   void _fetchUserGroups() async {
-    final User user = _authService.getCurrentUser();
+    final UserModel user = _authService.getCurrentUser();
     try {
       List<GroupModel> userGroupsList = await _groupService.getUserGroups(user.id);
       userGroups.value = userGroupsList;
@@ -151,7 +150,7 @@ class GroupController extends GetxController {
   }
 
   void _fetchAvailableGroups() async {
-    final User user = _authService.getCurrentUser();
+    final UserModel user = _authService.getCurrentUser();
 
     try {
       final List<GoalModel> userGoals = await _goalService.readUserGoals(user.id);
@@ -215,7 +214,6 @@ class GroupController extends GetxController {
       int index = list.indexWhere((group) => group.id == changedGroup.id);
       if (index != -1) {
         list[index] = changedGroup;
-        print("Debug: Group updated in the list");
       }
     }
   }
