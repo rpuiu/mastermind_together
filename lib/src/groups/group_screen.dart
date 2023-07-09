@@ -30,7 +30,7 @@ class GroupScreen extends GetView<GroupController> {
           } else {
             final group = groupSnapshot.data!;
             return FutureBuilder<List<UserModel>>(
-              future: controller.getGroupMembers(groupId),
+              future: controller.fetchGroupMembers(groupId),
               builder: (context, membersSnapshot) {
                 if (membersSnapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());

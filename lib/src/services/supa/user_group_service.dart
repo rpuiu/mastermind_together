@@ -150,15 +150,24 @@ class UserGroupService {
     });
   }
 
-// TODO: Uncomment once realtime feature is implemented
-/*
-  void subscribeToGroupChanges(Function(GroupModel) onGroupChanges) {
+  void subscribeToGroupChanges(Function(String, GroupModel) onGroupChanges) {
     groupSubscription = _client.channel('public:groups').on(
       RealtimeListenTypes.postgresChanges,
       ChannelFilter(event: '*', schema: 'public', table: groupsTable),
       (payload, [ref]) {
         print('Group change received: ${payload.toString()}');
-        onGroupChanges(GroupModel.fromJson(payload["new"]));
+
+        GroupModel changedGroup = GroupModel.fromJson(payload['new']);
+
+        switch (payload['eventType']) {
+          case 'INSERT':
+          case 'UPDATE':
+          case 'DELETE':
+            onGroupChanges(payload['eventType'], changedGroup);
+            break;
+          default:
+            break;
+        }
       },
     );
 
@@ -168,5 +177,4 @@ class UserGroupService {
   Future<void> unsubscribeFromGroupChanges() async {
     await _client.removeChannel(groupSubscription);
   }
-  */
 }

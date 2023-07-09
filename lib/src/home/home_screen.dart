@@ -78,6 +78,7 @@ class HomeScreen extends GetView<HomeController> {
                 Text("My Groups", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 Expanded(
                   child: Obx(() {
+                    print("Debug: Obx called for rebuilding ListView");
                     if (groupController.userGroups.isEmpty) {
                       return Center(child: Text('No groups yet.')); // Center the text
                     } else {

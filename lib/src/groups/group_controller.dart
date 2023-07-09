@@ -34,18 +34,23 @@ class GroupController extends GetxController {
   RxString? selectedCategory = 'Please select...'.obs; //TODO
   RxString? selectedDay = 'Please select...'.obs; //TODO?
 
+  final userGroupStatus = <String, RxBool>{}.obs;
+
   @override
   void onInit() {
     super.onInit();
-    fetchGroups();
-    fetchUserGroups();
-    fetchCategories();
-    fetchAvailableGroups();
+    _fetchGroups();
+    _fetchUserGroups();
+    _fetchCategories();
+    _fetchAvailableGroups();
+    _listenToGroupChanges();
   }
 
-  // void listenToGoalChanges() { //TODO
-  //   _groupService.subscribeToGroupChanges((newGoal) => groups.add(newGoal));
-  // }
+  @override
+  void onClose() {
+    super.onClose();
+    _groupService.unsubscribeFromGroupChanges();
+  }
 
   Future<void> createGroup() async {
     try {
@@ -55,14 +60,71 @@ class GroupController extends GetxController {
       await _groupService.createGroup(groupCopy);
 
       showSuccessSnackBar(message: 'The group has been created!');
-      update(); //TODO try to refactor when implementing realtime
     } catch (e, s) {
       print('$e: $s');
       showErrorSnackBar(message: 'Error creating group, please try again');
     }
   }
 
-  void fetchGroups() async {
+  void joinGroup(String groupId) async {
+    final User user = _authService.getCurrentUser();
+    try {
+      await _groupService.joinGroup(user.id, groupId);
+      showSuccessSnackBar(message: 'Successfully joined group');
+
+      final GroupModel joinedGroup = await _groupService.readGroup(groupId);
+      userGroups.add(joinedGroup);
+      userGroups.refresh();
+      _fetchAvailableGroups(); // Refresh the matching groups
+    } catch (e, s) {
+      print('$e $s');
+      showErrorSnackBar(message: 'Unable to join group due to: ${e.toString()}');
+    }
+    userGroupStatus[groupId]?.value = true;
+  }
+
+  void leaveGroup(String groupId) async {
+    final User user = _authService.getCurrentUser();
+    try {
+      await _groupService.leaveGroup(user.id, groupId);
+      showSuccessSnackBar(message: 'Successfully left group');
+
+      userGroups.removeWhere((group) => group.id == groupId);
+
+      userGroups.refresh();
+      _fetchAvailableGroups(); // Refresh the matching groups
+    } catch (e, s) {
+      print('$e $s');
+      showErrorSnackBar(message: 'Unable to leave group due to: ${e.toString()}');
+    }
+
+    userGroupStatus[groupId]?.value = false;
+  }
+
+  bool isUserMemberOfGroup(String groupId) {
+    return userGroupStatus.containsKey(groupId) ? userGroupStatus[groupId]!.value : false;
+  }
+
+  Future<GroupModel> fetchGroup(String groupId) async {
+    try {
+      final groupResponse = await _groupService.readGroup(groupId);
+      return groupResponse;
+    } catch (e, s) {
+      showErrorSnackBar(message: 'Group not found');
+      rethrow;
+    }
+  }
+
+  Future<List<UserModel>> fetchGroupMembers(String groupId) async {
+    try {
+      return await _groupService.getGroupMembers(groupId);
+    } catch (e, s) {
+      showErrorSnackBar(message: 'Unable to fetch group members');
+      return [];
+    }
+  }
+
+  void _fetchGroups() async {
     isLoading(true);
     try {
       final response = await _groupService.readAllGroups();
@@ -76,67 +138,21 @@ class GroupController extends GetxController {
     }
   }
 
-  void fetchCategories() async {
-    try {
-      List<CategoryModel> allCategories = await _categoryService.getAllCategories();
-      categories.assignAll(['Please select...']);
-      categories.addAll(allCategories.map((c) => c.name));
-    } catch (e, s) {
-      showErrorSnackBar(message: 'Error fetching goal areas: $e');
-    }
-  }
-
-  void joinGroup(String groupId) async {
-    try {
-      final User user = _authService.getCurrentUser();
-      await _groupService.joinGroup(user.id, groupId);
-      showSuccessSnackBar(message: 'Successfully joined group');
-    } catch (e, s) {
-      showErrorSnackBar(message: 'Unable to join group due to: ${e.toString()}');
-    }
-  }
-
-  void leaveGroup(String groupId) async {
+  void _fetchUserGroups() async {
     final User user = _authService.getCurrentUser();
     try {
-      await _groupService.leaveGroup(user.id, groupId);
-      showSuccessSnackBar(message: 'Successfully left group');
-      fetchGroups(); // Fetch groups again to reflect changes in UI //TODO replace with realtime
-    } catch (e, s) {
-      print('$e $s');
-      showErrorSnackBar(message: 'Unable to leave group due to: ${e.toString()}');
-    }
-  }
+      List<GroupModel> userGroupsList = await _groupService.getUserGroups(user.id);
+      userGroups.value = userGroupsList;
 
-  Future<GroupModel> fetchGroup(String groupId) async {
-    try {
-      final groupResponse = await _groupService.readGroup(groupId);
-      return groupResponse;
-    } catch (e, s) {
-      showErrorSnackBar(message: 'Group not found');
-      rethrow;
-    }
-  }
-
-  Future<List<UserModel>> getGroupMembers(String groupId) async {
-    try {
-      return await _groupService.getGroupMembers(groupId);
-    } catch (e, s) {
-      showErrorSnackBar(message: 'Unable to fetch group members');
-      return [];
-    }
-  }
-
-  void fetchUserGroups() async {
-    final User user = _authService.getCurrentUser();
-    try {
-      userGroups.value = await _groupService.getUserGroups(user.id);
+      for (var group in userGroupsList) {
+        userGroupStatus[group.id] = true.obs;
+      }
     } catch (e, s) {
       showErrorSnackBar(message: 'Failed to get user groups');
     }
   }
 
-  void fetchAvailableGroups() async {
+  void _fetchAvailableGroups() async {
     final User user = _authService.getCurrentUser();
 
     try {
@@ -147,11 +163,7 @@ class GroupController extends GetxController {
         final userGroups = await _groupService.getUserGroups(user.id);
 
         if (allGroups.isNotEmpty) {
-          final availableGroups = allGroups
-              .where(
-                (group) => !userGroups.any((userGroup) => userGroup.id == group.id),
-              )
-              .toList();
+          final availableGroups = allGroups.where((group) => !userGroups.any((userGroup) => userGroup.id == group.id)).toList();
 
           // Filter groups based on the availability match
           final matchingAvailableGroups = (await Future.wait(
@@ -159,6 +171,9 @@ class GroupController extends GetxController {
           ))
               .whereType<GroupModel>()
               .toList();
+
+          // Filter out the groups the user is already a member of
+          matchingAvailableGroups.removeWhere((group) => userGroupStatus[group.id]?.value ?? false);
 
           matchingGroups.value = matchingAvailableGroups;
         }
@@ -169,12 +184,64 @@ class GroupController extends GetxController {
     }
   }
 
-  bool isUserMemberOfGroup(String groupId) {
+  void _fetchCategories() async {
     try {
-      return userGroups.value.any((group) => group.id == groupId);
+      List<CategoryModel> allCategories = await _categoryService.getAllCategories();
+      categories.assignAll(['Please select...']);
+      categories.addAll(allCategories.map((c) => c.name));
     } catch (e, s) {
-      print('Error determining if user is a member of the group: $e');
-      return false;
+      showErrorSnackBar(message: 'Error fetching goal areas: $e');
     }
+  }
+
+  void _listenToGroupChanges() {
+    _groupService.subscribeToGroupChanges((eventType, changedGroup) {
+      switch (eventType) {
+        case 'INSERT':
+          print("Debug: INSERT event received for group: ${changedGroup.id}");
+          _handleInsertEvents(changedGroup);
+          break;
+        case 'UPDATE':
+          print("Debug: UPDATE event received for group: ${changedGroup.id}");
+          _handleUpdateEvents(changedGroup);
+          break;
+        case 'DELETE':
+          print("Debug: DELETE event received for group: ${changedGroup.id}");
+          _handleDeleteEvents(changedGroup);
+          break;
+        default:
+          break;
+      }
+      userGroupStatus[changedGroup.id] = RxBool(isUserMemberOfGroup(changedGroup.id));
+    });
+  }
+
+  void _handleDeleteEvents(GroupModel changedGroup) {
+    for (var list in [groups, userGroups, matchingGroups]) {
+      list.removeWhere((group) => group.id == changedGroup.id);
+    }
+  }
+
+  void _handleUpdateEvents(GroupModel changedGroup) {
+    for (var list in [groups, userGroups, matchingGroups]) {
+      int index = list.indexWhere((group) => group.id == changedGroup.id);
+      if (index != -1) {
+        list[index] = changedGroup;
+        print("Debug: Group updated in the list");
+      }
+    }
+  }
+
+  void _handleInsertEvents(GroupModel changedGroup) {
+    groups.add(changedGroup);
+
+    if (isUserMemberOfGroup(changedGroup.id)) {
+      userGroups.add(changedGroup);
+    }
+    _availabilityController.checkMatchingAvailability(_authService.getCurrentUser().id, changedGroup).then((matches) {
+      if (matches) {
+        matchingGroups.add(changedGroup);
+      }
+    });
   }
 }
