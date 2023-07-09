@@ -46,7 +46,7 @@ class CreateGroupScreen extends GetView<GroupController> {
     return DropdownButtonFormField<String>(
       decoration: InputDecoration(labelText: 'Category'),
       value: controller.selectedCategory!.value,
-      items: controller.categories.map((area) {
+      items: controller.categoryController.categories.map((area) {
         return DropdownMenuItem<String>(
           value: area,
           child: Text(area),

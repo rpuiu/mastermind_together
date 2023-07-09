@@ -3,18 +3,16 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/common/widgets/snackbar.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
+import 'package:mastermind_together/src/groups/categories/category_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';
-import 'package:mastermind_together/src/services/supa/category_service.dart';
 import 'package:mastermind_together/src/services/supa/goal_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class GoalController extends GetxController {
   final AuthService _authService = Get.find<AuthService>();
   final GoalService _goalService = Get.find<GoalService>();
-  final CategoryService _categoryService = Get.find<CategoryService>();
-
-  final RxList<String> categories = <String>[].obs;
+  final CategoryController categoryController = Get.find<CategoryController>();
 
   RxString? selectedCategory = 'Please select...'.obs;
   RxBool autoSelectGroup = false.obs;
@@ -25,8 +23,8 @@ class GoalController extends GetxController {
   void onInit() {
     super.onInit();
     fetchUserGoals();
-    listenToGoalChanges();
-    fetchCategories();
+    _listenToCurrentUserGoalChanges();
+    categoryController.fetchCategories();
   }
 
   void fetchUserGoals() async {
@@ -41,9 +39,14 @@ class GoalController extends GetxController {
     Get.toNamed(Routes.home);
   }
 
-  void listenToGoalChanges() {
+  void _listenToCurrentUserGoalChanges() {
     try {
-      _goalService.subscribeToGoalChanges((newGoal) => goals.add(newGoal));
+      _goalService.subscribeToGoalChanges((newGoal) {
+        final User user = _authService.getCurrentUser();
+        if (newGoal.userId == user.id) {
+          goals.add(newGoal);
+        }
+      });
     } catch (e, s) {
       showErrorSnackBar(message: "Unable to listen to any goal changes.");
     }
@@ -53,15 +56,5 @@ class GoalController extends GetxController {
   void onClose() {
     super.onClose();
     _goalService.unsubscribeFromGoalChanges();
-  }
-
-  void fetchCategories() async {
-    try {
-      final allCategories = await _categoryService.getAllCategories();
-      categories.assignAll(['Please select...']);
-      categories.addAll(allCategories.map((c) => c.name));
-    } catch (e, s) {
-      showErrorSnackBar(message: 'Error fetching categories: $e');
-    }
   }
 }

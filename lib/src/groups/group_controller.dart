@@ -3,11 +3,10 @@ import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/availability/availability_controller.dart';
 import 'package:mastermind_together/src/common/widgets/snackbar.dart';
-import 'package:mastermind_together/src/goal/category_model.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
+import 'package:mastermind_together/src/groups/categories/category_controller.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';
-import 'package:mastermind_together/src/services/supa/category_service.dart';
 import 'package:mastermind_together/src/services/supa/goal_service.dart';
 import 'package:mastermind_together/src/services/supa/user_group_service.dart';
 import 'package:mastermind_together/src/services/timezone/timezone_service.dart';
@@ -15,12 +14,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class GroupController extends GetxController {
   final UserGroupService _groupService = Get.find<UserGroupService>();
-  final CategoryService _categoryService = Get.find<CategoryService>();
   final AuthService _authService = Get.find<AuthService>();
   final GoalService _goalService = Get.find<GoalService>();
   final TimezoneService _tzService = Get.find<TimezoneService>();
 
   final AvailabilityController _availabilityController = Get.find<AvailabilityController>();
+  final CategoryController categoryController = Get.find<CategoryController>();
 
   final RxList<GroupModel> groups = RxList<GroupModel>();
   final RxList<GroupModel> userGroups = RxList<GroupModel>();
@@ -30,9 +29,8 @@ class GroupController extends GetxController {
   final isLoading = Rx<bool>(true);
 
   final meetingTimeController = TextEditingController(text: "Please select...").obs;
-  RxList<String> categories = <String>[].obs;
-  RxString? selectedCategory = 'Please select...'.obs; //TODO
-  RxString? selectedDay = 'Please select...'.obs; //TODO?
+  RxString? selectedCategory = 'Please select...'.obs;
+  RxString? selectedDay = 'Please select...'.obs;
 
   final userGroupStatus = <String, RxBool>{}.obs;
 
@@ -41,7 +39,7 @@ class GroupController extends GetxController {
     super.onInit();
     _fetchGroups();
     _fetchUserGroups();
-    _fetchCategories();
+    categoryController.fetchCategories();
     _fetchAvailableGroups();
     _listenToGroupChanges();
   }
@@ -181,16 +179,6 @@ class GroupController extends GetxController {
     } catch (e, s) {
       print('$e $s');
       showErrorSnackBar(message: 'Failed to fetch available groups');
-    }
-  }
-
-  void _fetchCategories() async {
-    try {
-      List<CategoryModel> allCategories = await _categoryService.getAllCategories();
-      categories.assignAll(['Please select...']);
-      categories.addAll(allCategories.map((c) => c.name));
-    } catch (e, s) {
-      showErrorSnackBar(message: 'Error fetching goal areas: $e');
     }
   }
 

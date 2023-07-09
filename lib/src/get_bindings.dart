@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/auth_controller.dart';
 import 'package:mastermind_together/src/availability/availability_controller.dart';
+import 'package:mastermind_together/src/groups/categories/category_controller.dart';
 import 'package:mastermind_together/src/services/sharedprefs/local_storage.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';
 import 'package:mastermind_together/src/services/supa/category_service.dart';
@@ -44,5 +45,6 @@ class GetBindings {
     Get.lazyPut(() => MessageService(), fenix: true);
     Get.lazyPut(() => sharedPreferences, fenix: true);
     Get.lazyPut(() => LocalStorageService(), fenix: true);
+    Get.lazyPut(() => CategoryController(), fenix: true);
   }
 }

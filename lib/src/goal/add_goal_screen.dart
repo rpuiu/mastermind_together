@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
 
 class AddGoalScreen extends GetView<GoalController> {
-
   final TextEditingController goalController = TextEditingController();
 
   AddGoalScreen({super.key});
@@ -34,7 +33,7 @@ class AddGoalScreen extends GetView<GoalController> {
                         onChanged: (String? newValue) {
                           controller.selectedCategory!.value = newValue!;
                         },
-                        items:controller.categories.map<DropdownMenuItem<String>>((String value) {
+                        items: controller.categoryController.categories.map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
                             child: Text(value),
