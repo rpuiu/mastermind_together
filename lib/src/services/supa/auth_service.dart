@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/user_model.dart';
+import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/services/sharedprefs/local_storage.dart';
 import 'package:mastermind_together/src/services/supa/users_extended_service.dart';
 import 'package:mastermind_together/src/services/timezone/timezone_service.dart';
@@ -17,13 +20,30 @@ class AuthService extends GetxService {
 
   set currentUser(UserModel? user) => _currentUser.value = user;
 
-  UserModel getCurrentUser() {
-    User? user = _client.auth.currentUser;
+  late final StreamSubscription<AuthState> _authStateSubscription;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _authStateSubscription = _client.auth.onAuthStateChange.listen((data) {
+      if (data.event == AuthChangeEvent.signedOut) {
+        _localStorage.clear();
+        Get.offAllNamed(Routes.login);
+      }
+    });
+  }
+
+  @override
+  void onClose() {
+    _authStateSubscription.cancel();
+  }
+
+  UserModel? getUser() {
+    final user = _client.auth.currentUser;
     if (user != null) {
-      String timezone = _localStorage.getUserTimezone();
-      return UserModel(id: user.id, email: user.email!, timezone: timezone);
+      return _localStorage.getUser();
     } else {
-      throw Exception('User is unexpectedly null.');
+      return null;
     }
   }
 
@@ -33,11 +53,11 @@ class AuthService extends GetxService {
       final User user = response.user!;
 
       String timezone = await _timezoneService.getCurrentTimezoneWithOffset();
-      await _userExtendedService.createUserExtended(user.id, user.email!, timezone);
 
-      UserModel userModel = UserModel(id: user.id, email: user.email!, timezone: timezone);
-
+      UserModel userModel = await _userExtendedService.createUserExtended(user.id, user.email!, timezone);
       currentUser = userModel;
+      _localStorage.saveUser(userModel);
+
       return userModel;
     } on AuthException catch (err, s) {
       print(err);
@@ -54,8 +74,8 @@ class AuthService extends GetxService {
       final User user = response.user!;
 
       String timezone = await _userExtendedService.readTimezone(user.id);
-
       UserModel userModel = UserModel(id: user.id, email: user.email!, timezone: timezone);
+      _localStorage.saveUser(userModel);
       currentUser = userModel;
 
       return userModel;
@@ -79,5 +99,11 @@ class AuthService extends GetxService {
       print('$e $s');
       throw ('An error occurred, please try again');
     }
+  }
+
+  bool isUserLoggedIn() {
+    User? supabaseUser = _client.auth.currentUser;
+    UserModel? localStorageUser = _localStorage.getUser();
+    return supabaseUser != null && localStorageUser != null;
   }
 }

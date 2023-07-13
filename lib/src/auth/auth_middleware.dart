@@ -5,14 +5,17 @@ import 'package:mastermind_together/src/services/supa/auth_service.dart';
 
 class AuthMiddleware extends GetMiddleware {
   @override
+  int? get priority => 1;
+
+  @override
   RouteSettings? redirect(String? route) {
-    final authService = Get.find<AuthService>();
-    if (authService.currentUser == null) {
-      // If the user is not authenticated, redirect them to the Login page
-      return RouteSettings(name: Routes.login);
+    final AuthService authService = Get.find<AuthService>();
+    final user = authService.getUser();
+
+    if (user == null) {
+      return const RouteSettings(name: Routes.login);
     } else {
-      // If the user is authenticated, allow the navigation
-      return null;
+      return null; // continue routing normally if user is not null
     }
   }
 }

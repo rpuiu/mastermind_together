@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/common/widgets/snackbar.dart';
 import 'package:mastermind_together/src/groups/chat/message_controller.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';
 
@@ -59,13 +60,18 @@ class ChatWidget extends GetView<MessageController> {
               IconButton(
                 icon: Icon(Icons.send),
                 onPressed: () {
-                  controller.sendMessage(
-                    groupId,
-                    authService.getCurrentUser().id,
-                    authService.getCurrentUser().email!,
-                    textController.text,
-                  );
-                  textController.clear();
+                  final user = authService.getUser();
+                  if (user != null) {
+                    controller.sendMessage(
+                      groupId,
+                      user.id,
+                      user.email,
+                      textController.text,
+                    );
+                    textController.clear();
+                  } else {
+                    showErrorSnackBar(message: 'You are not logged in. Please log in to send a message.');
+                  }
                 },
               ),
             ],

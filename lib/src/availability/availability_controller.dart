@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/availability/day_model.dart';
 import 'package:mastermind_together/src/common/widgets/snackbar.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
@@ -11,7 +12,7 @@ import 'package:mastermind_together/src/services/timezone/timezone_service.dart'
 import 'package:mastermind_together/src/util/date_time_util.dart';
 
 class AvailabilityController extends GetxController {
-  final _availabilityService = Get.find<AvailabilityService>();
+  final AvailabilityService _availabilityService = Get.find<AvailabilityService>();
   final AuthService _authService = Get.find<AuthService>();
   final TimezoneService _tzService = Get.find<TimezoneService>();
   final UsersExtendedService _ueService = Get.find<UsersExtendedService>();
@@ -29,22 +30,23 @@ class AvailabilityController extends GetxController {
     await _fetchAvailability();
   }
 
-  void saveAvailability() async {
+  Future<void> saveAvailability() async {
+    UserModel? currentUser = _authService.getUser();
+    if (currentUser == null) {
+      showErrorSnackBar(message: 'Please login to save availability');
+      return;
+    }
+
     try {
-      String userId = _authService.getCurrentUser().id;
-      await _updateTimezone(userId);
-      _localStorage.saveUserTimezone(selectedTimezone.value);
-
+      await _updateTimezone(currentUser.id);
       for (var day in days) {
-        await _saveDayAvailability(userId, day);
+        await _saveDayAvailability(currentUser.id, day);
       }
-
       await _fetchAvailability();
     } catch (e) {
       print('$e');
       showErrorSnackBar(message: 'Error saving availability: ${e.toString()}');
     }
-
     showSuccessSnackBar(message: 'Your availability has been updated');
   }
 
@@ -74,15 +76,18 @@ class AvailabilityController extends GetxController {
   }
 
   Future<void> _fetchAvailability() async {
+    UserModel? user = _authService.getUser();
+    if (user == null) {
+      showErrorSnackBar(message: 'Please login to fetch availability');
+      return;
+    }
     List<DayModel> availability;
     try {
-      String userId = _authService.getCurrentUser().id;
-      availability = await _availabilityService.getAvailability(userId);
+      availability = await _availabilityService.getAvailability(user.id);
     } catch (e, s) {
       showErrorSnackBar(message: 'Error fetching availability: ${e.toString()}');
       return;
     }
-
     _updateAvailabilityWithFetchedData(availability);
   }
 
@@ -132,17 +137,19 @@ class AvailabilityController extends GetxController {
   }
 
   Future<void> _fetchTimeZones() async {
+    UserModel? user = _authService.getUser();
+    if (user == null) {
+      showErrorSnackBar(message: 'Please login to fetch timezones');
+      return;
+    }
     try {
-      final user = _authService.getCurrentUser();
       String dbTimezone = await _ueService.readTimezone(user.id);
-
       if (dbTimezone.isEmpty) {
         selectedTimezone.value = await _tzService.getCurrentTimezoneWithOffset();
         await _updateTimezone(user.id);
       } else {
         selectedTimezone.value = dbTimezone;
       }
-
       allTimezones.value = _tzService.getAllTimeZonesWithOffset();
     } catch (e, s) {
       showErrorSnackBar(message: 'Unable to fetch your timezone. Please try again');
@@ -151,9 +158,10 @@ class AvailabilityController extends GetxController {
 
   Future<void> _updateTimezone(String userId) async {
     try {
-      await _ueService.updateTimezone(userId, selectedTimezone.value);
+      UserModel updatedUser = await _ueService.updateTimezone(userId, selectedTimezone.value);
+      _localStorage.saveUser(updatedUser);
     } catch (e, s) {
-      showErrorSnackBar(message: 'Unable to fetch your timezone. Please try again');
+      showErrorSnackBar(message: 'Unable to update your timezone. Please try again');
     }
   }
 

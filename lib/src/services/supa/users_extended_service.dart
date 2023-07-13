@@ -1,17 +1,23 @@
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UsersExtendedService extends GetxService {
   final SupabaseClient _client = Get.find<SupabaseClient>();
 
-  Future<List<Map<String, dynamic>>> createUserExtended(String userId, String email, String timezone) async {
+  Future<UserModel> createUserExtended(String userId, String email, String timezone) async {
     try {
-      List<Map<String, dynamic>> responseExtended = await _client.from('users_extended').insert({
+      List<Map<String, dynamic>> userExtended = await _client.from('users_extended').insert({
         'user_id': userId,
         'email': email,
         'timezone': timezone,
       }).select();
-      return responseExtended;
+
+      if (userExtended.isNotEmpty) {
+        return UserModel.fromJson(userExtended[0]);
+      } else {
+        throw Exception('Error creating extended user');
+      }
     } catch (e, s) {
       print('$e $s');
       rethrow;
@@ -28,9 +34,25 @@ class UsersExtendedService extends GetxService {
     }
   }
 
-  Future<void> updateTimezone(String userId, String value) async {
+  Future<UserModel> updateTimezone(String userId, String value) async {
     try {
-      await _client.from('users_extended').update({'timezone': value}).eq('user_id', userId);
+      Map<String, dynamic> response =
+          await _client.from('users_extended').update({'timezone': value}).eq('user_id', userId).select<Map<String, dynamic>>().single();
+      return UserModel.fromJson(response);
+    } catch (e, s) {
+      print('$e $s');
+      rethrow;
+    }
+  }
+
+  Future<UserModel> readUserExtended(String userId) async {
+    try {
+      final List<Map<String, dynamic>> responseExtended = await _client.from('users_extended').select().eq('user_id', userId).single();
+      if (responseExtended.isNotEmpty) {
+        return UserModel.fromJson(responseExtended.first);
+      } else {
+        throw Exception('User with id $userId not found in users_extended table.');
+      }
     } catch (e, s) {
       print('$e $s');
       rethrow;

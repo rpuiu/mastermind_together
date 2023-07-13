@@ -64,7 +64,9 @@ class GroupController extends GetxController {
   }
 
   void joinGroup(String groupId) async {
-    final UserModel user = _authService.getCurrentUser();
+    final UserModel? user = _authService.getUser();
+    if (user == null) return;
+
     try {
       await _groupService.joinGroup(user.id, groupId);
       showSuccessSnackBar(message: 'Successfully joined group');
@@ -81,7 +83,8 @@ class GroupController extends GetxController {
   }
 
   void leaveGroup(String groupId) async {
-    final UserModel user = _authService.getCurrentUser();
+    final UserModel? user = _authService.getUser();
+    if (user == null) return;
     try {
       await _groupService.leaveGroup(user.id, groupId);
       showSuccessSnackBar(message: 'Successfully left group');
@@ -136,7 +139,9 @@ class GroupController extends GetxController {
   }
 
   void _fetchUserGroups() async {
-    final UserModel user = _authService.getCurrentUser();
+    final UserModel? user = _authService.getUser();
+    if (user == null) return;
+
     try {
       List<GroupModel> userGroupsList = await _groupService.getUserGroups(user.id);
       userGroups.value = userGroupsList;
@@ -150,7 +155,8 @@ class GroupController extends GetxController {
   }
 
   void _fetchAvailableGroups() async {
-    final UserModel user = _authService.getCurrentUser();
+    final UserModel? user = _authService.getUser();
+    if (user == null) return;
 
     try {
       final List<GoalModel> userGoals = await _goalService.readUserGoals(user.id);
@@ -224,7 +230,10 @@ class GroupController extends GetxController {
     if (isUserMemberOfGroup(changedGroup.id)) {
       userGroups.add(changedGroup);
     }
-    _availabilityController.checkMatchingAvailability(_authService.getCurrentUser().id, changedGroup).then((matches) {
+    UserModel? user = _authService.getUser();
+    if (user == null) return;
+
+    _availabilityController.checkMatchingAvailability(user.id, changedGroup).then((matches) {
       if (matches) {
         matchingGroups.add(changedGroup);
       }

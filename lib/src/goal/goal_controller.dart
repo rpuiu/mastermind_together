@@ -28,22 +28,25 @@ class GoalController extends GetxController {
   }
 
   void fetchUserGoals() async {
-    final UserModel user = _authService.getCurrentUser();
-    goals.value = await _goalService.readUserGoals(user.id);
+    final UserModel? user = _authService.getUser();
+    if (user != null) {
+      goals.value = await _goalService.readUserGoals(user.id);
+    }
   }
 
   Future<void> saveGoal(String goal) async {
-    final UserModel user = _authService.getCurrentUser();
-
-    await _goalService.createGoal(user.id, goal, selectedCategory!.value, autoSelectGroup.value);
-    Get.toNamed(Routes.home);
+    final UserModel? user = _authService.getUser();
+    if (user != null) {
+      await _goalService.createGoal(user.id, goal, selectedCategory!.value, autoSelectGroup.value);
+      Get.toNamed(Routes.home);
+    }
   }
 
   void _listenToCurrentUserGoalChanges() {
     try {
       _goalService.subscribeToGoalChanges((newGoal) {
-        final UserModel user = _authService.getCurrentUser();
-        if (newGoal.userId == user.id) {
+        final UserModel? user = _authService.getUser();
+        if (user != null && newGoal.userId == user.id) {
           goals.add(newGoal);
         }
       });

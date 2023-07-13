@@ -106,13 +106,13 @@ class TimezoneService extends GetxService {
   }
 
   TimeOfDay convertToLocalTime(TimeOfDay utcTime) {
-    String userTimezone = Get.find<LocalStorageService>().getUserTimezone();
+    String userTimezone = Get.find<LocalStorageService>().getUser()!.timezone;
     TimeOfDay userTime = convertFromUTC(utcTime, userTimezone);
     return userTime;
   }
 
   TimeOfDay convertLocalTimeToUTC(TimeOfDay localTime) {
-    String userTimezone = Get.find<LocalStorageService>().getUserTimezone();
+    String userTimezone = Get.find<LocalStorageService>().getUser()!.timezone;
     TimeOfDay utcTime = convertToUTC(localTime, userTimezone)!;
     return utcTime;
   }
