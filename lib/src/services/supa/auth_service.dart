@@ -47,14 +47,14 @@ class AuthService extends GetxService {
     }
   }
 
-  Future<UserModel> signUp(String email, String password) async {
+  Future<UserModel> signUp(String username, String email, String password) async {
     try {
       final AuthResponse response = await _client.auth.signUp(email: email, password: password);
       final User user = response.user!;
 
       String timezone = await _timezoneService.getCurrentTimezoneWithOffset();
 
-      UserModel userModel = await _userExtendedService.createUserExtended(user.id, user.email!, timezone);
+      UserModel userModel = await _userExtendedService.createUserExtended(user.id, username, user.email!, timezone);
       currentUser = userModel;
       _localStorage.saveUser(userModel);
 
@@ -72,9 +72,7 @@ class AuthService extends GetxService {
     try {
       final AuthResponse response = await _client.auth.signInWithPassword(email: email, password: password);
       final User user = response.user!;
-
-      String timezone = await _userExtendedService.readTimezone(user.id);
-      UserModel userModel = UserModel(id: user.id, email: user.email!, timezone: timezone);
+      UserModel userModel = await _userExtendedService.readUserExtended(user.id);
       _localStorage.saveUser(userModel);
       currentUser = userModel;
 

@@ -38,7 +38,7 @@ class ChatWidget extends GetView<MessageController> {
                         ],
                       ),
                     ),
-                    subtitle: Text(message.timestamp.toString()),
+                    subtitle: Text(message.formattedTime.toString()),
                   );
                 },
               );
@@ -65,7 +65,7 @@ class ChatWidget extends GetView<MessageController> {
                     controller.sendMessage(
                       groupId,
                       user.id,
-                      user.email,
+                      user.username,
                       textController.text,
                     );
                     textController.clear();

@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class MessageModel {
   final String id;
   final String groupId;
@@ -5,6 +7,8 @@ class MessageModel {
   final String sender;
   final String content;
   final DateTime timestamp;
+
+  String get formattedTime => DateFormat.Hm().format(timestamp.toLocal());
 
   MessageModel({
     required this.id,

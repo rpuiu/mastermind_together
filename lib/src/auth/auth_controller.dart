@@ -8,9 +8,9 @@ import 'package:mastermind_together/src/services/supa/auth_service.dart';
 class AuthController extends GetxController {
   final AuthService _authService = Get.find<AuthService>();
 
-  Future<void> register(String email, String password) async {
+  Future<void> register(String username, String email, String password) async {
     try {
-      await _authService.signUp(email, password);
+      await _authService.signUp(username, email, password);
       showSuccessSnackBar(message: 'Congratulations, your account has been successfully created');
       Get.offAllNamed(Routes.login);
     } catch (e, s) {

@@ -4,6 +4,7 @@ import 'package:mastermind_together/src/auth/auth_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
 
 class RegisterScreen extends GetView<AuthController> {
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -25,6 +26,10 @@ class RegisterScreen extends GetView<AuthController> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextField(
+                    controller: usernameController,
+                    decoration: InputDecoration(labelText: 'Username'),
+                  ),
+                  TextField(
                     controller: emailController,
                     decoration: InputDecoration(labelText: 'Email'),
                   ),
@@ -38,7 +43,7 @@ class RegisterScreen extends GetView<AuthController> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Change this as per your requirement
                     children: [
                       ElevatedButton(
-                        onPressed: () => controller.register(emailController.text, passwordController.text),
+                        onPressed: () => controller.register(usernameController.text, emailController.text, passwordController.text),
                         child: Text('Register'),
                       ),
                       ElevatedButton(

@@ -15,7 +15,7 @@ class GroupScreen extends GetView<GroupController> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back), // change this as needed
+          icon: Icon(Icons.arrow_back),
           onPressed: () => Get.back(),
         ),
         title: Text('Group'),
@@ -66,8 +66,8 @@ class GroupScreen extends GetView<GroupController> {
                                   ),
                                   ...members
                                       .map((member) => ListTile(
-                                            title: Text(member.email),
-                                            // Add more details about the member as needed
+                                            leading: Icon(Icons.person),
+                                            title: Text(member.username),
                                           ))
                                       .toList(),
                                 ],

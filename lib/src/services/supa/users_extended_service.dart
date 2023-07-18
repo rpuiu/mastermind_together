@@ -5,11 +5,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class UsersExtendedService extends GetxService {
   final SupabaseClient _client = Get.find<SupabaseClient>();
 
-  Future<UserModel> createUserExtended(String userId, String email, String timezone) async {
+  Future<UserModel> createUserExtended(String userId, String username, String email, String timezone) async {
     try {
       List<Map<String, dynamic>> userExtended = await _client.from('users_extended').insert({
         'user_id': userId,
         'email': email,
+        'username': username,
         'timezone': timezone,
       }).select();
 
@@ -47,12 +48,8 @@ class UsersExtendedService extends GetxService {
 
   Future<UserModel> readUserExtended(String userId) async {
     try {
-      final List<Map<String, dynamic>> responseExtended = await _client.from('users_extended').select().eq('user_id', userId).single();
-      if (responseExtended.isNotEmpty) {
-        return UserModel.fromJson(responseExtended.first);
-      } else {
-        throw Exception('User with id $userId not found in users_extended table.');
-      }
+      final Map<String, dynamic> response = await _client.from('users_extended').select().eq('user_id', userId).single();
+      return UserModel.fromJson(response);
     } catch (e, s) {
       print('$e $s');
       rethrow;

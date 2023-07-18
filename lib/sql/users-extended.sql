@@ -1,6 +1,7 @@
 CREATE TABLE public.users_extended
 (
     user_id uuid NOT NULL,
+    username text,
     timezone text,
     email text,
     CONSTRAINT users_extended_pkey PRIMARY KEY (user_id),
