@@ -35,10 +35,14 @@ class GoalController extends GetxController {
   }
 
   Future<void> saveGoal(String goal) async {
-    final UserModel? user = _authService.getUser();
-    if (user != null) {
-      await _goalService.createGoal(user.id, goal, selectedCategory!.value, autoSelectGroup.value);
-      Get.toNamed(Routes.home);
+    try {
+      final UserModel? user = _authService.getUser();
+      if (user != null) {
+        await _goalService.createGoal(user.id, goal, selectedCategory!.value, autoSelectGroup.value, user.tenantId);
+        Get.toNamed(Routes.home);
+      }
+    } catch (e, s) {
+      showErrorSnackBar(message: "Unable to create goal");
     }
   }
 

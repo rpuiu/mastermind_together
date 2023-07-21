@@ -54,7 +54,7 @@ class GroupController extends GetxController {
       GroupModel groupCopy = group.value;
       groupCopy.meetingTimeUTC = _tzService.convertLocalTimeToUTC(group.value.meetingTimeUTC);
 
-      await _groupService.createGroup(groupCopy);
+      await _groupService.createGroup(groupCopy, _authService.getUser()!.tenantId);
 
       showSuccessSnackBar(message: 'The group has been created!');
     } catch (e, s) {
@@ -68,7 +68,7 @@ class GroupController extends GetxController {
     if (user == null) return;
 
     try {
-      await _groupService.joinGroup(user.id, groupId);
+      await _groupService.joinGroup(user, groupId);
       showSuccessSnackBar(message: 'Successfully joined group');
 
       final GroupModel joinedGroup = await _groupService.readGroup(groupId);
@@ -127,7 +127,7 @@ class GroupController extends GetxController {
   void _fetchGroups() async {
     isLoading(true);
     try {
-      final response = await _groupService.readAllGroups();
+      final response = await _groupService.readAllGroups(_authService.getUser()!.tenantId);
       if (response != null) {
         groups.value = response;
       }
@@ -143,7 +143,7 @@ class GroupController extends GetxController {
     if (user == null) return;
 
     try {
-      List<GroupModel> userGroupsList = await _groupService.getUserGroups(user.id);
+      List<GroupModel> userGroupsList = await _groupService.getUserGroups(user);
       userGroups.value = userGroupsList;
 
       for (var group in userGroupsList) {
@@ -162,8 +162,8 @@ class GroupController extends GetxController {
       final List<GoalModel> userGoals = await _goalService.readUserGoals(user.id);
       if (userGoals.isNotEmpty) {
         final String category = userGoals.first.category; //TODO Only first goal gets taken into account
-        List<GroupModel> allGroups = await _groupService.getGroupsByCategory(category);
-        final userGroups = await _groupService.getUserGroups(user.id);
+        List<GroupModel> allGroups = await _groupService.getGroupsByCategory(category, user.tenantId);
+        final userGroups = await _groupService.getUserGroups(user);
 
         if (allGroups.isNotEmpty) {
           final availableGroups = allGroups.where((group) => !userGroups.any((userGroup) => userGroup.id == group.id)).toList();
@@ -188,7 +188,8 @@ class GroupController extends GetxController {
   }
 
   void _listenToGroupChanges() {
-    _groupService.subscribeToGroupChanges((eventType, changedGroup) {
+    String tenantId = _authService.getUser()!.tenantId;
+    _groupService.subscribeToGroupChanges(tenantId, (eventType, changedGroup) {
       switch (eventType) {
         case 'INSERT':
           print("Debug: INSERT event received for group: ${changedGroup.id}");

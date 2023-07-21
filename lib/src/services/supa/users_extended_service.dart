@@ -5,13 +5,14 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class UsersExtendedService extends GetxService {
   final SupabaseClient _client = Get.find<SupabaseClient>();
 
-  Future<UserModel> createUserExtended(String userId, String username, String email, String timezone) async {
+  Future<UserModel> createUserExtended(String userId, String username, String email, String timezone, String tenantId) async {
     try {
       List<Map<String, dynamic>> userExtended = await _client.from('users_extended').insert({
         'user_id': userId,
         'email': email,
         'username': username,
         'timezone': timezone,
+        'tenant_id': tenantId,
       }).select();
 
       if (userExtended.isNotEmpty) {

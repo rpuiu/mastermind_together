@@ -1,17 +1,19 @@
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/admin/tenant_controller.dart';
 import 'package:mastermind_together/src/auth/auth_controller.dart';
 import 'package:mastermind_together/src/availability/availability_controller.dart';
+import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:mastermind_together/src/groups/categories/category_controller.dart';
+import 'package:mastermind_together/src/groups/chat/message_controller.dart';
+import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/services/sharedprefs/local_storage.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';
 import 'package:mastermind_together/src/services/supa/category_service.dart';
 import 'package:mastermind_together/src/services/supa/goal_service.dart';
 import 'package:mastermind_together/src/services/supa/message_service.dart';
-import 'package:mastermind_together/src/services/supa/users_extended_service.dart';
+import 'package:mastermind_together/src/services/supa/tenant_service.dart';
 import 'package:mastermind_together/src/services/supa/user_group_service.dart';
-import 'package:mastermind_together/src/goal/goal_controller.dart';
-import 'package:mastermind_together/src/groups/chat/message_controller.dart';
-import 'package:mastermind_together/src/groups/group_controller.dart';
+import 'package:mastermind_together/src/services/supa/users_extended_service.dart';
 import 'package:mastermind_together/src/services/timezone/timezone_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -46,5 +48,7 @@ class GetBindings {
     Get.lazyPut(() => sharedPreferences, fenix: true);
     Get.lazyPut(() => LocalStorageService(), fenix: true);
     Get.lazyPut(() => CategoryController(), fenix: true);
+    Get.lazyPut(() => TenantService(), fenix: true);
+    Get.lazyPut(() => TenantController(), fenix: true);
   }
 }

@@ -18,8 +18,8 @@ class GoalModel {
       'id': id,
       'user_id': userId,
       'goal': goal,
-      'goal_area': category,
-      'auto_select': autoSelectGroup,
+      'category': category,
+      'auto_select_group': autoSelectGroup,
     };
   }
 
@@ -28,8 +28,8 @@ class GoalModel {
       id: json['id'],
       userId: json['user_id'],
       goal: json['goal'],
-      category: json['goal_area'],
-      autoSelectGroup: json['auto_select'],
+      category: json['category'],
+      autoSelectGroup: json['auto_select_group'],
     );
   }
 }

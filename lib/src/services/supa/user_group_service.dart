@@ -14,6 +14,7 @@ class UserGroupService {
   static const String currentMembersField = 'current_members';
   static const String idField = 'id';
   static const String categoryField = 'category';
+  static const String tenantIdField = 'tenant_id';
 
   Future<T> _runQuery<T>(Future<T> Function() query) async {
     try {
@@ -24,9 +25,9 @@ class UserGroupService {
     }
   }
 
-  Future<List<GroupModel>?> readAllGroups() async {
+  Future<List<GroupModel>?> readAllGroups(String tenantId) async {
     return _runQuery(() async {
-      final List<dynamic> data = await _client.from(groupsTable).select();
+      final List<dynamic> data = await _client.from(groupsTable).select().eq(tenantIdField, tenantId);
       if (data.isEmpty) {
         print("No groups available");
         return null;
@@ -35,13 +36,13 @@ class UserGroupService {
     });
   }
 
-  Future<void> createGroup(GroupModel groupModel) async {
+  Future<void> createGroup(GroupModel groupModel, String tenantId) async {
     return _runQuery(() async {
-      await _client.from(groupsTable).insert(groupModel.toJson());
+      await _client.from(groupsTable).insert({...groupModel.toJson(), tenantIdField: tenantId});
     });
   }
 
-  Future<void> joinGroup(String userId, String groupId) async {
+  Future<void> joinGroup(UserModel user, String groupId) async {
     return _runQuery(() async {
       final groupResponse = await _client.from(groupsTable).select().eq(idField, groupId).single();
 
@@ -52,11 +53,11 @@ class UserGroupService {
           throw Exception('Group is already full.');
         }
 
-        bool isAlreadyInGroup = await isAlreadyMember(userId, groupId);
+        bool isAlreadyInGroup = await isAlreadyMember(user.id, groupId);
         if (isAlreadyInGroup) {
           throw Exception('You are already a member of this group.');
         }
-        await addUserToGroup(userId, groupId);
+        await addUserToGroup(user.id, groupId, user.tenantId);
         await incrementGroupMembers(group, groupId);
       } else {
         throw Exception('Group not found.');
@@ -106,9 +107,9 @@ class UserGroupService {
     });
   }
 
-  Future<void> addUserToGroup(String userId, String groupId) async {
+  Future<void> addUserToGroup(String userId, String groupId, String tenantId) async {
     return _runQuery(() async {
-      await _client.from(groupMembersTable).insert({userIdField: userId, groupIdField: groupId});
+      await _client.from(groupMembersTable).insert({userIdField: userId, groupIdField: groupId, tenantIdField: tenantId});
     });
   }
 
@@ -122,9 +123,10 @@ class UserGroupService {
 
   bool isGroupFull(GroupModel group) => group.currentMembers >= group.maxMembers;
 
-  Future<List<GroupModel>> getUserGroups(String userId) async {
+  Future<List<GroupModel>> getUserGroups(UserModel user) async {
     return _runQuery(() async {
-      final List<dynamic> response = await _client.from(groupMembersTable).select('$groupIdField:$groupIdField (*)').eq(userIdField, userId);
+      final List<dynamic> response =
+          await _client.from(groupMembersTable).select('$groupIdField:$groupIdField (*)').eq(userIdField, user.id).eq(tenantIdField, user.tenantId);
       return response.map((group) => GroupModel.fromJson(group[groupIdField])).toList();
     });
   }
@@ -143,17 +145,17 @@ class UserGroupService {
     });
   }
 
-  Future<List<GroupModel>> getGroupsByCategory(String category) async {
+  Future<List<GroupModel>> getGroupsByCategory(String category, String tenantId) async {
     return _runQuery(() async {
-      List<dynamic> response = await _client.from(groupsTable).select().eq(categoryField, category);
+      List<dynamic> response = await _client.from(groupsTable).select().eq(categoryField, category).eq(tenantIdField, tenantId);
       return response.map((group) => GroupModel.fromJson(group)).toList();
     });
   }
 
-  void subscribeToGroupChanges(Function(String, GroupModel) onGroupChanges) {
-    groupSubscription = _client.channel('public:groups').on(
+  void subscribeToGroupChanges(String tenantId, Function(String, GroupModel) onGroupChanges) {
+    groupSubscription = _client.channel('public:groups:tenant_id=eq.$tenantId').on(
       RealtimeListenTypes.postgresChanges,
-      ChannelFilter(event: '*', schema: 'public', table: groupsTable),
+      ChannelFilter(event: '*', schema: 'public', table: groupsTable, filter: 'tenant_id=eq.$tenantId'),
       (payload, [ref]) {
         print('Group change received: ${payload.toString()}');
 

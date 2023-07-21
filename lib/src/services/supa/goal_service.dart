@@ -11,13 +11,19 @@ class GoalService extends GetxService {
     return data.map((e) => GoalModel.fromJson(e)).toList();
   }
 
-  Future<void> createGoal(String userId, String goal, String goalArea, bool autoSelectGroup) async {
-    final response = await _client.from('goals').insert({
-      'user_id': userId,
-      'goal': goal,
-      'goal_area': goalArea,
-      'auto_select': autoSelectGroup,
-    });
+  Future<void> createGoal(String userId, String goal, String category, bool autoSelectGroup, String tenantId) async {
+    try {
+      final response = await _client.from('goals').insert({
+        'user_id': userId,
+        'goal': goal,
+        'category': category,
+        'auto_select_group': autoSelectGroup,
+        'tenant_id': tenantId,
+      });
+    } catch (e, s) {
+      print('Unable to create goal: ${e.toString() + s.toString()}');
+      rethrow;
+    }
   }
 
   void subscribeToGoalChanges(Function(GoalModel) onNewGoal) {

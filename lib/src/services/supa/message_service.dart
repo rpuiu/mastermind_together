@@ -11,7 +11,7 @@ class MessageService {
     try {
       _chatChannel = _client.channel('public:messages:group_id=eq.$groupId').on(
         RealtimeListenTypes.postgresChanges,
-        ChannelFilter(event: 'INSERT', schema: 'public', table: 'messages'),
+        ChannelFilter(event: 'INSERT', schema: 'public', table: 'messages', filter: 'group_id=eq.$groupId'),
         (payload, [ref]) {
           print('Message received: ${payload.toString()}');
           MessageModel newMessage = MessageModel.fromJson(payload['new']);

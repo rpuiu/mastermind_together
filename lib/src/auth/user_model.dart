@@ -3,12 +3,14 @@ class UserModel {
   final String email;
   final String timezone;
   final String username;
+  final String tenantId;
 
   UserModel({
     required this.id,
     required this.email,
     required this.timezone,
     required this.username,
+    required this.tenantId,
   });
 
   Map<String, dynamic> toJson() {
@@ -17,6 +19,7 @@ class UserModel {
       'email': email,
       'timezone': timezone,
       'username': username,
+      'tenant_id': tenantId,
     };
   }
 
@@ -26,6 +29,7 @@ class UserModel {
       email: json['email'],
       timezone: json['timezone'],
       username: json['username'],
+      tenantId: json['tenant_id'],
     );
   }
 }

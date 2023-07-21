@@ -53,8 +53,15 @@ class AuthService extends GetxService {
       final User user = response.user!;
 
       String timezone = await _timezoneService.getCurrentTimezoneWithOffset();
+      String tenantId;
+      String? tenantIdParam = Get.parameters['tenantId'];
+      if (tenantIdParam == ":tenantId" || tenantIdParam == null) {
+        tenantId = '3a4663f6-0e39-4095-b9aa-38449255910f'; //TODO remove this in production.
+      } else {
+        tenantId = tenantIdParam;
+      }
 
-      UserModel userModel = await _userExtendedService.createUserExtended(user.id, username, user.email!, timezone);
+      UserModel userModel = await _userExtendedService.createUserExtended(user.id, username, user.email!, timezone, tenantId);
       currentUser = userModel;
       _localStorage.saveUser(userModel);
 
