@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
+import 'package:mastermind_together/src/services/log/logger_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UserGroupService {
@@ -20,7 +21,7 @@ class UserGroupService {
     try {
       return await query();
     } catch (e, s) {
-      print('$e $s');
+      Log().e("Error while executing query: $query:", e, s);
       rethrow;
     }
   }
@@ -29,7 +30,7 @@ class UserGroupService {
     return _runQuery(() async {
       final List<dynamic> data = await _client.from(groupsTable).select().eq(tenantIdField, tenantId);
       if (data.isEmpty) {
-        print("No groups available");
+        Log().d("No groups available for $tenantId");
         return null;
       }
       return data.map((g) => GroupModel.fromJson(g)).toList();
@@ -157,7 +158,7 @@ class UserGroupService {
       RealtimeListenTypes.postgresChanges,
       ChannelFilter(event: '*', schema: 'public', table: groupsTable, filter: 'tenant_id=eq.$tenantId'),
       (payload, [ref]) {
-        print('Group change received: ${payload.toString()}');
+        Log().i('Group change received: ${payload.toString()}');
 
         GroupModel changedGroup = GroupModel.fromJson(payload['new']);
 

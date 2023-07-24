@@ -41,7 +41,7 @@ class GoalController extends GetxController {
         await _goalService.createGoal(user.id, goal, selectedCategory!.value, autoSelectGroup.value, user.tenantId);
         Get.toNamed(Routes.home);
       }
-    } catch (e, s) {
+    } catch (e) {
       showErrorSnackBar(message: "Unable to create goal");
     }
   }
@@ -54,7 +54,7 @@ class GoalController extends GetxController {
           goals.add(newGoal);
         }
       });
-    } catch (e, s) {
+    } catch (e) {
       showErrorSnackBar(message: "Unable to listen to any goal changes.");
     }
   }

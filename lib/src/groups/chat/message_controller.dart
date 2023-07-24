@@ -15,7 +15,7 @@ class MessageController extends GetxController {
     try {
       loadMessages(groupId);
       _messageService.subscribeToNewMessages(groupId, _onNewMessage);
-    } catch (e, s) {
+    } catch (e) {
       showErrorSnackBar(message: "Unable to load messages");
     }
   }
@@ -28,7 +28,7 @@ class MessageController extends GetxController {
     try {
       final fetchedMessages = await _messageService.getGroupMessages(groupId);
       messages.value = fetchedMessages;
-    } catch (e, s) {
+    } catch (e) {
       showErrorSnackBar(message: "Unable to load new messages. $e");
     }
   }

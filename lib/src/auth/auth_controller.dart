@@ -13,8 +13,8 @@ class AuthController extends GetxController {
       await _authService.signUp(username, email, password);
       showSuccessSnackBar(message: 'Congratulations, your account has been successfully created');
       Get.offAllNamed(Routes.login);
-    } catch (e, s) {
-      showErrorSnackBar(message: e.toString());
+    } catch (e) {
+      showErrorSnackBar(message: "Registration failed, please try again or contact us for support");
     }
   }
 
@@ -23,8 +23,8 @@ class AuthController extends GetxController {
       await _authService.signInWithPassword(email, password);
       showSuccessSnackBar(message: 'Logged in successfully');
       Get.offAllNamed(Routes.home);
-    } catch (e, s) {
-      showErrorSnackBar(message: e.toString());
+    } catch (e) {
+      showErrorSnackBar(message: "Error while authenticating [$email]. Please try again or contact us for support.");
       await _authService.signOut(); // on sign-in failure, sign out the user
     }
   }
@@ -33,8 +33,8 @@ class AuthController extends GetxController {
     try {
       await _authService.signOut();
       showSuccessSnackBar(message: 'Logged out successfully');
-    } catch (e, s) {
-      showErrorSnackBar(message: e.toString());
+    } catch (e) {
+      showErrorSnackBar(message: "Error while logging out. Please try again or contact us for support");
     }
   }
 }

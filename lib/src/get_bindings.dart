@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import 'package:mastermind_together/src/admin/tenant_controller.dart';
 import 'package:mastermind_together/src/auth/auth_controller.dart';
 import 'package:mastermind_together/src/availability/availability_controller.dart';
@@ -50,5 +51,6 @@ class GetBindings {
     Get.lazyPut(() => CategoryController(), fenix: true);
     Get.lazyPut(() => TenantService(), fenix: true);
     Get.lazyPut(() => TenantController(), fenix: true);
+    Get.lazyPut(() => Logger(), fenix: true);
   }
 }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/routes.dart';
+import 'package:mastermind_together/src/services/log/logger_service.dart';
 import 'package:mastermind_together/src/services/sharedprefs/local_storage.dart';
 import 'package:mastermind_together/src/services/supa/users_extended_service.dart';
 import 'package:mastermind_together/src/services/timezone/timezone_service.dart';
@@ -48,13 +49,13 @@ class AuthService extends GetxService {
   }
 
   Future<UserModel> signUp(String username, String email, String password) async {
+    String? tenantIdParam = Get.parameters['tenantId'];
     try {
       final AuthResponse response = await _client.auth.signUp(email: email, password: password);
       final User user = response.user!;
 
       String timezone = await _timezoneService.getCurrentTimezoneWithOffset();
       String tenantId;
-      String? tenantIdParam = Get.parameters['tenantId'];
       if (tenantIdParam == ":tenantId" || tenantIdParam == null) {
         tenantId = '3a4663f6-0e39-4095-b9aa-38449255910f'; //TODO remove this in production.
       } else {
@@ -66,12 +67,12 @@ class AuthService extends GetxService {
       _localStorage.saveUser(userModel);
 
       return userModel;
-    } on AuthException catch (err, s) {
-      print(err);
-      throw ('Failed to register $email: ${err.message}');
-    } catch (err, s) {
-      print(err);
-      throw ('An unexpected error occurred when registering $email, please try again');
+    } on AuthException catch (e, s) {
+      Log().e("Error while registering $email:", e, s, tenantIdParam!);
+      rethrow;
+    } catch (e, s) {
+      Log().e("An unexpected error occurred when registering $email", e, s, tenantIdParam!);
+      rethrow;
     }
   }
 
@@ -84,12 +85,12 @@ class AuthService extends GetxService {
       currentUser = userModel;
 
       return userModel;
-    } on AuthException catch (err, s) {
-      print(err);
-      throw ('Failed to login $email: ${err.message}');
-    } catch (err, s) {
-      print(err);
-      throw ('An unexpected error occurred when logging in $email, please try again');
+    } on AuthException catch (e, s) {
+      Log().e("Error while authenticating [$email]:", e, s);
+      rethrow;
+    } catch (e, s) {
+      Log().e("An unexpected error occured while authenticating $email:", e, s);
+      rethrow;
     }
   }
 
@@ -98,11 +99,11 @@ class AuthService extends GetxService {
       await _client.auth.signOut();
       currentUser = null;
     } on AuthException catch (e, s) {
-      print('$e $s');
-      throw ('An error occurred: ${e.message}');
+      Log().e("Error while logging out ${currentUser!.id}:", e, s, currentUser!.tenantId);
+      rethrow;
     } catch (e, s) {
-      print('$e $s');
-      throw ('An error occurred, please try again');
+      Log().e("An unexpected error occurred while logging out ${currentUser!.id}:", e, s, currentUser!.tenantId);
+      rethrow;
     }
   }
 

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/groups/chat/message_model.dart';
+import 'package:mastermind_together/src/services/log/logger_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MessageService {
@@ -13,7 +14,7 @@ class MessageService {
         RealtimeListenTypes.postgresChanges,
         ChannelFilter(event: 'INSERT', schema: 'public', table: 'messages', filter: 'group_id=eq.$groupId'),
         (payload, [ref]) {
-          print('Message received: ${payload.toString()}');
+          Log().i('Message received: ${payload.toString()}');
           MessageModel newMessage = MessageModel.fromJson(payload['new']);
           onNewMessage(newMessage);
         },
@@ -21,7 +22,7 @@ class MessageService {
 
       _chatChannel.subscribe();
     } catch (e, s) {
-      print('$e $s');
+      Log().e("Error while subscribing to new messages in $groupId:", e, s);
       rethrow;
     }
   }
@@ -30,7 +31,7 @@ class MessageService {
     try {
       await _client.removeChannel(_chatChannel);
     } catch (e, s) {
-      print('$e $s');
+      Log().e("Error while removing messages subscription: ", e, s);
     }
   }
 
@@ -39,7 +40,7 @@ class MessageService {
       final List<dynamic> response = await _client.from('messages').select().eq('group_id', groupId).order('timestamp', ascending: true);
       return response.map((json) => MessageModel.fromJson(json)).toList();
     } catch (e, s) {
-      print('$e $s');
+      Log().e("Error while fetching group messages:", e, s);
       rethrow;
     }
   }
@@ -53,7 +54,7 @@ class MessageService {
         'content': content,
       });
     } catch (e, s) {
-      print('$e $s');
+      Log().e("Error while sending a message by $userId in $groupId:", e, s);
       rethrow;
     }
   }

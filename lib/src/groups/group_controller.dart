@@ -6,6 +6,7 @@ import 'package:mastermind_together/src/common/widgets/snackbar.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
 import 'package:mastermind_together/src/groups/categories/category_controller.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
+import 'package:mastermind_together/src/services/log/logger_service.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';
 import 'package:mastermind_together/src/services/supa/goal_service.dart';
 import 'package:mastermind_together/src/services/supa/user_group_service.dart';
@@ -58,7 +59,7 @@ class GroupController extends GetxController {
 
       showSuccessSnackBar(message: 'The group has been created!');
     } catch (e, s) {
-      print('$e: $s');
+      Log().e("Error while creating group:", e, s);
       showErrorSnackBar(message: 'Error creating group, please try again');
     }
   }
@@ -76,8 +77,8 @@ class GroupController extends GetxController {
       userGroups.refresh();
       _fetchAvailableGroups(); // Refresh the matching groups
     } catch (e, s) {
-      print('$e $s');
-      showErrorSnackBar(message: 'Unable to join group due to: ${e.toString()}');
+      Log().e("Error while joining group $groupId:", e, s, user.tenantId);
+      showErrorSnackBar(message: 'Unable to join group: ${e.toString()}');
     }
     userGroupStatus[groupId]?.value = true;
   }
@@ -94,8 +95,8 @@ class GroupController extends GetxController {
       userGroups.refresh();
       _fetchAvailableGroups(); // Refresh the matching groups
     } catch (e, s) {
-      print('$e $s');
-      showErrorSnackBar(message: 'Unable to leave group due to: ${e.toString()}');
+      Log().e("Error while leaving group $groupId:", e, s, user.tenantId);
+      showErrorSnackBar(message: 'Unable to leave group: ${e.toString()}');
     }
 
     userGroupStatus[groupId]?.value = false;
@@ -109,7 +110,7 @@ class GroupController extends GetxController {
     try {
       final groupResponse = await _groupService.readGroup(groupId);
       return groupResponse;
-    } catch (e, s) {
+    } catch (e) {
       showErrorSnackBar(message: 'Group not found');
       rethrow;
     }
@@ -118,7 +119,7 @@ class GroupController extends GetxController {
   Future<List<UserModel>> fetchGroupMembers(String groupId) async {
     try {
       return await _groupService.getGroupMembers(groupId);
-    } catch (e, s) {
+    } catch (e) {
       showErrorSnackBar(message: 'Unable to fetch group members');
       return [];
     }
@@ -131,7 +132,7 @@ class GroupController extends GetxController {
       if (response != null) {
         groups.value = response;
       }
-    } catch (e, s) {
+    } catch (e) {
       showErrorSnackBar(message: 'Unable to fetch groups. Please try again');
     } finally {
       isLoading(false);
@@ -149,7 +150,7 @@ class GroupController extends GetxController {
       for (var group in userGroupsList) {
         userGroupStatus[group.id] = true.obs;
       }
-    } catch (e, s) {
+    } catch (e) {
       showErrorSnackBar(message: 'Failed to get user groups');
     }
   }
@@ -182,7 +183,7 @@ class GroupController extends GetxController {
         }
       }
     } catch (e, s) {
-      print('$e $s');
+      Log().e("Error while fetching the available groups:", e, s);
       showErrorSnackBar(message: 'Failed to fetch available groups');
     }
   }
@@ -192,15 +193,15 @@ class GroupController extends GetxController {
     _groupService.subscribeToGroupChanges(tenantId, (eventType, changedGroup) {
       switch (eventType) {
         case 'INSERT':
-          print("Debug: INSERT event received for group: ${changedGroup.id}");
+          Log().d("Debug: INSERT event received for group: ${changedGroup.id}");
           _handleInsertEvents(changedGroup);
           break;
         case 'UPDATE':
-          print("Debug: UPDATE event received for group: ${changedGroup.id}");
+          Log().d("Debug: UPDATE event received for group: ${changedGroup.id}");
           _handleUpdateEvents(changedGroup);
           break;
         case 'DELETE':
-          print("Debug: DELETE event received for group: ${changedGroup.id}");
+          Log().d("Debug: DELETE event received for group: ${changedGroup.id}");
           _handleDeleteEvents(changedGroup);
           break;
         default:

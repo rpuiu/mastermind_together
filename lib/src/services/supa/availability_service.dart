@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/availability/day_model.dart';
+import 'package:mastermind_together/src/services/log/logger_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AvailabilityService extends GetxService {
@@ -12,7 +13,7 @@ class AvailabilityService extends GetxService {
       final List<dynamic> data = await _client.from('availability').select().eq('user_id', userId);
       return data.map((json) => DayModel.fromJson(json)).toList();
     } catch (e, s) {
-      print('$e $s');
+      Log().e("Error getting availability for $userId:", e, s);
       rethrow;
     }
   }
@@ -26,8 +27,8 @@ class AvailabilityService extends GetxService {
         await _updateAvailability(dayModel, userId);
       }
     } catch (e, s) {
-      print('$e $s');
-      rethrow;
+      Log().e("Error setting availability for $userId:", e, s);
+      return;
     }
   }
 
@@ -35,7 +36,7 @@ class AvailabilityService extends GetxService {
     try {
       await _client.from('availability').update(dayModel.toJson()..['user_id'] = userId).eq('user_id', userId).eq('day', dayModel.dayName);
     } catch (e, s) {
-      print('$e $s');
+      Log().e("Error while updating availabilty for $userId: ", e, s);
       rethrow;
     }
   }
@@ -44,7 +45,7 @@ class AvailabilityService extends GetxService {
     try {
       return await _client.from('availability').insert(dayModel.toJson()..['user_id'] = userId);
     } catch (e, s) {
-      print('$e $s');
+      Log().e("Error while inserting availability of $userId", e, s);
       rethrow;
     }
   }
@@ -53,7 +54,7 @@ class AvailabilityService extends GetxService {
     try {
       return await _client.from('availability').select().eq('user_id', userId).eq('day', dayModel.dayName).maybeSingle();
     } catch (e, s) {
-      print('$e $s');
+      Log().e("Error while checking if $userId is available: ", e, s);
       rethrow;
     }
   }

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/user_model.dart';
+import 'package:mastermind_together/src/services/log/logger_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UsersExtendedService extends GetxService {
@@ -18,10 +19,9 @@ class UsersExtendedService extends GetxService {
       if (userExtended.isNotEmpty) {
         return UserModel.fromJson(userExtended[0]);
       } else {
-        throw Exception('Error creating extended user');
+        throw Exception('Error creating user details');
       }
-    } catch (e, s) {
-      print('$e $s');
+    } catch (e) {
       rethrow;
     }
   }
@@ -31,7 +31,7 @@ class UsersExtendedService extends GetxService {
       Map<String, dynamic> response = await _client.from('users_extended').select('timezone').eq('user_id', userId).single();
       return response['timezone'];
     } catch (e, s) {
-      print('$e $s');
+      Log().e("Error while reading timezone for $userId:", e, s);
       rethrow;
     }
   }
@@ -42,7 +42,7 @@ class UsersExtendedService extends GetxService {
           await _client.from('users_extended').update({'timezone': value}).eq('user_id', userId).select<Map<String, dynamic>>().single();
       return UserModel.fromJson(response);
     } catch (e, s) {
-      print('$e $s');
+      Log().e("Error while updating timezone for $userId with value $value", e, s);
       rethrow;
     }
   }
@@ -51,8 +51,7 @@ class UsersExtendedService extends GetxService {
     try {
       final Map<String, dynamic> response = await _client.from('users_extended').select().eq('user_id', userId).single();
       return UserModel.fromJson(response);
-    } catch (e, s) {
-      print('$e $s');
+    } catch (e) {
       rethrow;
     }
   }

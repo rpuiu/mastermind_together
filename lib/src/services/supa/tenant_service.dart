@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/services/log/logger_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class TenantService extends GetxService {
@@ -22,7 +23,7 @@ class TenantService extends GetxService {
         throw Exception('Error creating new tenant: $response');
       }
     } catch (e, s) {
-      print('$e $s');
+      Log().e("Error while creating tenant:", e, s);
       rethrow;
     }
   }

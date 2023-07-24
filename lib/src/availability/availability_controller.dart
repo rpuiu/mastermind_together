@@ -4,6 +4,7 @@ import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/availability/day_model.dart';
 import 'package:mastermind_together/src/common/widgets/snackbar.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
+import 'package:mastermind_together/src/services/log/logger_service.dart';
 import 'package:mastermind_together/src/services/sharedprefs/local_storage.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';
 import 'package:mastermind_together/src/services/supa/availability_service.dart';
@@ -43,9 +44,9 @@ class AvailabilityController extends GetxController {
         await _saveDayAvailability(currentUser.id, day);
       }
       await _fetchAvailability();
-    } catch (e) {
-      print('$e');
-      showErrorSnackBar(message: 'Error saving availability: ${e.toString()}');
+    } catch (e, s) {
+      Log().e("Error while subscribing to goal changes:", e, s);
+      showErrorSnackBar(message: 'Error saving availability. Please try again or contact us for support');
     }
     showSuccessSnackBar(message: 'Your availability has been updated');
   }
@@ -84,8 +85,7 @@ class AvailabilityController extends GetxController {
     List<DayModel> availability;
     try {
       availability = await _availabilityService.getAvailability(user.id);
-    } catch (e, s) {
-      showErrorSnackBar(message: 'Error fetching availability: ${e.toString()}');
+    } catch (e) {
       return;
     }
     _updateAvailabilityWithFetchedData(availability);
@@ -111,24 +111,19 @@ class AvailabilityController extends GetxController {
   }
 
   Future<void> _saveDayAvailability(String userId, DayModel day) async {
-    try {
-      // Create a copy of the day model to avoid changing the times in the UI.
-      var dayToSave = DayModel.fromDayModel(day);
+    // Create a copy of the day model to avoid changing the times in the UI.
+    var dayToSave = DayModel.fromDayModel(day);
 
-      // Convert the times to UTC using the selected timezone.
-      dayToSave.fromTime = _tzService.convertToUTC(day.fromTime, selectedTimezone.value);
-      dayToSave.toTime = _tzService.convertToUTC(day.toTime, selectedTimezone.value);
+    // Convert the times to UTC using the selected timezone.
+    dayToSave.fromTime = _tzService.convertToUTC(day.fromTime, selectedTimezone.value);
+    dayToSave.toTime = _tzService.convertToUTC(day.toTime, selectedTimezone.value);
 
-      // If day.id is not null, set it to dayToSave.id
-      if (day.id != null) {
-        dayToSave.id = day.id;
-      }
-
-      await _availabilityService.saveAvailability(userId, dayToSave);
-    } catch (e) {
-      print('$e');
-      showErrorSnackBar(message: 'Error saving availability: ${e.toString()}');
+    // If day.id is not null, set it to dayToSave.id
+    if (day.id != null) {
+      dayToSave.id = day.id;
     }
+
+    await _availabilityService.saveAvailability(userId, dayToSave);
   }
 
   void _initDays() {
@@ -151,7 +146,7 @@ class AvailabilityController extends GetxController {
         selectedTimezone.value = dbTimezone;
       }
       allTimezones.value = _tzService.getAllTimeZonesWithOffset();
-    } catch (e, s) {
+    } catch (e) {
       showErrorSnackBar(message: 'Unable to fetch your timezone. Please try again');
     }
   }
@@ -160,7 +155,7 @@ class AvailabilityController extends GetxController {
     try {
       UserModel updatedUser = await _ueService.updateTimezone(userId, selectedTimezone.value);
       _localStorage.saveUser(updatedUser);
-    } catch (e, s) {
+    } catch (e) {
       showErrorSnackBar(message: 'Unable to update your timezone. Please try again');
     }
   }

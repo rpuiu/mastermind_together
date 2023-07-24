@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
+import 'package:mastermind_together/src/services/log/logger_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class GoalService extends GetxService {
@@ -21,7 +22,7 @@ class GoalService extends GetxService {
         'tenant_id': tenantId,
       });
     } catch (e, s) {
-      print('Unable to create goal: ${e.toString() + s.toString()}');
+      Log().e("Error while creating goal for $userId:", e, s, tenantId);
       rethrow;
     }
   }
@@ -32,14 +33,14 @@ class GoalService extends GetxService {
         RealtimeListenTypes.postgresChanges,
         ChannelFilter(event: 'INSERT', schema: 'public', table: 'goals'),
         (payload, [ref]) {
-          print('Change received: ${payload.toString()}');
+          Log().i('Goal change occurred: ${payload.toString()}');
           onNewGoal(GoalModel.fromJson(payload["new"]));
         },
       );
 
       insertGoalSubscription.subscribe();
     } catch (e, s) {
-      print('Unable to initialize subscription: ${e.toString()}');
+      Log().e("Error while subscribing to goal changes:", e, s);
       rethrow;
     }
   }
@@ -48,7 +49,7 @@ class GoalService extends GetxService {
     try {
       await _client.removeChannel(insertGoalSubscription);
     } catch (e, s) {
-      print('$e $s');
+      Log().e("Error while removing goal changes subscription:", e, s);
       rethrow;
     }
   }
