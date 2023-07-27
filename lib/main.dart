@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/routes.dart';
+import 'package:mastermind_together/src/ui/theme/theme.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 import 'src/get_bindings.dart';
@@ -20,9 +21,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: Routes.login,
       getPages: Routes.routes,
-      theme: ThemeData(
-          // primaryColor: const Color(0xFF23FF87),
-          ),
+      theme: AppTheme.lightTheme,
     );
   }
 }

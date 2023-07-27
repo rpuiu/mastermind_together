@@ -48,15 +48,15 @@ class GroupCard extends GetView<GroupController> {
                     Text('Members: ${group.currentMembers} / ${group.maxMembers}'),
                     userIsMember
                         ? ElevatedButton(
-                            child: Text('Leave group'),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.red,
                               foregroundColor: Colors.white,
                             ),
                             onPressed: () => controller.leaveGroup(group.id),
+                            child: const Text('Leave'),
                           )
                         : ElevatedButton(
-                            child: Text('Join'),
+                            child: const Text('Join'),
                             onPressed: () => controller.joinGroup(group.id),
                           ),
                   ],

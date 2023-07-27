@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/admin/tenant_controller.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/button.dart';
 
 class TenantRegisterScreen extends GetView<TenantController> {
   const TenantRegisterScreen({super.key});
@@ -23,7 +24,7 @@ class TenantRegisterScreen extends GetView<TenantController> {
                 labelText: 'Tenant Name',
               ),
             ),
-            ElevatedButton(
+            CustomButton(
               onPressed: controller.registerTenant,
               child: Text('Register Tenant'),
             ),

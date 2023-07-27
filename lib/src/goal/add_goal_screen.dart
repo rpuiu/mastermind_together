@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
+import 'package:mastermind_together/src/ui/drawer.dart';
+import 'package:mastermind_together/src/ui/theme/sizes.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/button.dart';
+import 'package:mastermind_together/src/ui/widgets/checkbox/checkbox_list_tile.dart';
+import 'package:mastermind_together/src/ui/widgets/dropdown/dropdown_widget.dart';
+import 'package:mastermind_together/src/ui/widgets/text_field.dart';
 
 class AddGoalScreen extends GetView<GoalController> {
   final TextEditingController goalController = TextEditingController();
@@ -11,53 +17,47 @@ class AddGoalScreen extends GetView<GoalController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Goal'),
+        title: const Text('Add Goal'),
       ),
+      drawer: CustomDrawer(),
       body: SingleChildScrollView(
         child: Center(
           child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 500),
+            constraints: const BoxConstraints(maxWidth: 500),
             child: Padding(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  TextField(
-                    controller: goalController,
-                    decoration: InputDecoration(
-                      labelText: 'What is your goal?',
+                  CustomTextField(controller: goalController, label: "Goal", hintText: 'What is your goal?'),
+                  const SizedBox(height: 2 * fontSize),
+                  Obx(
+                    () => CustomDropDown(
+                      label: "Category",
+                      selectedValue: controller.selectedCategory!.value,
+                      onChanged: (String? newValue) {
+                        if (newValue != null) {
+                          controller.selectedCategory!.value = newValue;
+                        }
+                      },
+                      items: controller.categoryController.categories,
                     ),
                   ),
-                  SizedBox(height: 20), // adds some spacing
-                  Obx(() => DropdownButton<String>(
-                        value: controller.selectedCategory!.value,
-                        onChanged: (String? newValue) {
-                          controller.selectedCategory!.value = newValue!;
-                        },
-                        items: controller.categoryController.categories.map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                      )),
-
-                  SizedBox(height: 20), // adds some spacing
-                  Obx(() => CheckboxListTile(
-                        title: Text("Auto select group?"),
-                        value: controller.autoSelectGroup.value,
-                        onChanged: (newValue) {
-                          controller.autoSelectGroup.value = newValue!;
-                        },
-                        controlAffinity: ListTileControlAffinity.leading,
-                      )),
-
-                  SizedBox(height: 20), // adds some spacing
-                  ElevatedButton(
+                  const SizedBox(height: 2 * fontSize),
+                  Obx(
+                    () => CustomCheckboxListTile(
+                      title: "Auto select group?",
+                      tooltip: "If you select this you will automatically be assigned to a group based on your goal and availability",
+                      value: controller.autoSelectGroup.value,
+                      onChanged: (newValue) => controller.autoSelectGroup.value = newValue!,
+                    ),
+                  ),
+                  const SizedBox(height: 2 * fontSize),
+                  CustomButton(
                     onPressed: () {
                       controller.saveGoal(goalController.text);
                       Get.back();
                     },
-                    child: Text('Save Goal'),
+                    child: const Text('Save Goal'),
                   ),
                 ],
               ),

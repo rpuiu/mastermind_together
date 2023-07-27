@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:mastermind_together/src/groups/group_card_widget.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/button.dart';
 
 class AllGroupsScreen extends GetView<GroupController> {
   const AllGroupsScreen({super.key});
@@ -32,11 +33,11 @@ class AllGroupsScreen extends GetView<GroupController> {
                 },
               ),
             ),
-            ElevatedButton(
+            CustomButton(
               onPressed: () {
                 Get.toNamed(Routes.createGroup);
               },
-              child: Text('Create New Group'),
+              child: const Text('Create New Group'),
             ),
           ],
         ),

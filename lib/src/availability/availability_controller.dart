@@ -31,11 +31,10 @@ class AvailabilityController extends GetxController {
     await _fetchAvailability();
   }
 
-  Future<void> saveAvailability() async {
+  Future<bool> saveAvailability() async {
     UserModel? currentUser = _authService.getUser();
     if (currentUser == null) {
-      showErrorSnackBar(message: 'Please login to save availability');
-      return;
+      return false;
     }
 
     try {
@@ -46,9 +45,9 @@ class AvailabilityController extends GetxController {
       await _fetchAvailability();
     } catch (e, s) {
       Log().e("Error while subscribing to goal changes:", e, s);
-      showErrorSnackBar(message: 'Error saving availability. Please try again or contact us for support');
+      return false;
     }
-    showSuccessSnackBar(message: 'Your availability has been updated');
+    return true;
   }
 
   Future<bool> checkMatchingAvailability(String userId, GroupModel group) async {

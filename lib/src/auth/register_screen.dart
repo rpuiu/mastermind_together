@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/auth_controller.dart';
+import 'package:mastermind_together/src/auth/tos/tos_checkbox_widget.dart';
 import 'package:mastermind_together/src/routes.dart';
+import 'package:mastermind_together/src/ui/theme/sizes.dart';
+import 'package:mastermind_together/src/ui/theme/text_styles.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/button.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/link_text.dart';
+import 'package:mastermind_together/src/ui/widgets/logo.dart';
+import 'package:mastermind_together/src/ui/widgets/text_field.dart';
 
 class RegisterScreen extends GetView<AuthController> {
   final TextEditingController usernameController = TextEditingController();
@@ -13,42 +20,55 @@ class RegisterScreen extends GetView<AuthController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Registration Screen'),
-      ),
       body: SingleChildScrollView(
         child: Center(
           child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 500),
+            constraints: const BoxConstraints(maxWidth: 500),
             child: Padding(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextField(
+                  const Logo(),
+                  const SizedBox(height: 2 * fontSize),
+                  const Text('Create free account', style: h3),
+                  const SizedBox(height: 2 * fontSize),
+                  CustomTextField(
                     controller: usernameController,
-                    decoration: InputDecoration(labelText: 'Username'),
+                    label: 'Username',
+                    hintText: "What username would you like to use?",
                   ),
-                  TextField(
+                  const SizedBox(height: 2 * fontSize),
+                  CustomTextField(
                     controller: emailController,
-                    decoration: InputDecoration(labelText: 'Email'),
+                    label: 'Email',
+                    hintText: "What is your email?",
                   ),
-                  TextField(
+                  const SizedBox(height: 2 * fontSize),
+                  CustomTextField(
                     controller: passwordController,
-                    decoration: InputDecoration(labelText: 'Password'),
+                    label: 'Password',
+                    hintText: "What is your password?",
                     obscureText: true,
                   ),
-                  SizedBox(height: 10),
-                  Row(
+                  const SizedBox(height: 2 * fontSize),
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Change this as per your requirement
                     children: [
-                      ElevatedButton(
+                      TosCheckboxWidget(),
+                      const SizedBox(height: 2 * fontSize),
+                      CustomButton(
                         onPressed: () => controller.register(usernameController.text, emailController.text, passwordController.text),
-                        child: Text('Register'),
+                        child: const Text('Create Account'),
                       ),
-                      ElevatedButton(
-                        onPressed: () => Get.toNamed(Routes.login),
-                        child: Text('Login'),
+                      const SizedBox(height: 2 * fontSize),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text("Already have an account?"),
+                          const SizedBox(width: fontSize / 2),
+                          LinkText(textValue: 'Sign In', callback: () => Get.toNamed(Routes.login)),
+                        ],
                       ),
                     ],
                   ),

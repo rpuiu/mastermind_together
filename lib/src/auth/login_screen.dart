@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/auth_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
+import 'package:mastermind_together/src/ui/theme/sizes.dart';
+import 'package:mastermind_together/src/ui/theme/text_styles.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/button.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/link_text.dart';
+import 'package:mastermind_together/src/ui/widgets/logo.dart';
+import 'package:mastermind_together/src/ui/widgets/text_field.dart';
 
 class LoginScreen extends GetView<AuthController> {
   final TextEditingController emailController = TextEditingController();
@@ -12,38 +18,47 @@ class LoginScreen extends GetView<AuthController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Login Screen'),
-      ),
       body: SingleChildScrollView(
         child: Center(
           child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 500),
+            constraints: const BoxConstraints(maxWidth: 500),
             child: Padding(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextField(
+                  const Logo(),
+                  const SizedBox(height: 2 * fontSize),
+                  const Text('Login to your account', style: h3),
+                  const SizedBox(height: 2 * fontSize),
+                  CustomTextField(
                     controller: emailController,
-                    decoration: InputDecoration(labelText: 'Email'),
+                    label: 'Email',
+                    hintText: "What is your email?",
                   ),
-                  TextField(
+                  const SizedBox(height: 2 * fontSize),
+                  CustomTextField(
                     controller: passwordController,
-                    decoration: InputDecoration(labelText: 'Password'),
+                    label: 'Password',
+                    hintText: "What is your password?",
                     obscureText: true,
                   ),
-                  SizedBox(height: 10),
-                  Row(
+                  const SizedBox(height: 2 * fontSize),
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Change this as per your requirement
                     children: [
-                      ElevatedButton(
+                      CustomButton(
                         onPressed: () => controller.login(emailController.text, passwordController.text),
-                        child: Text('Log In'),
+                        child: const Text('Log In'),
                       ),
-                      ElevatedButton(
-                        onPressed: () => Get.toNamed(Routes.register),
-                        child: Text('Register'),
+                      const SizedBox(height: 2 * fontSize),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text("Don't have an account?"),
+                          const SizedBox(width: fontSize / 2),
+                          LinkText(textValue: 'Register', callback: () => Get.toNamed(Routes.register)),
+                        ],
                       ),
                     ],
                   ),

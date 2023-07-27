@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/button.dart';
 import 'package:mastermind_together/src/util/date_time_util.dart';
 
 class CreateGroupScreen extends GetView<GroupController> {
@@ -120,8 +121,8 @@ class CreateGroupScreen extends GetView<GroupController> {
     );
   }
 
-  ElevatedButton _buildSubmitButton(BuildContext context) {
-    return ElevatedButton(
+  CustomButton _buildSubmitButton(BuildContext context) {
+    return CustomButton(
       child: Text('Create Group'),
       onPressed: () {
         if (_formKey.currentState!.validate()) {

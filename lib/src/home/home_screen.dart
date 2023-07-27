@@ -7,6 +7,9 @@ import 'package:mastermind_together/src/groups/group_card_widget.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/home/home_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
+import 'package:mastermind_together/src/ui/drawer.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/button.dart';
+import 'package:mastermind_together/src/ui/widgets/goal_card.dart';
 
 class HomeScreen extends GetView<HomeController> {
   final AuthController authController = Get.find<AuthController>();
@@ -19,51 +22,22 @@ class HomeScreen extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              Get.toNamed(Routes.createGoal);
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.groups),
-            onPressed: () {
-              Get.toNamed(Routes.allGroups);
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: authController.logout,
-          ),
-          IconButton(
-            icon: Icon(Icons.event_available),
-            onPressed: () {
-              Get.toNamed(Routes.availability);
-            },
-          ),
-        ],
+        title: const Text('Home'),
       ),
+      drawer: CustomDrawer(),
       body: Row(
         children: [
           Expanded(
             child: Column(
               children: [
-                Text("My Goals", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const Text("My Goals", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 Expanded(
                   child: Obx(
                     () => ListView.builder(
                       itemCount: goalController.goals.length,
                       itemBuilder: (_, index) {
                         final goal = goalController.goals[index];
-                        return ListTile(
-                          title: Text(
-                            '$index: ${goal.goal}',
-                            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Text('Category: ${goal.category}'),
-                        );
+                        return GoalCard(goal: goal, index: index);
                       },
                     ),
                   ),
@@ -71,15 +45,15 @@ class HomeScreen extends GetView<HomeController> {
               ],
             ),
           ),
-          VerticalDivider(),
+          const VerticalDivider(),
           Expanded(
             child: Column(
               children: [
-                Text("My Groups", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const Text("My Groups", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 Expanded(
                   child: Obx(() {
                     if (groupController.userGroups.isEmpty) {
-                      return Center(child: Text('No groups yet.')); // Center the text
+                      return const Center(child: Text('No groups yet.')); // Center the text
                     } else {
                       return ListView.builder(
                         itemCount: groupController.userGroups.length,
@@ -91,7 +65,7 @@ class HomeScreen extends GetView<HomeController> {
                     }
                   }),
                 ),
-                Text("Matching Groups", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const Text("Matching Groups", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 Expanded(
                   child: Obx(() {
                     List<GoalModel> userGoals = goalController.goals.value;
@@ -100,13 +74,12 @@ class HomeScreen extends GetView<HomeController> {
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('Please set a goal in order to view matching groups.'),
-                          ElevatedButton(
+                          const Text('Please set a goal in order to view matching groups.'),
+                          CustomButton(
                             onPressed: () {
-                              // Navigate to the create goal screen
                               Get.toNamed(Routes.createGoal);
                             },
-                            child: Text('Set a Goal'),
+                            child: const Text('Set a Goal'),
                           ),
                         ],
                       );
@@ -114,21 +87,19 @@ class HomeScreen extends GetView<HomeController> {
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('No matching groups found.'),
-                          ElevatedButton(
+                          const Text('No matching groups found.'),
+                          CustomButton(
                             onPressed: () {
-                              // Navigate to the create group screen
                               Get.toNamed(Routes.createGroup);
                             },
-                            child: Text('Create new group'),
+                            child: const Text('Create new group'),
                           ),
-                          SizedBox(height: 10),
-                          ElevatedButton(
+                          const SizedBox(height: 10),
+                          CustomButton(
                             onPressed: () {
-                              // Navigate to the same category groups screen
                               Get.toNamed(Routes.allGroups); //TODO all groups with filter.
                             },
-                            child: Text('View groups in the same category'),
+                            child: const Text('View groups in the same category'),
                           ),
                         ],
                       );
