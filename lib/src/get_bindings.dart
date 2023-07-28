@@ -7,6 +7,7 @@ import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:mastermind_together/src/groups/categories/category_controller.dart';
 import 'package:mastermind_together/src/groups/chat/message_controller.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
+import 'package:mastermind_together/src/services/mixpanel/analytics_service.dart';
 import 'package:mastermind_together/src/services/sharedprefs/local_storage.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';
 import 'package:mastermind_together/src/services/supa/category_service.dart';
@@ -58,5 +59,6 @@ class GetBindings {
     Get.lazyPut(() => TenantService(), fenix: true);
     Get.lazyPut(() => TenantController(), fenix: true);
     Get.lazyPut(() => Logger(), fenix: true);
+    Get.lazyPut(() => AnalyticsService(), fenix: true);
   }
 }

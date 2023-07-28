@@ -37,9 +37,16 @@ class UserGroupService {
     });
   }
 
-  Future<void> createGroup(GroupModel groupModel, String tenantId) async {
+  Future<GroupModel> createGroup(GroupModel groupModel, String tenantId) async {
     return _runQuery(() async {
-      await _client.from(groupsTable).insert({...groupModel.toJson(), tenantIdField: tenantId});
+      List<Map<String, dynamic>> groupResponse = await _client.from(groupsTable).insert(
+        {...groupModel.toJson(), tenantIdField: tenantId},
+      ).select();
+      if (groupResponse.isNotEmpty) {
+        return GroupModel.fromJson(groupResponse[0]);
+      } else {
+        throw Exception('Error creating goal');
+      }
     });
   }
 

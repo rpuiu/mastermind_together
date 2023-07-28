@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/availability/availability_controller.dart';
-import 'package:mastermind_together/src/common/widgets/snackbar.dart';
+import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/drawer.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';

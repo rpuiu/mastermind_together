@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/availability/availability_controller.dart';
-import 'package:mastermind_together/src/common/widgets/snackbar.dart';
+import 'package:mastermind_together/src/services/mixpanel/analytics_service.dart';
+import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
 import 'package:mastermind_together/src/groups/categories/category_controller.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
@@ -17,6 +18,7 @@ class GroupController extends GetxController {
   final AuthService _authService = Get.find<AuthService>();
   final GoalService _goalService = Get.find<GoalService>();
   final TimezoneService _tzService = Get.find<TimezoneService>();
+  final AnalyticsService _analytics = Get.find<AnalyticsService>();
 
   final AvailabilityController _availabilityController = Get.find<AvailabilityController>();
   final CategoryController categoryController = Get.find<CategoryController>();
@@ -55,7 +57,13 @@ class GroupController extends GetxController {
       GroupModel groupCopy = group.value;
       groupCopy.meetingTimeUTC = _tzService.convertLocalTimeToUTC(group.value.meetingTimeUTC);
 
-      await _groupService.createGroup(groupCopy, _authService.getUser()!.tenantId);
+      UserModel user = _authService.getUser()!;
+      GroupModel groupResponse = await _groupService.createGroup(groupCopy, user.tenantId);
+
+      _analytics.track('GROUP_CREATED', properties: {
+        'user': user.toJson(),
+        'group': groupResponse.toJson(),
+      });
 
       showSuccessSnackBar(message: 'The group has been created!');
     } catch (e, s) {
@@ -76,6 +84,11 @@ class GroupController extends GetxController {
       userGroups.add(joinedGroup);
       userGroups.refresh();
       _fetchAvailableGroups(); // Refresh the matching groups
+
+      _analytics.track('GROUP_JOINED', properties: {
+        'user': user.toJson(),
+        'group': joinedGroup.toJson(),
+      });
     } catch (e, s) {
       Log().e("Error while joining group $groupId:", e, s, user.tenantId);
       showErrorSnackBar(message: 'Unable to join group: ${e.toString()}');
@@ -94,6 +107,10 @@ class GroupController extends GetxController {
 
       userGroups.refresh();
       _fetchAvailableGroups(); // Refresh the matching groups
+      _analytics.track('GROUP_LEFT', properties: {
+        'user': user.toJson(),
+        'groupId': groupId,
+      });
     } catch (e, s) {
       Log().e("Error while leaving group $groupId:", e, s, user.tenantId);
       showErrorSnackBar(message: 'Unable to leave group: ${e.toString()}');

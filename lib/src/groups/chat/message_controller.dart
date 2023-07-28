@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/common/widgets/snackbar.dart';
+import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 import 'package:mastermind_together/src/groups/chat/message_model.dart';
 import 'package:mastermind_together/src/services/supa/message_service.dart';
 

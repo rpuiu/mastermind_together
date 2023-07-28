@@ -1,10 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/availability/day_model.dart';
-import 'package:mastermind_together/src/common/widgets/snackbar.dart';
+import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
 import 'package:mastermind_together/src/services/log/logger_service.dart';
+import 'package:mastermind_together/src/services/mixpanel/analytics_service.dart';
 import 'package:mastermind_together/src/services/sharedprefs/local_storage.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';
 import 'package:mastermind_together/src/services/supa/availability_service.dart';
@@ -19,6 +22,7 @@ class AvailabilityController extends GetxController {
   final UsersExtendedService _ueService = Get.find<UsersExtendedService>();
   final LocalStorageService _localStorage = Get.find<LocalStorageService>();
   final RxList<DayModel> days = RxList<DayModel>();
+  final AnalyticsService _analytics = Get.find<AnalyticsService>();
 
   final RxString selectedTimezone = ''.obs;
   final RxList<String> allTimezones = <String>[].obs;
@@ -47,6 +51,11 @@ class AvailabilityController extends GetxController {
       Log().e("Error while subscribing to goal changes:", e, s);
       return false;
     }
+    _analytics.track('AVAILABILITY_SET', properties: {
+      'user': currentUser.toJson(),
+      'availability': jsonEncode(days.map((day) => day.toJson()).toList()),
+    });
+
     return true;
   }
 
