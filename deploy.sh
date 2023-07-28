@@ -9,7 +9,7 @@ chmod 600 ./id_rsa
 
 echo "Building Flutter app..."
 flutter clean
-flutter build web
+flutter build web --target=lib/main_prod.dart
 
 if [ $? -ne 0 ]; then
     echo "Flutter build failed"

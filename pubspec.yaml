@@ -69,7 +69,8 @@ flutter:
 
   assets:
     - assets/images/logo/
-    - .env
+    - .env.prod
+    - .env.dev
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
