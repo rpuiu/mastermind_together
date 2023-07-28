@@ -43,14 +43,15 @@ class AddGoalScreen extends GetView<GoalController> {
                     ),
                   ),
                   const SizedBox(height: 2 * fontSize),
-                  Obx(
-                    () => CustomCheckboxListTile(
-                      title: "Auto select group?",
-                      tooltip: "If you select this you will automatically be assigned to a group based on your goal and availability",
-                      value: controller.autoSelectGroup.value,
-                      onChanged: (newValue) => controller.autoSelectGroup.value = newValue!,
-                    ),
-                  ),
+                  // MAIN-T-44
+                  // Obx(
+                  //   () => CustomCheckboxListTile(
+                  //     title: "Auto select group?",
+                  //     tooltip: "If you select this you will automatically be assigned to a group based on your goal and availability",
+                  //     value: controller.autoSelectGroup.value,
+                  //     onChanged: (newValue) => controller.autoSelectGroup.value = newValue!,
+                  //   ),
+                  // ),
                   const SizedBox(height: 2 * fontSize),
                   CustomButton(
                     onPressed: () {
