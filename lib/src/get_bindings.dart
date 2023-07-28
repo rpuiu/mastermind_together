@@ -18,20 +18,26 @@ import 'package:mastermind_together/src/services/supa/users_extended_service.dar
 import 'package:mastermind_together/src/services/timezone/timezone_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
+import 'package:mixpanel_flutter/mixpanel_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'services/supa/availability_service.dart';
 
 class GetBindings {
   static Future init() async {
     Supabase supabase = await Supabase.initialize(
-        url: 'https://qcycfezcqfdivbjzqjzg.supabase.co',
-        anonKey:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFjeWNmZXpjcWZkaXZianpxanpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODcyODA5ODIsImV4cCI6MjAwMjg1Njk4Mn0.zczM2v7LQ1RrseTDmiWm26O-vtjRysinJkJIK2GtrGQ');
-//TODO extract secrets!!!
+      url: dotenv.env['SUPABASE_URL']!,
+      anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+    );
 
     SupabaseClient supaClient = Supabase.instance.client;
     final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
+    Mixpanel mixpanel = await Mixpanel.init(
+      dotenv.env['MIXPANEL_PROJECT_TOKEN']!,
+      trackAutomaticEvents: true,
+    );
+
+    Get.lazyPut(() => mixpanel, fenix: true);
     Get.lazyPut(() => supaClient, fenix: true);
     Get.lazyPut(() => AuthController(), fenix: true);
     Get.lazyPut(() => GoalController(), fenix: true);

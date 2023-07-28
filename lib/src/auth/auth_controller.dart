@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:mastermind_together/src/common/widgets/snackbar.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';
+import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 
 class AuthController extends GetxController {
   final AuthService _authService = Get.find<AuthService>();
@@ -22,6 +23,7 @@ class AuthController extends GetxController {
     try {
       await _authService.signInWithPassword(email, password);
       showSuccessSnackBar(message: 'Logged in successfully');
+      Get.find<Mixpanel>().track("$email logged in successfully");
       Get.offAllNamed(Routes.home);
     } catch (e) {
       showErrorSnackBar(message: "Error while authenticating [$email]. Please try again or contact us for support.");
