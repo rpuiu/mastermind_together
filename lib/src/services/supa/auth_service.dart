@@ -112,4 +112,37 @@ class AuthService extends GetxService {
     UserModel? localStorageUser = _localStorage.getUser();
     return supabaseUser != null && localStorageUser != null;
   }
+
+  updateUser(UserModel newUser) {
+    try {
+      // UserAttributes userAttributes = UserAttributes(email: newUser.email);
+      // _client.auth.updateUser(userAttributes); //Changing the user's email will send an email to both email addresses.
+
+      _userExtendedService.updateUser(newUser);
+      _localStorage.saveUser(newUser);
+      currentUser = newUser;
+    } catch (e, s) {
+      Log().e("An unexpected error occurred while updating your details out ${currentUser!.id}:", e, s, currentUser!.tenantId);
+      rethrow;
+    }
+  }
+
+  Future<void> changePassword(String oldPassword, String newPassword, String confirmNewPassword) async {
+    try {
+      if (newPassword != confirmNewPassword) {
+        throw Exception("New password entries do not match");
+      }
+
+      final AuthResponse response = await _client.auth.signInWithPassword(email: currentUser!.email, password: oldPassword);
+      final UserAttributes userAttributes = UserAttributes(password: newPassword);
+      await _client.auth.updateUser(userAttributes);
+    } on AuthException catch (e) {
+      if (e.message == "Invalid login credentials") {
+        throw const AuthException("Incorrect old password");
+      }
+    } catch (e, s) {
+      Log().e("An error occurred while changing the password for user ${currentUser!.id}:", e, s, currentUser!.tenantId);
+      rethrow;
+    }
+  }
 }

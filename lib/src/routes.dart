@@ -10,6 +10,7 @@ import 'package:mastermind_together/src/groups/all_groups_screen.dart';
 import 'package:mastermind_together/src/groups/create_group_screen.dart';
 import 'package:mastermind_together/src/groups/group_screen.dart';
 import 'package:mastermind_together/src/home/home_screen.dart';
+import 'package:mastermind_together/src/profile/user_profile_screen.dart';
 
 class Routes {
   static const String home = '/home';
@@ -23,6 +24,7 @@ class Routes {
   static const String tenantRegister = '/tenant';
   static const String termsOfService = '/tos';
   static const String privacyPolicy = '/privacy-policy';
+  static const String userProfile = '/user-profile';
 
   static List<GetPage> routes = [
     GetPage(name: home, page: () => HomeScreen(), middlewares: [AuthMiddleware()]),
@@ -36,6 +38,7 @@ class Routes {
     GetPage(name: tenantRegister, page: () => TenantRegisterScreen()), //TODO secure!
     GetPage(name: termsOfService, page: () => TosScreen()), //TODO implement MAIN-T-36
     GetPage(name: privacyPolicy, page: () => TosScreen()), //TODO implement MAIN-T-36
+    GetPage(name: userProfile, page: () => UserProfileScreen()),
   ];
 
   static String groupRoute(String groupId) => '$group/$groupId';

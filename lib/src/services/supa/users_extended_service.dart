@@ -55,4 +55,22 @@ class UsersExtendedService extends GetxService {
       rethrow;
     }
   }
+
+  Future<UserModel> updateUser(UserModel newUser) async {
+    try {
+      final List<Map<String, dynamic>> response = await _client
+          .from('users_extended')
+          .update({
+            'email': newUser.email,
+            'username': newUser.username,
+            'timezone': newUser.timezone,
+          })
+          .eq('user_id', newUser.id)
+          .select();
+      return UserModel.fromJson(response[0]);
+    } catch (e, s) {
+      Log().e("Error while updating user_extended for ${newUser.id}:", e, s);
+      rethrow;
+    }
+  }
 }

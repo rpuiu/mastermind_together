@@ -13,6 +13,22 @@ class UserModel {
     required this.tenantId,
   });
 
+  UserModel copyWith({
+    String? id,
+    String? email,
+    String? timezone,
+    String? username,
+    String? tenantId,
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      email: email ?? this.email,
+      timezone: timezone ?? this.timezone,
+      username: username ?? this.username,
+      tenantId: tenantId ?? this.tenantId,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'user_id': id,

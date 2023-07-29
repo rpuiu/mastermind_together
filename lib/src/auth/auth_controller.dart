@@ -23,7 +23,7 @@ class AuthController extends GetxController {
       Get.offAllNamed(Routes.login);
     } on AuthException catch (e) {
       showErrorSnackBar(message: "Registration failed: ${e.message}");
-    } catch (e){
+    } catch (e) {
       showErrorSnackBar(message: "Registration failed with an unexpected error, please try again or contact us for support");
     }
   }
@@ -35,6 +35,10 @@ class AuthController extends GetxController {
       _analytics.track('USER_AUTHENTICATED', properties: {'user': '${user.toJson()}'});
       showSuccessSnackBar(message: 'Logged in successfully');
       Get.offAllNamed(Routes.home);
+    } on AuthException catch (e) {
+      if (e.message == 'Invalid login credentials') {
+        showErrorSnackBar(message: "Invalid credentials. Please try again");
+      }
     } catch (e) {
       showErrorSnackBar(message: "Error while authenticating [$email]. Please try again or contact us for support.");
       await _authService.signOut(); // on sign-in failure, sign out the user

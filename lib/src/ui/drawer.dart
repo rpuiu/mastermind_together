@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/auth_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
-import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/logo.dart';
 
 class CustomDrawer extends StatelessWidget {
@@ -47,6 +46,11 @@ class CustomDrawer extends StatelessWidget {
             leading: const Icon(Icons.groups),
             title: const Text('Groups'),
             onTap: () => Get.toNamed(Routes.allGroups),
+          ),
+          ListTile(
+            leading: const Icon(Icons.account_circle),
+            title: const Text('Profile'),
+            onTap: () => Get.toNamed(Routes.userProfile),
           ),
           ListTile(
             leading: const Icon(Icons.logout),
