@@ -5,6 +5,7 @@ import 'package:mastermind_together/src/auth/login_screen.dart';
 import 'package:mastermind_together/src/auth/register_screen.dart';
 import 'package:mastermind_together/src/auth/tos/tos_screen.dart';
 import 'package:mastermind_together/src/availability/availability_screen.dart';
+import 'package:mastermind_together/src/feedback/feedback_screen.dart';
 import 'package:mastermind_together/src/goal/add_goal_screen.dart';
 import 'package:mastermind_together/src/groups/all_groups_screen.dart';
 import 'package:mastermind_together/src/groups/create_group_screen.dart';
@@ -25,6 +26,7 @@ class Routes {
   static const String termsOfService = '/tos';
   static const String privacyPolicy = '/privacy-policy';
   static const String userProfile = '/user-profile';
+  static const String feedback = '/feedback';
 
   static List<GetPage> routes = [
     GetPage(name: home, page: () => HomeScreen(), middlewares: [AuthMiddleware()]),
@@ -39,6 +41,7 @@ class Routes {
     GetPage(name: termsOfService, page: () => TosScreen()), //TODO implement MAIN-T-36
     GetPage(name: privacyPolicy, page: () => TosScreen()), //TODO implement MAIN-T-36
     GetPage(name: userProfile, page: () => UserProfileScreen()),
+    GetPage(name: feedback, page: () => const FeedbackScreen()),
   ];
 
   static String groupRoute(String groupId) => '$group/$groupId';

@@ -3,6 +3,7 @@ import 'package:logger/logger.dart';
 import 'package:mastermind_together/src/admin/tenant_controller.dart';
 import 'package:mastermind_together/src/auth/auth_controller.dart';
 import 'package:mastermind_together/src/availability/availability_controller.dart';
+import 'package:mastermind_together/src/feedback/feedback_controller.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:mastermind_together/src/groups/categories/category_controller.dart';
 import 'package:mastermind_together/src/groups/chat/message_controller.dart';
@@ -62,5 +63,6 @@ class GetBindings {
     Get.lazyPut(() => Logger(), fenix: true);
     Get.lazyPut(() => AnalyticsService(), fenix: true);
     Get.lazyPut(() => UserController(), fenix: true);
+    Get.lazyPut(() => FeedbackController(), fenix: true);
   }
 }

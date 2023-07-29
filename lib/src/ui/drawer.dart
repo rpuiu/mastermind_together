@@ -53,6 +53,11 @@ class CustomDrawer extends StatelessWidget {
             onTap: () => Get.toNamed(Routes.userProfile),
           ),
           ListTile(
+            leading: const Icon(Icons.feedback),
+            title: const Text('Feedback'),
+            onTap: () => Get.toNamed(Routes.feedback),
+          ),
+          ListTile(
             leading: const Icon(Icons.logout),
             title: const Text('Logout'),
             onTap: _authController.logout,
