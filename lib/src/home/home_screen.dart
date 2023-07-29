@@ -95,11 +95,17 @@ class HomeScreen extends GetView<HomeController> {
                             child: const Text('Create new group'),
                           ),
                           const SizedBox(height: 10),
-                          CustomButton(
-                            onPressed: () {
-                              Get.toNamed(Routes.allGroups); //TODO all groups with filter.
-                            },
-                            child: const Text('View groups in the same category'),
+                          groupController.sameCategoryGroups.isEmpty
+                              ? Container()
+                              : const Text("Available groups in the same category:", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          Expanded(
+                            child: ListView.builder(
+                              itemCount: groupController.sameCategoryGroups.length,
+                              itemBuilder: (context, index) {
+                                final group = groupController.sameCategoryGroups[index];
+                                return GroupCard(group: group);
+                              },
+                            ),
                           ),
                         ],
                       );

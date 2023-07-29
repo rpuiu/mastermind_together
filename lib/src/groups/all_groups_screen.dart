@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:mastermind_together/src/groups/group_card_widget.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
+import 'package:mastermind_together/src/ui/drawer.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/button.dart';
 
 class AllGroupsScreen extends GetView<GroupController> {
@@ -12,21 +13,47 @@ class AllGroupsScreen extends GetView<GroupController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('All Groups'),
+        title: const Text('All Groups'),
       ),
+      drawer: CustomDrawer(),
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
           children: <Widget>[
+            Obx(
+              () {
+                final categories = controller.categoryController.categories;
+                return Wrap(
+                  spacing: 5.0,
+                  children: categories.map((String category) {
+                    return FilterChip(
+                      label: Text(category),
+                      selected: controller.selectedCategories.contains(category),
+                      onSelected: (bool selected) {
+                        if (selected) {
+                          controller.selectedCategories.add(category);
+                        } else {
+                          controller.selectedCategories.remove(category);
+                        }
+                        controller.filterGroupsByCategory(controller.selectedCategories.toList());
+                      },
+                    );
+                  }).toList(),
+                );
+              },
+            ),
             Expanded(
               child: Obx(
                 () {
-                  if (controller.isLoading.value) return Center(child: CircularProgressIndicator());
-
+                  if (controller.isLoading.value) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
                   return ListView.builder(
-                    itemCount: controller.groups.value.length,
+                    itemCount: controller.filteredGroups.value.length,
                     itemBuilder: (_, index) {
-                      final group = controller.groups.value[index];
+                      final group = controller.filteredGroups.value[index];
                       return GroupCard(group: group);
                     },
                   );

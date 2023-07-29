@@ -23,9 +23,13 @@ class GroupController extends GetxController {
   final AvailabilityController _availabilityController = Get.find<AvailabilityController>();
   final CategoryController categoryController = Get.find<CategoryController>();
 
+  final RxList<String> selectedCategories = RxList<String>();
+
   final RxList<GroupModel> groups = RxList<GroupModel>();
   final RxList<GroupModel> userGroups = RxList<GroupModel>();
   final RxList<GroupModel> matchingGroups = RxList<GroupModel>();
+  final RxList<GroupModel> filteredGroups = RxList<GroupModel>();
+  final RxList<GroupModel> sameCategoryGroups = RxList<GroupModel>();
 
   final Rx<GroupModel> group = GroupModel.empty().obs;
   final isLoading = Rx<bool>(true);
@@ -44,6 +48,8 @@ class GroupController extends GetxController {
     categoryController.fetchCategories();
     _fetchAvailableGroups();
     _listenToGroupChanges();
+    filteredGroups.value = groups;
+    _updateSameCategoryGroupsFromUserGoal();
   }
 
   @override
@@ -142,6 +148,14 @@ class GroupController extends GetxController {
     }
   }
 
+  void filterGroupsByCategory(List<String> categories) {
+    if (categories.isEmpty) {
+      filteredGroups.value = groups;
+    } else {
+      filteredGroups.value = groups.where((group) => categories.contains(group.category)).toList();
+    }
+  }
+
   void _fetchGroups() async {
     isLoading(true);
     try {
@@ -179,7 +193,7 @@ class GroupController extends GetxController {
     try {
       final List<GoalModel> userGoals = await _goalService.readUserGoals(user.id);
       if (userGoals.isNotEmpty) {
-        final String category = userGoals.first.category; //TODO Only first goal gets taken into account
+        final String category = userGoals.first.category;
         List<GroupModel> allGroups = await _groupService.getGroupsByCategory(category, user.tenantId);
         final userGroups = await _groupService.getUserGroups(user);
 
@@ -197,11 +211,26 @@ class GroupController extends GetxController {
           matchingAvailableGroups.removeWhere((group) => userGroupStatus[group.id]?.value ?? false);
 
           matchingGroups.value = matchingAvailableGroups;
+          sameCategoryGroups.value = availableGroups;
         }
       }
     } catch (e, s) {
       Log().e("Error while fetching the available groups:", e, s);
       showErrorSnackBar(message: 'Failed to fetch available groups');
+    }
+  }
+
+  void _updateSameCategoryGroupsFromUserGoal() async {
+    UserModel? user = _authService.getUser();
+    if (user == null) return;
+
+    try {
+      final List<GoalModel> userGoals = await _goalService.readUserGoals(user.id);
+      if (userGoals.isNotEmpty) {
+        sameCategoryGroups.value = groups.value.where((group) => group.category == userGoals[0].category && group.currentMembers < group.maxMembers).toList();
+      }
+    } catch (e, s) {
+      Log().e("Error while updating same category groups from user goal:", e, s);
     }
   }
 
@@ -229,13 +258,13 @@ class GroupController extends GetxController {
   }
 
   void _handleDeleteEvents(GroupModel changedGroup) {
-    for (var list in [groups, userGroups, matchingGroups]) {
+    for (var list in [groups, userGroups, matchingGroups, sameCategoryGroups]) {
       list.removeWhere((group) => group.id == changedGroup.id);
     }
   }
 
   void _handleUpdateEvents(GroupModel changedGroup) {
-    for (var list in [groups, userGroups, matchingGroups]) {
+    for (var list in [groups, userGroups, matchingGroups, sameCategoryGroups]) {
       int index = list.indexWhere((group) => group.id == changedGroup.id);
       if (index != -1) {
         list[index] = changedGroup;
@@ -257,5 +286,6 @@ class GroupController extends GetxController {
         matchingGroups.add(changedGroup);
       }
     });
+    _fetchAvailableGroups();
   }
 }
