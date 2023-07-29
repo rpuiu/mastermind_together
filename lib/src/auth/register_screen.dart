@@ -15,10 +15,12 @@ class RegisterScreen extends GetView<AuthController> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  RegisterScreen({super.key});
+  RegisterScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final TosCheckboxWidget termsOfService = TosCheckboxWidget();
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Center(
@@ -52,24 +54,22 @@ class RegisterScreen extends GetView<AuthController> {
                     obscureText: true,
                   ),
                   const SizedBox(height: 2 * fontSize),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Change this as per your requirement
+                  termsOfService,
+                  const SizedBox(height: 2 * fontSize),
+                  Obx(
+                    () => CustomButton(
+                      onPressed: () => controller.register(usernameController.text, emailController.text, passwordController.text),
+                      enabled: termsOfService.isChecked.value,
+                      child: const Text('Create Account'),
+                    ),
+                  ),
+                  const SizedBox(height: 2 * fontSize),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      TosCheckboxWidget(),
-                      const SizedBox(height: 2 * fontSize),
-                      CustomButton(
-                        onPressed: () => controller.register(usernameController.text, emailController.text, passwordController.text),
-                        child: const Text('Create Account'),
-                      ),
-                      const SizedBox(height: 2 * fontSize),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text("Already have an account?"),
-                          const SizedBox(width: fontSize / 2),
-                          LinkText(textValue: 'Sign In', callback: () => Get.toNamed(Routes.login)),
-                        ],
-                      ),
+                      const Text("Already have an account?"),
+                      const SizedBox(width: fontSize / 2),
+                      LinkText(textValue: 'Sign In', callback: () => Get.toNamed(Routes.login)),
                     ],
                   ),
                 ],
