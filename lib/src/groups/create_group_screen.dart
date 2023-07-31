@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
+import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/button.dart';
 import 'package:mastermind_together/src/ui/widgets/dropdown/dropdown_widget.dart';
+import 'package:mastermind_together/src/ui/widgets/text_form_field.dart';
 import 'package:mastermind_together/src/util/date_time_util.dart';
+import 'package:mastermind_together/src/util/form_validators.dart';
 
 class CreateGroupScreen extends GetView<GroupController> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -25,16 +28,22 @@ class CreateGroupScreen extends GetView<GroupController> {
             child: Column(
               children: <Widget>[
                 _buildCategoryField(),
+                const SizedBox(height: 2 * fontSize),
                 _buildNameField(),
+                const SizedBox(height: 2 * fontSize),
                 Row(
                   children: [
                     Expanded(child: _buildDayField()),
+                    const SizedBox(height: 2 * fontSize),
                     Expanded(child: _buildTimeField(context)),
+                    const SizedBox(height: 2 * fontSize),
                   ],
                 ),
+                const SizedBox(height: 2 * fontSize),
                 _buildUrlField(),
+                const SizedBox(height: 2 * fontSize),
                 _buildMaxMembersField(),
-                const SizedBox(height: 16),
+                const SizedBox(height: 2 * fontSize),
                 _buildSubmitButton(context),
               ],
             ),
@@ -56,6 +65,7 @@ class CreateGroupScreen extends GetView<GroupController> {
           }
         },
         items: controller.categoryController.categories,
+        validator: (value) => FormValidators.validateEmpty(value, 'Please select a category'),
       ),
     );
   }
@@ -72,24 +82,28 @@ class CreateGroupScreen extends GetView<GroupController> {
           }
         },
         items: ['Please select...'].followedBy(getWeekDaysNames()).toList(),
+        validator: (value) => FormValidators.validateEmpty(value, 'Please select a meeting day'),
       ),
     );
   }
 
-  TextFormField _buildNameField() {
-    return TextFormField(
-      decoration: const InputDecoration(labelText: 'Name'),
-      validator: (value) => (value == null || value.isEmpty) ? 'Please enter a name' : null,
-      onSaved: (value) => controller.group.value.name = value!,
+  CustomTextFormField _buildNameField() {
+    return CustomTextFormField(
+      controller: TextEditingController(),
+      label: 'Name',
+      hintText: 'Enter a name',
+      validator: (value) => FormValidators.validateEmpty(value, 'Please enter a name'),
+      onChanged: (value) => controller.group.value.name = value,
     );
   }
 
   Obx _buildTimeField(BuildContext context) {
     return Obx(
-      () => TextFormField(
+      () => CustomTextFormField(
         readOnly: true,
-        decoration: const InputDecoration(labelText: 'Meeting Time'),
         controller: controller.meetingTimeController.value,
+        label: 'Meeting Time',
+        hintText: 'Please select a meeting time',
         onTap: () async {
           final timeOfDay = await showTimePicker(
             context: context,
@@ -100,25 +114,29 @@ class CreateGroupScreen extends GetView<GroupController> {
             controller.meetingTimeController.value.text = timeOfDay.format(context);
           }
         },
-        validator: (value) => (value == null || value.isEmpty) ? 'Please select a meeting time' : null,
+        validator: (value) => FormValidators.validateEmpty(value, 'Please select a meeting time'),
       ),
     );
   }
 
-  TextFormField _buildUrlField() {
-    return TextFormField(
-      decoration: const InputDecoration(labelText: 'Meeting URL'),
-      validator: (value) => (value == null || value.isEmpty) ? 'Please enter a meeting URL' : null,
-      onSaved: (value) => controller.group.value.meetingUrl = value!,
+  CustomTextFormField _buildUrlField() {
+    return CustomTextFormField(
+      controller: TextEditingController(),
+      label: 'Meeting URL',
+      hintText: 'Enter the meeting URL',
+      validator: (value) => FormValidators.validateEmpty(value, 'Please enter a meeting URL'),
+      onChanged: (value) => controller.group.value.meetingUrl = value,
     );
   }
 
-  TextFormField _buildMaxMembersField() {
-    return TextFormField(
-      decoration: const InputDecoration(labelText: 'Max Number of Members'),
-      validator: (value) => (value == null || value.isEmpty) ? 'Please enter a maximum number of members' : null,
+  CustomTextFormField _buildMaxMembersField() {
+    return CustomTextFormField(
+      controller: TextEditingController(),
+      label: 'Max Number of Members',
+      hintText: 'Enter the maximum number of members',
+      validator: (value) => FormValidators.validateEmpty(value, 'Please enter a maximum number of members'),
       keyboardType: TextInputType.number,
-      onSaved: (value) => controller.group.value.maxMembers = int.parse(value!),
+      onChanged: (value) => controller.group.value.maxMembers = int.parse(value),
     );
   }
 

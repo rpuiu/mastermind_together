@@ -55,4 +55,8 @@ class FormValidators {
     }
     return null;
   }
+
+  static String? validateEmpty(String? value, String errorMessage) {
+    return (value == null || value.isEmpty) ? errorMessage : null;
+  }
 }

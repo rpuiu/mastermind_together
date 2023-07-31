@@ -34,7 +34,7 @@ class GroupController extends GetxController {
   final Rx<GroupModel> group = GroupModel.empty().obs;
   final isLoading = Rx<bool>(true);
 
-  final meetingTimeController = TextEditingController(text: "Please select...").obs;
+  final Rx<TextEditingController> meetingTimeController = TextEditingController().obs;
   RxString? selectedCategory = ''.obs;
   RxString? selectedDay = ''.obs;
 

@@ -27,48 +27,53 @@ class AddGoalScreen extends GetView<GoalController> {
             constraints: const BoxConstraints(maxWidth: 500),
             child: Padding(
               padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  CustomTextFormField(
-                    controller: goalController,
-                    label: "Goal",
-                    hintText: 'What is your goal?',
-                    validator: FormValidators.validateGoal,
-                  ),
-                  const SizedBox(height: 2 * fontSize),
-                  Obx(
-                    () => controller.categoryController.categories.isNotEmpty
-                        ? CustomDropDown(
-                            label: "Category",
-                            selectedValue: controller.selectedCategory?.value,
-                            onChanged: (String? newValue) {
-                              if (newValue != null && controller.selectedCategory != null) {
-                                controller.selectedCategory!.value = newValue;
-                              }
-                            },
-                            items: controller.categoryController.categories,
-                          )
-                        : Container(),
-                  ),
-                  const SizedBox(height: 2 * fontSize),
-                  // MAIN-T-44
-                  // Obx(
-                  //   () => CustomCheckboxListTile(
-                  //     title: "Auto select group?",
-                  //     tooltip: "If you select this you will automatically be assigned to a group based on your goal and availability",
-                  //     value: controller.autoSelectGroup.value,
-                  //     onChanged: (newValue) => controller.autoSelectGroup.value = newValue!,
-                  //   ),
-                  // ),
-                  const SizedBox(height: 2 * fontSize),
-                  CustomButton(
-                    onPressed: () {
-                      controller.saveGoal(goalController.text);
-                      Get.back();
-                    },
-                    child: const Text('Save Goal'),
-                  ),
-                ],
+              child: Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    CustomTextFormField(
+                      controller: goalController,
+                      label: "Goal",
+                      hintText: 'What is your goal?',
+                      validator: (value) => FormValidators.validateEmpty(value, 'Please enter a goal'),
+                    ),
+                    const SizedBox(height: 2 * fontSize),
+                    Obx(
+                      () => controller.categoryController.categories.isNotEmpty
+                          ? CustomDropDown(
+                              label: "Category",
+                              selectedValue: controller.selectedCategory?.value,
+                              onChanged: (String? newValue) {
+                                if (newValue != null && controller.selectedCategory != null) {
+                                  controller.selectedCategory!.value = newValue;
+                                }
+                              },
+                              items: controller.categoryController.categories,
+                              validator: (value) => FormValidators.validateEmpty(value, 'Please select a category'),
+                            )
+                          : Container(),
+                    ),
+                    // MAIN-T-44
+                    // Obx(
+                    //   () => CustomCheckboxListTile(
+                    //     title: "Auto select group?",
+                    //     tooltip: "If you select this you will automatically be assigned to a group based on your goal and availability",
+                    //     value: controller.autoSelectGroup.value,
+                    //     onChanged: (newValue) => controller.autoSelectGroup.value = newValue!,
+                    //   ),
+                    // ),
+                    const SizedBox(height: 2 * fontSize),
+                    CustomButton(
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                          controller.saveGoal(goalController.text);
+                          Get.back();
+                        }
+                      },
+                      child: const Text('Save Goal'),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
