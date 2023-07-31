@@ -9,6 +9,7 @@ class UserController extends GetxController {
   final AuthService _authService = Get.find<AuthService>();
   late Rx<UserModel?> user;
 
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController oldPasswordController = TextEditingController();
   final TextEditingController newPasswordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
@@ -46,21 +47,5 @@ class UserController extends GetxController {
     oldPasswordController.clear();
     newPasswordController.clear();
     confirmPasswordController.clear();
-  }
-
-  String? validateConfirmPassword(String value) {
-    if (value.isEmpty) {
-      return 'Please confirm your new password';
-    } else if (value != newPasswordController.text) {
-      return 'The new password does not match the confirmation password';
-    }
-    return null;
-  }
-
-  String? validateIfEmpty(String value, String message) {
-    if (value.isEmpty) {
-      return message;
-    }
-    return null;
   }
 }

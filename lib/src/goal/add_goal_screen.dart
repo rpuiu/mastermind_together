@@ -4,14 +4,15 @@ import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:mastermind_together/src/ui/drawer.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/button.dart';
-import 'package:mastermind_together/src/ui/widgets/checkbox/checkbox_list_tile.dart';
 import 'package:mastermind_together/src/ui/widgets/dropdown/dropdown_widget.dart';
-import 'package:mastermind_together/src/ui/widgets/text_field.dart';
+import 'package:mastermind_together/src/ui/widgets/text_form_field.dart';
+import 'package:mastermind_together/src/util/form_validators.dart';
 
 class AddGoalScreen extends GetView<GoalController> {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController goalController = TextEditingController();
 
-  AddGoalScreen({super.key});
+  AddGoalScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,12 @@ class AddGoalScreen extends GetView<GoalController> {
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  CustomTextField(controller: goalController, label: "Goal", hintText: 'What is your goal?'),
+                  CustomTextFormField(
+                    controller: goalController,
+                    label: "Goal",
+                    hintText: 'What is your goal?',
+                    validator: FormValidators.validateGoal,
+                  ),
                   const SizedBox(height: 2 * fontSize),
                   Obx(
                     () => CustomDropDown(

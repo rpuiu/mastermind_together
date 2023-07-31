@@ -3,7 +3,10 @@ import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/profile/user_profile_controller.dart';
 import 'package:mastermind_together/src/ui/drawer.dart';
+import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
+import 'package:mastermind_together/src/ui/widgets/text_form_field.dart';
+import 'package:mastermind_together/src/util/form_validators.dart';
 
 class UserProfileScreen extends GetView<UserController> {
   UserProfileScreen({Key? key}) : super(key: key);
@@ -48,17 +51,18 @@ class UserProfileScreen extends GetView<UserController> {
                     showDialog(
                       context: context,
                       builder: (_) => AlertDialog(
-                        title: const Text('Edit Username'),
+                        title: const Text('New Username'),
                         content: Form(
                           key: _usernameFormKey,
-                          child: TextFormField(
-                            initialValue: user.username,
-                            decoration: const InputDecoration(labelText: 'Username'),
+                          child: CustomTextFormField(
+                            controller: controller.usernameController,
+                            label: 'Username',
+                            hintText: 'Enter your username',
                             onChanged: (value) {
                               user = user.copyWith(username: value);
                               controller.user.value = user;
                             },
-                            validator: (value) => controller.validateIfEmpty(value!, 'Please enter your username'),
+                            validator: FormValidators.validateUsername,
                           ),
                         ),
                         actions: [
@@ -79,7 +83,7 @@ class UserProfileScreen extends GetView<UserController> {
                       ),
                     );
                   },
-                  child: const Text("Edit Username"),
+                  child: const Text("Change Username"),
                 ),
                 const SizedBox(height: 20.0),
                 ElevatedButton(
@@ -88,30 +92,39 @@ class UserProfileScreen extends GetView<UserController> {
                       context: context,
                       builder: (_) => AlertDialog(
                         title: const Text('Change Password'),
-                        content: Form(
-                          key: _formKey,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min, // set to min to prevent overflow
-                            children: [
-                              TextFormField(
-                                controller: controller.oldPasswordController,
-                                decoration: const InputDecoration(labelText: 'Old Password'),
-                                obscureText: true,
-                                validator: (value) => controller.validateIfEmpty(value!, 'Please enter your old password'),
-                              ),
-                              TextFormField(
-                                controller: controller.newPasswordController,
-                                decoration: const InputDecoration(labelText: 'New Password'),
-                                obscureText: true,
-                                validator: (value) => controller.validateIfEmpty(value!, 'Please enter your new password'),
-                              ),
-                              TextFormField(
-                                controller: controller.confirmPasswordController,
-                                decoration: const InputDecoration(labelText: 'Confirm Password'),
-                                obscureText: true,
-                                validator: (value) => controller.validateConfirmPassword(value!),
-                              ),
-                            ],
+                        content: SingleChildScrollView(
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min, // set to min to prevent overflow
+                              children: [
+                                CustomTextFormField(
+                                  controller: controller.oldPasswordController,
+                                  label: 'Old Password',
+                                  hintText: 'Enter your old password',
+                                  obscureText: true,
+                                  validator: FormValidators.validatePassword,
+                                ),
+                                const SizedBox(height: 20.0), // Add space
+                                CustomTextFormField(
+                                  controller: controller.newPasswordController,
+                                  label: 'New Password',
+                                  hintText: 'Enter your new password',
+                                  obscureText: true,
+                                  validator: FormValidators.validatePassword,
+                                ),
+                                const SizedBox(height: 20.0), // Add space
+                                CustomTextFormField(
+                                  controller: controller.confirmPasswordController,
+                                  label: 'Confirm Password',
+                                  hintText: 'Confirm your new password',
+                                  obscureText: true,
+                                  validator: (value) {
+                                    return FormValidators.validateConfirmPassword(value, controller.confirmPasswordController.text);
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         actions: [
@@ -138,6 +151,7 @@ class UserProfileScreen extends GetView<UserController> {
                   },
                   child: const Text("Change Password"),
                 ),
+                const SizedBox(height: 2 * fontSize),
               ],
             );
           }),
