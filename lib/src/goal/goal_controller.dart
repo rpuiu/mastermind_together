@@ -16,7 +16,7 @@ class GoalController extends GetxController {
   final CategoryController categoryController = Get.find<CategoryController>();
   final AnalyticsService _analytics = Get.find<AnalyticsService>();
 
-  RxString? selectedCategory = 'Please select...'.obs;
+  RxString? selectedCategory=''.obs;
   RxBool autoSelectGroup = false.obs;
 
   final RxList<GoalModel> goals = <GoalModel>[].obs;

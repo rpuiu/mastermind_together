@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/button.dart';
+import 'package:mastermind_together/src/ui/widgets/dropdown/dropdown_widget.dart';
 import 'package:mastermind_together/src/util/date_time_util.dart';
 
 class CreateGroupScreen extends GetView<GroupController> {
@@ -14,7 +15,7 @@ class CreateGroupScreen extends GetView<GroupController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Group'),
+        title: const Text('Create Group'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -33,7 +34,7 @@ class CreateGroupScreen extends GetView<GroupController> {
                 ),
                 _buildUrlField(),
                 _buildMaxMembersField(),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 _buildSubmitButton(context),
               ],
             ),
@@ -43,43 +44,43 @@ class CreateGroupScreen extends GetView<GroupController> {
     );
   }
 
-  DropdownButtonFormField<String> _buildCategoryField() {
-    return DropdownButtonFormField<String>(
-      decoration: InputDecoration(labelText: 'Category'),
-      value: controller.selectedCategory!.value,
-      items: controller.categoryController.categories.map((area) {
-        return DropdownMenuItem<String>(
-          value: area,
-          child: Text(area),
-        );
-      }).toList(),
-      onChanged: (value) => controller.selectedCategory!.value = value!,
-      validator: (value) => (value == null || value.isEmpty || value == 'Please select...') ? 'Please select a category' : null,
-      onSaved: (value) => controller.group.value.category = value!,
+  Widget _buildCategoryField() {
+    return Obx(
+      () => CustomDropDown(
+        label: 'Category',
+        selectedValue: controller.selectedCategory?.value,
+        onChanged: (value) {
+          if (value != null) {
+            controller.group.value.category = value;
+            controller.selectedCategory!.value = value;
+          }
+        },
+        items: controller.categoryController.categories,
+      ),
+    );
+  }
+
+  Widget _buildDayField() {
+    return Obx(
+      () => CustomDropDown(
+        label: 'Meeting Day',
+        selectedValue: controller.selectedDay?.value,
+        onChanged: (value) {
+          if (value != null) {
+            controller.group.value.meetingDay = value;
+            controller.selectedDay!.value = value;
+          }
+        },
+        items: ['Please select...'].followedBy(getWeekDaysNames()).toList(),
+      ),
     );
   }
 
   TextFormField _buildNameField() {
     return TextFormField(
-      decoration: InputDecoration(labelText: 'Name'),
+      decoration: const InputDecoration(labelText: 'Name'),
       validator: (value) => (value == null || value.isEmpty) ? 'Please enter a name' : null,
       onSaved: (value) => controller.group.value.name = value!,
-    );
-  }
-
-  DropdownButtonFormField<String> _buildDayField() {
-    return DropdownButtonFormField<String>(
-      decoration: InputDecoration(labelText: 'Meeting Day'),
-      value: controller.selectedDay!.value,
-      items: ['Please select...'].followedBy(getWeekDaysNames()).map((day) {
-        return DropdownMenuItem<String>(
-          value: day,
-          child: Text(day),
-        );
-      }).toList(),
-      onChanged: (value) => controller.selectedDay!.value = value!,
-      validator: (value) => (value == null || value.isEmpty || value == 'Please select...') ? 'Please select a day' : null,
-      onSaved: (value) => controller.group.value.meetingDay = value!,
     );
   }
 
@@ -87,7 +88,7 @@ class CreateGroupScreen extends GetView<GroupController> {
     return Obx(
       () => TextFormField(
         readOnly: true,
-        decoration: InputDecoration(labelText: 'Meeting Time'),
+        decoration: const InputDecoration(labelText: 'Meeting Time'),
         controller: controller.meetingTimeController.value,
         onTap: () async {
           final timeOfDay = await showTimePicker(
@@ -106,7 +107,7 @@ class CreateGroupScreen extends GetView<GroupController> {
 
   TextFormField _buildUrlField() {
     return TextFormField(
-      decoration: InputDecoration(labelText: 'Meeting URL'),
+      decoration: const InputDecoration(labelText: 'Meeting URL'),
       validator: (value) => (value == null || value.isEmpty) ? 'Please enter a meeting URL' : null,
       onSaved: (value) => controller.group.value.meetingUrl = value!,
     );
@@ -114,7 +115,7 @@ class CreateGroupScreen extends GetView<GroupController> {
 
   TextFormField _buildMaxMembersField() {
     return TextFormField(
-      decoration: InputDecoration(labelText: 'Max Number of Members'),
+      decoration: const InputDecoration(labelText: 'Max Number of Members'),
       validator: (value) => (value == null || value.isEmpty) ? 'Please enter a maximum number of members' : null,
       keyboardType: TextInputType.number,
       onSaved: (value) => controller.group.value.maxMembers = int.parse(value!),
@@ -123,7 +124,7 @@ class CreateGroupScreen extends GetView<GroupController> {
 
   CustomButton _buildSubmitButton(BuildContext context) {
     return CustomButton(
-      child: Text('Create Group'),
+      child: const Text('Create Group'),
       onPressed: () {
         if (_formKey.currentState!.validate()) {
           _formKey.currentState!.save();

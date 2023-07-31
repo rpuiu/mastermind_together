@@ -35,8 +35,8 @@ class GroupController extends GetxController {
   final isLoading = Rx<bool>(true);
 
   final meetingTimeController = TextEditingController(text: "Please select...").obs;
-  RxString? selectedCategory = 'Please select...'.obs;
-  RxString? selectedDay = 'Please select...'.obs;
+  RxString? selectedCategory = ''.obs;
+  RxString? selectedDay = ''.obs;
 
   final userGroupStatus = <String, RxBool>{}.obs;
 

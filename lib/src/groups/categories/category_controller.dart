@@ -9,7 +9,7 @@ class CategoryController extends GetxController {
   void fetchCategories() async {
     try {
       final allCategories = await _categoryService.getAllCategories();
-      categories.assignAll(['Please select...']);
+      categories.clear(); // clear the list before adding new items
       categories.addAll(allCategories.map((c) => c.name));
     } catch (e, s) {
       showErrorSnackBar(message: 'Error fetching categories: $e');

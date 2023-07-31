@@ -37,16 +37,18 @@ class AddGoalScreen extends GetView<GoalController> {
                   ),
                   const SizedBox(height: 2 * fontSize),
                   Obx(
-                    () => CustomDropDown(
-                      label: "Category",
-                      selectedValue: controller.selectedCategory!.value,
-                      onChanged: (String? newValue) {
-                        if (newValue != null) {
-                          controller.selectedCategory!.value = newValue;
-                        }
-                      },
-                      items: controller.categoryController.categories,
-                    ),
+                    () => controller.categoryController.categories.isNotEmpty
+                        ? CustomDropDown(
+                            label: "Category",
+                            selectedValue: controller.selectedCategory?.value,
+                            onChanged: (String? newValue) {
+                              if (newValue != null && controller.selectedCategory != null) {
+                                controller.selectedCategory!.value = newValue;
+                              }
+                            },
+                            items: controller.categoryController.categories,
+                          )
+                        : Container(),
                   ),
                   const SizedBox(height: 2 * fontSize),
                   // MAIN-T-44
