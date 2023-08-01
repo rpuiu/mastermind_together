@@ -34,7 +34,7 @@ class AuthController extends GetxController {
       _analytics.identify(user.id);
       _analytics.track('USER_AUTHENTICATED', properties: {'user': '${user.toJson()}'});
       showSuccessSnackBar(message: 'Logged in successfully');
-      Get.offAllNamed(Routes.home);
+      _redirect();
     } on AuthException catch (e) {
       if (e.message == 'Invalid login credentials') {
         showErrorSnackBar(message: "Invalid credentials. Please try again");
@@ -52,6 +52,14 @@ class AuthController extends GetxController {
       showSuccessSnackBar(message: 'Logged out successfully');
     } catch (e) {
       showErrorSnackBar(message: "Error while logging out. Please try again or contact us for support");
+    }
+  }
+
+  void _redirect() {
+    if (_authService.isTenant()) {
+      Get.offAllNamed(Routes.tenantDashboard);
+    } else {
+      Get.offAllNamed(Routes.home);
     }
   }
 }

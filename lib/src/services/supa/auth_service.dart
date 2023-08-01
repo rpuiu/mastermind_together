@@ -22,6 +22,7 @@ class AuthService extends GetxService {
   set currentUser(UserModel? user) => _currentUser.value = user;
 
   late final StreamSubscription<AuthState> _authStateSubscription;
+  late String? role;
 
   @override
   void onInit() {
@@ -80,6 +81,7 @@ class AuthService extends GetxService {
     try {
       final AuthResponse response = await _client.auth.signInWithPassword(email: email, password: password);
       final User user = response.user!;
+      _setRole(user);
       UserModel userModel = await _userExtendedService.readUserExtended(user.id);
       _localStorage.saveUser(userModel);
       currentUser = userModel;
@@ -143,6 +145,18 @@ class AuthService extends GetxService {
     } catch (e, s) {
       Log().e("An error occurred while changing the password for user ${currentUser!.id}:", e, s, currentUser!.tenantId);
       rethrow;
+    }
+  }
+
+  bool isTenant() {
+    return role == 'tenant';
+  }
+
+  void _setRole(User user) {
+    if (user.userMetadata != null) {
+      role = user.userMetadata!['role'];
+    } else {
+      role = 'user';
     }
   }
 }

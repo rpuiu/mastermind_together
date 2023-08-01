@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/auth/auth_controller.dart';
 import 'package:mastermind_together/src/auth/tos/tos_checkbox_widget.dart';
 import 'package:mastermind_together/src/routes.dart';
+import 'package:mastermind_together/src/tenant/tenant_controller.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/button.dart';
@@ -11,14 +11,14 @@ import 'package:mastermind_together/src/ui/widgets/logo.dart';
 import 'package:mastermind_together/src/ui/widgets/text_form_field.dart';
 import 'package:mastermind_together/src/util/form_validators.dart';
 
-class RegisterScreen extends GetView<AuthController> {
+class TenantRegisterScreen extends GetView<TenantController> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController tenantNameController = TextEditingController();
+  final TextEditingController adminEmailController = TextEditingController();
+  final TextEditingController adminPasswordController = TextEditingController();
+  final TextEditingController confirmAdminPasswordController = TextEditingController();
 
-  RegisterScreen({Key? key}) : super(key: key);
+  TenantRegisterScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,37 +38,37 @@ class RegisterScreen extends GetView<AuthController> {
                   children: [
                     const Logo(),
                     const SizedBox(height: 2 * fontSize),
-                    const Text('Create free account', style: h3),
+                    const Text('Register Tenant', style: h3),
                     const SizedBox(height: 2 * fontSize),
                     CustomTextFormField(
-                      controller: usernameController,
-                      label: 'Username',
-                      hintText: "What username would you like to use?",
-                      validator: FormValidators.validateUsername,
+                      controller: tenantNameController,
+                      label: 'Tenant Name',
+                      hintText: "Enter your tenant name",
+                      validator: FormValidators.validateUsername, // update this as per your requirements
                     ),
                     const SizedBox(height: 2 * fontSize),
                     CustomTextFormField(
-                      controller: emailController,
-                      label: 'Email',
-                      hintText: "What is your email?",
+                      controller: adminEmailController,
+                      label: 'Admin Email',
+                      hintText: "Enter your admin email",
                       validator: FormValidators.validateEmail,
                     ),
                     const SizedBox(height: 2 * fontSize),
                     CustomTextFormField(
-                      controller: passwordController,
-                      label: 'Password',
-                      hintText: "What is your password?",
+                      controller: adminPasswordController,
+                      label: 'Admin Password',
+                      hintText: "Enter your admin password",
                       obscureText: true,
                       validator: FormValidators.validatePassword,
                     ),
                     const SizedBox(height: 2 * fontSize),
                     CustomTextFormField(
-                      controller: confirmPasswordController,
-                      label: 'Confirm Password',
-                      hintText: "Confirm your password",
+                      controller: confirmAdminPasswordController,
+                      label: 'Confirm Admin Password',
+                      hintText: "Confirm your admin password",
                       obscureText: true,
                       validator: (value) {
-                        return FormValidators.validateConfirmPassword(value, passwordController.text);
+                        return FormValidators.validateConfirmPassword(value, adminPasswordController.text);
                       },
                     ),
                     const SizedBox(height: 2 * fontSize),
@@ -78,11 +78,11 @@ class RegisterScreen extends GetView<AuthController> {
                       () => CustomButton(
                         onPressed: () {
                           if (formKey.currentState?.validate() ?? false) {
-                            controller.register(usernameController.text, emailController.text, passwordController.text);
+                            controller.registerTenant(tenantNameController.text, adminEmailController.text, adminPasswordController.text);
                           }
                         },
                         enabled: termsOfService.isChecked.value,
-                        child: const Text('Create Account'),
+                        child: const Text('Register Tenant'),
                       ),
                     ),
                     const SizedBox(height: 2 * fontSize),

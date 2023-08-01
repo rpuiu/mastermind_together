@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/admin/tenant_register_screen.dart';
 import 'package:mastermind_together/src/auth/auth_middleware.dart';
 import 'package:mastermind_together/src/auth/login_screen.dart';
 import 'package:mastermind_together/src/auth/register_screen.dart';
@@ -12,6 +11,8 @@ import 'package:mastermind_together/src/groups/create_group_screen.dart';
 import 'package:mastermind_together/src/groups/group_screen.dart';
 import 'package:mastermind_together/src/home/home_screen.dart';
 import 'package:mastermind_together/src/profile/user_profile_screen.dart';
+import 'package:mastermind_together/src/tenant/tenant_dashboard_screen.dart';
+import 'package:mastermind_together/src/tenant/tenant_register_screen.dart';
 
 class Routes {
   static const String home = '/home';
@@ -27,6 +28,7 @@ class Routes {
   static const String privacyPolicy = '/privacy-policy';
   static const String userProfile = '/user-profile';
   static const String feedback = '/feedback';
+  static const String tenantDashboard = '/dashboard';
 
   static List<GetPage> routes = [
     GetPage(name: home, page: () => HomeScreen(), middlewares: [AuthMiddleware()]),
@@ -42,6 +44,7 @@ class Routes {
     GetPage(name: privacyPolicy, page: () => TosScreen()), //TODO implement MAIN-T-36
     GetPage(name: userProfile, page: () => UserProfileScreen()),
     GetPage(name: feedback, page: () => const FeedbackScreen()),
+    GetPage(name: tenantDashboard, page: () => const TenantDashboardScreen()),
   ];
 
   static String groupRoute(String groupId) => '$group/$groupId';
