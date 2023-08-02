@@ -1,0 +1,49 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mastermind_together/src/tenant/tenant_controller.dart';
+import 'package:mastermind_together/src/ui/tenant_drawer.dart';
+
+class EditTermsScreen extends GetView<TenantController> {
+  const EditTermsScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Terms of Service & Privacy Policy'),
+      ),
+      drawer: TenantDrawer(),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Obx(() => TextField(
+                    controller: controller.tosController.value,
+                    maxLines: 10,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Terms of Service',
+                    ),
+                  )),
+              const SizedBox(height: 16),
+              Obx(() => TextField(
+                    controller: controller.ppController.value,
+                    maxLines: 10,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Privacy Policy',
+                    ),
+                  )),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () => controller.updateTerms(),
+                child: const Text('Save Changes'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

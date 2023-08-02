@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/services/log/logger_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SettingsService extends GetxService {
@@ -13,6 +14,32 @@ class SettingsService extends GetxService {
       });
     } catch (e) {
       throw Exception('Failed to create initial settings: $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchSettings(String tenantId) async {
+    try {
+      final Map<String, dynamic> response = await _client.from('settings').select().eq('tenant_id', tenantId).single();
+      return response;
+    } catch (e, s) {
+      Log().e('Failed to fetch settings: ', e, s);
+      rethrow;
+    }
+  }
+
+  Future<void> updateSettings(String tenantId, String termsOfService, String privacyPolicy) async {
+    try {
+      final response = await _client
+          .from('settings')
+          .update({
+            'terms_of_service': termsOfService,
+            'privacy_policy': privacyPolicy,
+          })
+          .eq('tenant_id', tenantId)
+          .select();
+    } catch (e, s) {
+      Log().e('Failed to update settings: ', e, s);
+      rethrow;
     }
   }
 }

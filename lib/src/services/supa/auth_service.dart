@@ -49,30 +49,22 @@ class AuthService extends GetxService {
     }
   }
 
-  Future<UserModel> signUp(String username, String email, String password) async {
-    String? tenantIdParam = Get.parameters['tenantId'];
+  Future<UserModel> signUp(String tenantId, String username, String email, String password) async {
     try {
       final AuthResponse response = await _client.auth.signUp(email: email, password: password);
       final User user = response.user!;
 
       String timezone = await _timezoneService.getCurrentTimezoneWithOffset();
-      String tenantId;
-      if (tenantIdParam == ":tenantId" || tenantIdParam == null) {
-        tenantId = '3a4663f6-0e39-4095-b9aa-38449255910f'; //TODO remove this in production.
-      } else {
-        tenantId = tenantIdParam;
-      }
-
       UserModel userModel = await _userExtendedService.createUserExtended(user.id, username, user.email!, timezone, tenantId);
       currentUser = userModel;
       _localStorage.saveUser(userModel);
 
       return userModel;
     } on AuthException catch (e, s) {
-      Log().e("Error while registering $email:", e, s, tenantIdParam!);
+      Log().e("Error while registering $email:", e, s, tenantId);
       rethrow;
     } catch (e, s) {
-      Log().e("An unexpected error occurred when registering $email", e, s, tenantIdParam!);
+      Log().e("An unexpected error occurred when registering $email", e, s, tenantId);
       rethrow;
     }
   }

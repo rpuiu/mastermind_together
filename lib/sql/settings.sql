@@ -15,4 +15,9 @@ create policy "Settings are modifiable by the tenant who created them."
   using ( auth.uid() = tenant_id )
   with check ( auth.uid() = tenant_id );
 
+CREATE POLICY "Settings are selectable by anyone."
+ON settings
+FOR SELECT
+USING (true);
+
 alter table settings enable row level security;

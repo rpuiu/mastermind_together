@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/auth/tos/tos_checkbox_widget.dart';
+import 'package:mastermind_together/src/auth/tos/terms_and_conditions_widget.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/tenant/tenant_controller.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
@@ -22,7 +22,7 @@ class TenantRegisterScreen extends GetView<TenantController> {
 
   @override
   Widget build(BuildContext context) {
-    final TosCheckboxWidget termsOfService = TosCheckboxWidget();
+    final TermsAndConditionsWidget termsOfService = TermsAndConditionsWidget(tenantId: "OUR_TENANT_TODO"); //TODO Add our tenantId to display our TOS.
 
     return Scaffold(
       body: SingleChildScrollView(

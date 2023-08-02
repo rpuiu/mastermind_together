@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/auth_controller.dart';
-import 'package:mastermind_together/src/auth/tos/tos_checkbox_widget.dart';
+import 'package:mastermind_together/src/auth/tos/terms_and_conditions_widget.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
@@ -22,7 +22,7 @@ class RegisterScreen extends GetView<AuthController> {
 
   @override
   Widget build(BuildContext context) {
-    final TosCheckboxWidget termsOfService = TosCheckboxWidget();
+    final TermsAndConditionsWidget termsOfService = TermsAndConditionsWidget(tenantId: controller.getTenantId());
 
     return Scaffold(
       body: SingleChildScrollView(

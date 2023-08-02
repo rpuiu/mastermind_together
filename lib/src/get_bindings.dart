@@ -1,6 +1,8 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:mastermind_together/src/auth/auth_controller.dart';
+import 'package:mastermind_together/src/auth/tos/terms_controller.dart';
 import 'package:mastermind_together/src/availability/availability_controller.dart';
 import 'package:mastermind_together/src/feedback/feedback_controller.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
@@ -20,10 +22,10 @@ import 'package:mastermind_together/src/services/supa/user_group_service.dart';
 import 'package:mastermind_together/src/services/supa/users_extended_service.dart';
 import 'package:mastermind_together/src/services/timezone/timezone_service.dart';
 import 'package:mastermind_together/src/tenant/tenant_controller.dart';
+import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:mixpanel_flutter/mixpanel_flutter.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import 'services/supa/availability_service.dart';
 
 class GetBindings {
@@ -66,5 +68,6 @@ class GetBindings {
     Get.lazyPut(() => UserController(), fenix: true);
     Get.lazyPut(() => FeedbackController(), fenix: true);
     Get.lazyPut(() => SettingsService(), fenix: true);
+    Get.lazyPut(() => TermsController(), fenix: true);
   }
 }

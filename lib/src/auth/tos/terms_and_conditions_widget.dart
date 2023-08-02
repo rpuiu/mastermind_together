@@ -1,14 +1,16 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/auth/auth_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/checkbox/checkbox.dart';
 
-class TosCheckboxWidget extends StatelessWidget {
+class TermsAndConditionsWidget extends GetView<AuthController> {
   final RxBool isChecked = false.obs;
+  final String tenantId;
 
-  TosCheckboxWidget({Key? key}) : super(key: key);
+  TermsAndConditionsWidget({Key? key, required this.tenantId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,13 +31,19 @@ class TosCheckboxWidget extends StatelessWidget {
                     TextSpan(
                       text: 'Terms of Service',
                       style: linkStyle,
-                      recognizer: TapGestureRecognizer()..onTap = () => Get.toNamed(Routes.termsOfService),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () => Get.toNamed(
+                              Routes.termsOfServiceRoute(tenantId),
+                            ),
                     ),
                     const TextSpan(text: ' and '),
                     TextSpan(
                       text: 'Privacy Policy',
                       style: linkStyle,
-                      recognizer: TapGestureRecognizer()..onTap = () => Get.toNamed(Routes.privacyPolicy),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () => Get.toNamed(
+                              Routes.privacyPolicyRoute(tenantId),
+                            ),
                     ),
                   ],
                 ),

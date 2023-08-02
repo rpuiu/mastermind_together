@@ -12,9 +12,20 @@ class AuthController extends GetxController {
   final AuthService _authService = Get.find<AuthService>();
   final AnalyticsService _analytics = Get.find<AnalyticsService>();
 
+  String getTenantId() {
+    String? tenantIdParam = Get.parameters['tenantId'];
+    String tenantId;
+    if (tenantIdParam == ":tenantId" || tenantIdParam == null) {
+      tenantId = '3a4663f6-0e39-4095-b9aa-38449255910f'; //TODO remove this in production.
+    } else {
+      tenantId = tenantIdParam;
+    }
+    return tenantId;
+  }
+
   Future<void> register(String username, String email, String password) async {
     try {
-      UserModel user = await _authService.signUp(username, email, password);
+      UserModel user = await _authService.signUp(getTenantId(), username, email, password);
       _analytics.track('USER_REGISTERED', properties: {'user': '${user.toJson()}'});
       _analytics.setUserProperties(user.id, "\$email", user.email);
       _analytics.setUserProperties(user.id, "\$name", user.username);

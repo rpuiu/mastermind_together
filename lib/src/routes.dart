@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/auth_middleware.dart';
 import 'package:mastermind_together/src/auth/login_screen.dart';
 import 'package:mastermind_together/src/auth/register_screen.dart';
-import 'package:mastermind_together/src/auth/tos/tos_screen.dart';
+import 'package:mastermind_together/src/auth/tos/terms_screen.dart';
 import 'package:mastermind_together/src/availability/availability_screen.dart';
 import 'package:mastermind_together/src/feedback/feedback_screen.dart';
 import 'package:mastermind_together/src/goal/add_goal_screen.dart';
@@ -13,6 +13,7 @@ import 'package:mastermind_together/src/home/home_screen.dart';
 import 'package:mastermind_together/src/profile/user_profile_screen.dart';
 import 'package:mastermind_together/src/tenant/tenant_dashboard_screen.dart';
 import 'package:mastermind_together/src/tenant/tenant_register_screen.dart';
+import 'package:mastermind_together/src/tenant/edit_terms_screen.dart';
 
 class Routes {
   static const String home = '/home';
@@ -29,6 +30,7 @@ class Routes {
   static const String userProfile = '/user-profile';
   static const String feedback = '/feedback';
   static const String tenantDashboard = '/dashboard';
+  static const String editTerms = '/edit-terms';
 
   static List<GetPage> routes = [
     GetPage(name: home, page: () => HomeScreen(), middlewares: [AuthMiddleware()]),
@@ -40,12 +42,17 @@ class Routes {
     GetPage(name: allGroups, page: () => AllGroupsScreen(), middlewares: [AuthMiddleware()]),
     GetPage(name: '$group/:groupId', page: () => GroupScreen(), middlewares: [AuthMiddleware()]),
     GetPage(name: tenantRegister, page: () => TenantRegisterScreen()), //TODO secure!
-    GetPage(name: termsOfService, page: () => TosScreen()), //TODO implement MAIN-T-36
-    GetPage(name: privacyPolicy, page: () => TosScreen()), //TODO implement MAIN-T-36
+    GetPage(name: '/:tenantId/$termsOfService', page: () => TermsScreen(documentType: 'TOS')),
+    GetPage(name: '/:tenantId/$privacyPolicy', page: () => TermsScreen(documentType: 'Privacy')),
     GetPage(name: userProfile, page: () => UserProfileScreen()),
     GetPage(name: feedback, page: () => const FeedbackScreen()),
     GetPage(name: tenantDashboard, page: () => const TenantDashboardScreen()),
+    GetPage(name: editTerms, page: () => EditTermsScreen()),
   ];
 
   static String groupRoute(String groupId) => '$group/$groupId';
+
+  static String termsOfServiceRoute(String tenantId) => '/$tenantId$termsOfService';
+
+  static String privacyPolicyRoute(String tenantId) => '/$tenantId$privacyPolicy';
 }
