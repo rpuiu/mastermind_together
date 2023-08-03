@@ -14,7 +14,7 @@ import 'package:mastermind_together/src/profile/user_profile_screen.dart';
 import 'package:mastermind_together/src/tenant/categories/categories_screen.dart';
 import 'package:mastermind_together/src/tenant/tenant_dashboard_screen.dart';
 import 'package:mastermind_together/src/tenant/tenant_register_screen.dart';
-import 'package:mastermind_together/src/tenant/edit_terms_screen.dart';
+import 'package:mastermind_together/src/tenant/terms/edit_terms_screen.dart';
 
 class Routes {
   static const String home = '/home';

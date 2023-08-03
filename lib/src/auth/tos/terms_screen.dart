@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/auth/tos/terms_controller.dart';
+import 'package:mastermind_together/src/tenant/terms/terms_controller.dart';
 
 class TermsScreen extends GetView<TermsController> {
   final String documentType;
 
-  TermsScreen({Key? key, required this.documentType}) : super(key: key);
+  const TermsScreen({Key? key, required this.documentType}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

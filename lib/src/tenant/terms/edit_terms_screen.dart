@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/tenant/tenant_controller.dart';
+import 'package:mastermind_together/src/tenant/terms/terms_controller.dart';
 import 'package:mastermind_together/src/ui/tenant_drawer.dart';
 
-class EditTermsScreen extends GetView<TenantController> {
+class EditTermsScreen extends GetView<TermsController> {
   const EditTermsScreen({Key? key}) : super(key: key);
 
   @override
