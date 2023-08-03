@@ -7,6 +7,7 @@ import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/services/mixpanel/analytics_service.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AuthController extends GetxController {
   final AuthService _authService = Get.find<AuthService>();
@@ -16,7 +17,7 @@ class AuthController extends GetxController {
     String? tenantIdParam = Get.parameters['tenantId'];
     String tenantId;
     if (tenantIdParam == ":tenantId" || tenantIdParam == null) {
-      tenantId = '3a4663f6-0e39-4095-b9aa-38449255910f'; //TODO remove this in production.
+      tenantId = dotenv.env['MMT_TENANT_ID']!;
     } else {
       tenantId = tenantIdParam;
     }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/tos/terms_and_conditions_widget.dart';
 import 'package:mastermind_together/src/routes.dart';
@@ -22,7 +23,8 @@ class TenantRegisterScreen extends GetView<TenantController> {
 
   @override
   Widget build(BuildContext context) {
-    final TermsAndConditionsWidget termsOfService = TermsAndConditionsWidget(tenantId: "OUR_TENANT_TODO"); //TODO Add our tenantId to display our TOS.
+    String mmtTenantId = dotenv.env['MMT_TENANT_ID']!;
+    final TermsAndConditionsWidget termsOfService = TermsAndConditionsWidget(tenantId: mmtTenantId);
 
     return Scaffold(
       body: SingleChildScrollView(

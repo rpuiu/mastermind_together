@@ -81,7 +81,7 @@ class CreateGroupScreen extends GetView<GroupController> {
             controller.selectedDay!.value = value;
           }
         },
-        items: ['Please select...'].followedBy(getWeekDaysNames()).toList(),
+        items: getWeekDaysNames().toList(),
         validator: (value) => FormValidators.validateEmpty(value, 'Please select a meeting day'),
       ),
     );
