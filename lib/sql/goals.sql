@@ -11,11 +11,3 @@ CREATE TABLE goals (
 
 -- *** Add tables to the publication to enable real time subscription ***
 alter publication supabase_realtime add table public.goals;
-
-CREATE TABLE categories (
-    id SERIAL PRIMARY KEY,
-    tenant_id uuid REFERENCES public.tenants (tenant_id) ON DELETE CASCADE,
-    name VARCHAR(255) NOT NULL UNIQUE
-);
-
-INSERT INTO categories (name) VALUES ('Health'), ('Career'), ('Education'), ('Others');

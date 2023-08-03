@@ -5,7 +5,7 @@ import 'package:mastermind_together/src/availability/availability_controller.dar
 import 'package:mastermind_together/src/services/mixpanel/analytics_service.dart';
 import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
-import 'package:mastermind_together/src/groups/categories/category_controller.dart';
+import 'package:mastermind_together/src/categories/category_controller.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
 import 'package:mastermind_together/src/services/log/logger_service.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';

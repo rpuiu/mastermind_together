@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/routes.dart';
+import 'package:mastermind_together/src/services/log/logger_service.dart';
 import 'package:mastermind_together/src/services/mixpanel/analytics_service.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';
 import 'package:mastermind_together/src/services/supa/settings_service.dart';
@@ -59,7 +60,8 @@ class TenantController extends GetxController {
 
       tosController.value = TextEditingController(text: settings['terms_of_service'] as String);
       ppController.value = TextEditingController(text: settings['privacy_policy'] as String);
-    } catch (e) {
+    } catch (e, s) {
+      Log().e('Failed to load settings', e, s);
       showErrorSnackBar(message: 'Failed to load settings');
     }
   }

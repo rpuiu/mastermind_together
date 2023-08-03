@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
-import 'package:mastermind_together/src/groups/categories/category_controller.dart';
+import 'package:mastermind_together/src/categories/category_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/services/mixpanel/analytics_service.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';

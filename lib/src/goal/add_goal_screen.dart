@@ -48,7 +48,7 @@ class AddGoalScreen extends GetView<GoalController> {
                                   controller.selectedCategory!.value = newValue;
                                 }
                               },
-                              items: controller.categoryController.categories,
+                              items: controller.categoryController.categoryNames,
                               validator: (value) => FormValidators.validateEmpty(value, 'Please select a category'),
                             )
                           : Container(),

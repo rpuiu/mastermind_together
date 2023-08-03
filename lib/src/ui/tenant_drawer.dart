@@ -39,9 +39,7 @@ class TenantDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.category),
             title: const Text('Goal & Group Categories'),
-            onTap: () => {
-              /* Navigate to Goal & Group Categories page */
-            },
+            onTap: () => Get.toNamed(Routes.categories),
           ),
           ListTile(
             leading: const Icon(Icons.color_lens),

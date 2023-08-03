@@ -22,7 +22,7 @@ class AllGroupsScreen extends GetView<GroupController> {
           children: <Widget>[
             Obx(
               () {
-                final categories = controller.categoryController.categories;
+                final categories = controller.categoryController.categoryNames;
                 return Wrap(
                   spacing: 5.0,
                   children: categories.map((String category) {

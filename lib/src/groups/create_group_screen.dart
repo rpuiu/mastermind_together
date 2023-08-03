@@ -64,7 +64,7 @@ class CreateGroupScreen extends GetView<GroupController> {
             controller.selectedCategory!.value = value;
           }
         },
-        items: controller.categoryController.categories,
+        items: controller.categoryController.categoryNames,
         validator: (value) => FormValidators.validateEmpty(value, 'Please select a category'),
       ),
     );
