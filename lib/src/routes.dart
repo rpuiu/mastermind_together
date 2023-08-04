@@ -10,6 +10,7 @@ import 'package:mastermind_together/src/groups/all_groups_screen.dart';
 import 'package:mastermind_together/src/groups/create_group_screen.dart';
 import 'package:mastermind_together/src/groups/group_screen.dart';
 import 'package:mastermind_together/src/home/home_screen.dart';
+import 'package:mastermind_together/src/onboarding/onboard_screen.dart';
 import 'package:mastermind_together/src/profile/user_profile_screen.dart';
 import 'package:mastermind_together/src/tenant/categories/categories_screen.dart';
 import 'package:mastermind_together/src/tenant/tenant_dashboard_screen.dart';
@@ -33,6 +34,7 @@ class Routes {
   static const String tenantDashboard = '/dashboard';
   static const String editTerms = '/edit-terms';
   static const String categories = '/categories';
+  static const String onboarding = '/onboarding';
 
   static List<GetPage> routes = [
     GetPage(name: home, page: () => HomeScreen(), middlewares: [AuthMiddleware()]),
@@ -51,6 +53,7 @@ class Routes {
     GetPage(name: tenantDashboard, page: () => const TenantDashboardScreen()),
     GetPage(name: editTerms, page: () => EditTermsScreen()),
     GetPage(name: categories, page: () => CategoriesScreen()),
+    GetPage(name: onboarding, page: () => OnBoardScreen()),
   ];
 
   static String groupRoute(String groupId) => '$group/$groupId';

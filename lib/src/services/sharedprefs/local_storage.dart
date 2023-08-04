@@ -6,12 +6,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorageService {
   static const String currentUser = 'currentUser';
+  static const String onboardingSeen = 'onboardingSeen';
 
   SharedPreferences prefs = Get.find<SharedPreferences>();
 
-  void saveUser(UserModel userModel) {
+  Future<void> saveUser(UserModel userModel) async {
     Map<String, dynamic> userJson = userModel.toJson();
-    prefs.setString(currentUser, jsonEncode(userJson));
+    await prefs.setString(currentUser, jsonEncode(userJson));
   }
 
   UserModel? getUser() {
@@ -20,7 +21,19 @@ class LocalStorageService {
     return UserModel.fromJson(jsonDecode(userJson));
   }
 
-  void clear() {
-    prefs.clear();
+  removeUser() async {
+    await prefs.remove(currentUser);
+  }
+
+  Future<void> clear() async {
+   await prefs.clear();
+  }
+
+  Future<void> completeOnboarding() async {
+    await prefs.setBool(onboardingSeen, true);
+  }
+
+  bool isOnboardingComplete() {
+    return prefs.getBool(onboardingSeen) ?? false;
   }
 }

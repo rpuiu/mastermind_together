@@ -29,7 +29,7 @@ class AuthService extends GetxService {
     super.onInit();
     _authStateSubscription = _client.auth.onAuthStateChange.listen((data) {
       if (data.event == AuthChangeEvent.signedOut) {
-        _localStorage.clear();
+        _localStorage.removeUser();
         Get.offAllNamed(Routes.login);
       }
     });
@@ -107,13 +107,13 @@ class AuthService extends GetxService {
     return supabaseUser != null && localStorageUser != null;
   }
 
-  updateUser(UserModel newUser) {
+  updateUser(UserModel newUser) async {
     try {
       // UserAttributes userAttributes = UserAttributes(email: newUser.email);
       // _client.auth.updateUser(userAttributes); //Changing the user's email will send an email to both email addresses.
 
       _userExtendedService.updateUser(newUser);
-      _localStorage.saveUser(newUser);
+      await _localStorage.saveUser(newUser);
       currentUser = newUser;
     } catch (e, s) {
       Log().e("An unexpected error occurred while updating your details out ${currentUser!.id}:", e, s, currentUser!.tenantId);

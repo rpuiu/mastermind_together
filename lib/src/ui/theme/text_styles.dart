@@ -62,7 +62,6 @@ const TextStyle placeholderBodyMedium = TextStyle(
   fontSize: 16,
   fontFamily: fontFamily,
   fontWeight: FontWeight.w400,
-  height: 1.6,
 );
 
 const TextStyle labelText = TextStyle(
@@ -70,7 +69,6 @@ const TextStyle labelText = TextStyle(
   fontSize: 14,
   fontFamily: fontFamily,
   fontWeight: FontWeight.w500,
-  // height: 2.0,
 );
 
 const TextStyle cardTitle = TextStyle(
@@ -85,7 +83,6 @@ const TextStyle labelSmall = TextStyle(
   fontSize: 10,
   fontFamily: fontFamily,
   fontWeight: FontWeight.w400,
-  height: 0.4,
 );
 
 const TextStyle btnText = TextStyle(

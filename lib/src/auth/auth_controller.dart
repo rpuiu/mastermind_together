@@ -1,17 +1,19 @@
 import 'dart:async';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/user_model.dart';
-import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/services/mixpanel/analytics_service.dart';
+import 'package:mastermind_together/src/services/sharedprefs/local_storage.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';
+import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AuthController extends GetxController {
   final AuthService _authService = Get.find<AuthService>();
   final AnalyticsService _analytics = Get.find<AnalyticsService>();
+  final LocalStorageService _localStorage = Get.find<LocalStorageService>();
 
   String getTenantId() {
     String? tenantIdParam = Get.parameters['tenantId'];
@@ -71,7 +73,11 @@ class AuthController extends GetxController {
     if (_authService.isTenant()) {
       Get.offAllNamed(Routes.tenantDashboard);
     } else {
-      Get.offAllNamed(Routes.home);
+      if (_localStorage.isOnboardingComplete()) {
+        Get.offAllNamed(Routes.home);
+      } else {
+        Get.offAllNamed(Routes.onboarding);
+      }
     }
   }
 }
