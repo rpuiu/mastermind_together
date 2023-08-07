@@ -4,6 +4,7 @@ import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/profile/user_profile_controller.dart';
 import 'package:mastermind_together/src/ui/drawer.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
+import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 import 'package:mastermind_together/src/ui/widgets/text_form_field.dart';
 import 'package:mastermind_together/src/util/form_validators.dart';
@@ -46,6 +47,8 @@ class UserProfileScreen extends GetView<UserController> {
                   ),
                 ),
                 const SizedBox(height: 10.0),
+                Text(user.email, style: labelText),
+                const SizedBox(height: 2 * fontSize),
                 ElevatedButton(
                   onPressed: () {
                     showDialog(
