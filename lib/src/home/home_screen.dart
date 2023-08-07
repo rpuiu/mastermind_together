@@ -33,13 +33,29 @@ class HomeScreen extends GetView<HomeController> {
                 const Text("My Goals", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 Expanded(
                   child: Obx(
-                    () => ListView.builder(
-                      itemCount: goalController.goals.length,
-                      itemBuilder: (_, index) {
-                        final goal = goalController.goals[index];
-                        return GoalCard(goal: goal, index: index);
-                      },
-                    ),
+                    () => goalController.goals.isEmpty
+                        ? Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const SizedBox(height: 10), // Spacer
+                                const Text('You haven\'t set any goals yet.'),
+                                CustomButton(
+                                  onPressed: () {
+                                    Get.toNamed(Routes.createGoal);
+                                  },
+                                  child: const Text('Set a Goal'),
+                                ),
+                              ],
+                            ),
+                          )
+                        : ListView.builder(
+                            itemCount: goalController.goals.length,
+                            itemBuilder: (_, index) {
+                              final goal = goalController.goals[index];
+                              return GoalCard(goal: goal, index: index);
+                            },
+                          ),
                   ),
                 ),
               ],
@@ -53,7 +69,7 @@ class HomeScreen extends GetView<HomeController> {
                 Expanded(
                   child: Obx(() {
                     if (groupController.userGroups.isEmpty) {
-                      return const Center(child: Text('No groups yet.')); // Center the text
+                      return const Center(child: Text('No groups yet.'));
                     } else {
                       return ListView.builder(
                         itemCount: groupController.userGroups.length,
@@ -69,7 +85,6 @@ class HomeScreen extends GetView<HomeController> {
                 Expanded(
                   child: Obx(() {
                     List<GoalModel> userGoals = goalController.goals.value;
-                    // Check if userGoal is null or empty
                     if (userGoals.isEmpty) {
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.center,
