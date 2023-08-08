@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/goal/goal_model.dart'; // Import the GoalModel
+import 'package:mastermind_together/src/goal/goal_model.dart'; // Import the GoalModelort 'package:mastermind_together/src/ui/widgets/goal_card.dart'; // Import the GoalCard
 import 'package:mastermind_together/src/home/goals_carousel_controller.dart';
-import 'package:mastermind_together/src/ui/widgets/goal_card.dart'; // Import the GoalCard
+import 'package:mastermind_together/src/ui/widgets/goal_card.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class GoalsCarousel extends GetView<GoalsCarouselController> {
@@ -23,18 +23,21 @@ class GoalsCarousel extends GetView<GoalsCarouselController> {
           children: [
             Obx(
               () => SizedBox(
-                height: controller.height.value, // Reactive height
+                height: controller.height.value,
                 child: PageView.builder(
                   controller: pageController,
                   itemCount: goals.length,
-                  itemBuilder: (context, index) => Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: GoalCard(
-                      goalModel: goals[index],
-                      keyResults: keyResults,
-                      onExpansionChanged: (expanded, numberOfKeyResults) => controller.updateHeight(expanded, keyResults.length),
-                    ),
-                  ),
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: GoalCard(
+                        index: index,
+                        goalModel: goals[index],
+                        keyResults: keyResults,
+                        onExpansionChanged: (expanded, numberOfKeyResults) => controller.updateHeight(expanded, keyResults.length),
+                      ),
+                    );
+                  },
                 ),
               ),
             ),

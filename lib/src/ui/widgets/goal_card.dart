@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
+import 'package:mastermind_together/src/home/app_expansion_tile.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 
 class GoalCard extends StatelessWidget {
@@ -7,7 +8,9 @@ class GoalCard extends StatelessWidget {
   final List<String> keyResults;
   final Function(bool, dynamic) onExpansionChanged;
 
-  GoalCard({super.key, required this.goalModel, required this.keyResults, required this.onExpansionChanged});
+  final int index;
+
+  GoalCard({super.key, required this.goalModel, required this.keyResults, required this.onExpansionChanged, required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -51,13 +54,15 @@ class GoalCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 24),
-            ExpansionTile(
+            AppExpansionTile(
+              keyStr: 'tile_$index',
               onExpansionChanged: (expanded) => onExpansionChanged(expanded, keyResults.length),
               title: const Text('Actions:'),
               subtitle: LinearProgressIndicator(
                 value: 1 / keyResults.length, //TODO calculate progress once key results are up.
                 backgroundColor: Colors.grey[300],
               ),
+              leading: Text("KEADLING"),
               children: [
                 Column(
                   children: keyResults.map((keyResult) {

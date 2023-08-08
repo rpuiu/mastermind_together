@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/home/app_expansion_tile_controller.dart';
 
 class GoalsCarouselController extends GetxController {
   static const double defaultHeight = 230.0;
+
+  AppExpansionTileController expansionTileController = Get.find<AppExpansionTileController>();
+
   final RxDouble height = defaultHeight.obs;
 
   final PageController pageController = PageController(viewportFraction: 0.8);
@@ -13,6 +17,7 @@ class GoalsCarouselController extends GetxController {
   }
 
   void resetHeight() {
+    expansionTileController.collapse();
     height.value = defaultHeight;
   }
 

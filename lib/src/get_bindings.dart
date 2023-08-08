@@ -8,6 +8,7 @@ import 'package:mastermind_together/src/feedback/feedback_controller.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:mastermind_together/src/groups/chat/message_controller.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
+import 'package:mastermind_together/src/home/app_expansion_tile_controller.dart';
 import 'package:mastermind_together/src/home/goals_carousel_controller.dart';
 import 'package:mastermind_together/src/onboarding/onboard_controller.dart';
 import 'package:mastermind_together/src/profile/user_profile_controller.dart';
@@ -74,5 +75,6 @@ class GetBindings {
     Get.lazyPut(() => CategoryController(), fenix: true);
     Get.lazyPut(() => OnBoardController(), fenix: true);
     Get.lazyPut(() => GoalsCarouselController(), fenix: true);
+    Get.lazyPut(() => AppExpansionTileController(), fenix: true);
   }
 }
