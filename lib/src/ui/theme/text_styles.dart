@@ -5,7 +5,6 @@ const String fontFamily = 'Inter';
 const Color textColor = darkerPrimaryColor;
 const Color textPlaceholderColor = placeholderColor;
 const Color btnTextColor = Colors.white; //TODO move to color_scheme
-const Color linkColor = Colors.blue;
 
 const TextStyle h1 = TextStyle(
   color: textColor,

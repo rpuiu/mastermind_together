@@ -5,7 +5,7 @@ import 'package:mastermind_together/src/auth/auth_controller.dart';
 import 'package:mastermind_together/src/availability/availability_controller.dart';
 import 'package:mastermind_together/src/categories/category_controller.dart';
 import 'package:mastermind_together/src/feedback/feedback_controller.dart';
-import 'package:mastermind_together/src/goal/actions_controller.dart';
+import 'package:mastermind_together/src/goal/actions/actions_controller.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:mastermind_together/src/groups/chat/message_controller.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
@@ -75,6 +75,5 @@ class GetBindings {
     Get.lazyPut(() => CategoryController(), fenix: true);
     Get.lazyPut(() => OnBoardController(), fenix: true);
     Get.lazyPut(() => ActionService(), fenix: true);
-    Get.lazyPut(() => ActionController(), fenix: true);
   }
 }

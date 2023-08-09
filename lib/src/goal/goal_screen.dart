@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/goal/actions_controller.dart';
-import 'package:mastermind_together/src/goal/add_actions_widget.dart';
+import 'package:mastermind_together/src/goal/actions/add_actions_widget.dart';
 
-class GoalScreen extends GetView<ActionController> {
+class GoalScreen extends StatelessWidget {
   final String goalId = Get.parameters['goalId']!;
 
   GoalScreen({Key? key}) : super(key: key);

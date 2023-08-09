@@ -12,6 +12,13 @@ const Color errorColor = Color(0xFFCF2A22);
 const Color placeholderColor = Color(0xFF728D93);
 const Color doneColor = Color(0xFF2C9D1A);
 
+
+
+const Color linkColor = Color(0xFF1A8CA1); //TODO fix colors this is subheadings?
+const Color accent = Color(0xFF0E8B59);
+const Color labels = Color(0xFF666666);
+const Color textColor = Color(0xFF333333);
+
 const shadow = BoxShadow(
   color: Color(0x33000000),
   blurRadius: 4,

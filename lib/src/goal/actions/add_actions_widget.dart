@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/goal/actions_controller.dart'; // Import your ActionController here
+import 'package:mastermind_together/src/goal/actions/actions_controller.dart'; // Import your ActionController here
 
-class AddActionsScreen extends GetView<ActionController> {
+class AddActionsScreen extends StatelessWidget {
   final TextEditingController actionController = TextEditingController();
+  final ActionController _actionController = Get.find<ActionController>();
+
   final String goalId;
 
   AddActionsScreen({Key? key, required this.goalId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    controller.fetchActionsForGoal(goalId);
+    _actionController.fetchActionsForGoal();
 
     return Scaffold(
       appBar: AppBar(
@@ -36,7 +38,7 @@ class AddActionsScreen extends GetView<ActionController> {
                     IconButton(
                       icon: const Icon(Icons.add),
                       onPressed: () {
-                        controller.createAction(goalId, actionController.text, 'pending');
+                        _actionController.createAction(goalId, actionController.text, 'pending');
                         actionController.clear();
                       },
                     ),
@@ -47,9 +49,9 @@ class AddActionsScreen extends GetView<ActionController> {
               Expanded(
                 child: Obx(() {
                   return ListView.builder(
-                    itemCount: controller.actions.length,
+                    itemCount: _actionController.actions.length,
                     itemBuilder: (context, index) {
-                      final action = controller.actions[index];
+                      final action = _actionController.actions[index];
                       return ListTile(
                         title: Text(action.description),
                         trailing: Row(
@@ -63,7 +65,7 @@ class AddActionsScreen extends GetView<ActionController> {
                                   builder: (context) => _editActionDialog(action.description, context),
                                 );
                                 if (newDescription != null) {
-                                  controller.updateActionDescription(goalId, action.id, newDescription);
+                                  _actionController.updateActionDescription(action.id, newDescription);
                                 }
                               },
                             ),
@@ -71,7 +73,7 @@ class AddActionsScreen extends GetView<ActionController> {
                               icon: const Icon(Icons.delete),
                               onPressed: () {
                                 // Delete logic here
-                                controller.deleteAction(action.id);
+                                _actionController.deleteAction(action.id);
                               },
                             ),
                           ],
@@ -87,6 +89,7 @@ class AddActionsScreen extends GetView<ActionController> {
       ),
     );
   }
+
   Widget _editActionDialog(String currentName, BuildContext context) {
     final TextEditingController editController = TextEditingController(text: currentName);
     return AlertDialog(

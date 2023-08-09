@@ -16,29 +16,34 @@ class GoalsSection extends GetView<GoalController> {
           const Text("My Goals", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           Expanded(
             child: Obx(
-                  () => controller.goals.isEmpty
+              () => controller.goals.isEmpty
                   ? Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 10), // Spacer
-                    const Text('You haven\'t set any goals yet.'),
-                    CustomButton(
-                      onPressed: () {
-                        Get.toNamed(Routes.createGoal);
-                      },
-                      child: const Text('Set a Goal'),
-                    ),
-                  ],
-                ),
-              )
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 10), // Spacer
+                          const Text('You haven\'t set any goals yet.'),
+                          CustomButton(
+                            onPressed: () {
+                              Get.toNamed(Routes.createGoal);
+                            },
+                            child: const Text('Set a Goal'),
+                          ),
+                        ],
+                      ),
+                    )
                   : ListView.builder(
-                itemCount: controller.goals.length,
-                itemBuilder: (_, index) {
-                  final goal = controller.goals[index];
-                  return GoalCard(goal: goal, index: index);
-                },
-              ),
+                      itemCount: controller.goals.length,
+                      itemBuilder: (_, index) {
+                        final goal = controller.goals[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Center(
+                            child: GoalCard(goal: goal, index: index),
+                          ),
+                        );
+                      },
+                    ),
             ),
           ),
         ],

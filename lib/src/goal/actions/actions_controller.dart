@@ -1,19 +1,25 @@
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/goal/action_model.dart';
+import 'package:mastermind_together/src/goal/actions/action_model.dart';
 import 'package:mastermind_together/src/services/supa/action_service.dart';
 import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 
 class ActionController extends GetxController {
+  final String goalId;
+
   final ActionService _actionService = Get.find<ActionService>();
 
   final RxList<ActionModel> actions = <ActionModel>[].obs;
+
+  ActionController(this.goalId) {
+    fetchActionsForGoal();
+  }
 
   @override
   void onInit() {
     super.onInit();
   }
 
-  void fetchActionsForGoal(String goalId) async {
+  void fetchActionsForGoal() async {
     try {
       actions.value = await _actionService.readActionsForGoal(goalId);
     } catch (e) {
@@ -55,10 +61,10 @@ class ActionController extends GetxController {
     }
   }
 
-  void updateActionDescription(String goalId, String id, String newDescription) async {
+  void updateActionDescription(String id, String newDescription) async {
     try {
       await _actionService.updateActionDescription(id, newDescription);
-      fetchActionsForGoal(goalId);
+      fetchActionsForGoal();
     } catch (e) {
       showErrorSnackBar(message: 'Error updating category: $e');
     }

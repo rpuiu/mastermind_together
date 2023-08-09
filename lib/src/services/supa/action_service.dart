@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/goal/action_model.dart';
+import 'package:mastermind_together/src/goal/actions/action_model.dart';
 import 'package:mastermind_together/src/services/log/logger_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
