@@ -9,7 +9,7 @@ import 'package:mastermind_together/src/home/home_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/drawer.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/button.dart';
-import 'package:mastermind_together/src/ui/widgets/goal_card.dart';
+import 'package:mastermind_together/src/goal/goal_card.dart';
 
 class HomeScreen extends GetView<HomeController> {
   final AuthController authController = Get.find<AuthController>();

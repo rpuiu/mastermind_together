@@ -6,6 +6,7 @@ import 'package:mastermind_together/src/auth/tos/terms_screen.dart';
 import 'package:mastermind_together/src/availability/availability_screen.dart';
 import 'package:mastermind_together/src/feedback/feedback_screen.dart';
 import 'package:mastermind_together/src/goal/add_goal_screen.dart';
+import 'package:mastermind_together/src/goal/goal_screen.dart';
 import 'package:mastermind_together/src/groups/all_groups_screen.dart';
 import 'package:mastermind_together/src/groups/create_group_screen.dart';
 import 'package:mastermind_together/src/groups/group_screen.dart';
@@ -35,6 +36,7 @@ class Routes {
   static const String editTerms = '/edit-terms';
   static const String categories = '/categories';
   static const String onboarding = '/onboarding';
+  static const String goal = '/goal';
 
   static List<GetPage> routes = [
     GetPage(name: home, page: () => HomeScreen(), middlewares: [AuthMiddleware()]),
@@ -54,6 +56,7 @@ class Routes {
     GetPage(name: editTerms, page: () => EditTermsScreen()),
     GetPage(name: categories, page: () => CategoriesScreen()),
     GetPage(name: onboarding, page: () => OnBoardScreen()),
+    GetPage(name: '$goal/:goalId', page: () => GoalScreen(), middlewares: [AuthMiddleware()]),
   ];
 
   static String groupRoute(String groupId) => '$group/$groupId';
@@ -61,4 +64,6 @@ class Routes {
   static String termsOfServiceRoute(String tenantId) => '/$tenantId$termsOfService';
 
   static String privacyPolicyRoute(String tenantId) => '/$tenantId$privacyPolicy';
+
+  static String goalRoute(String goalId) => '$goal/$goalId';
 }
