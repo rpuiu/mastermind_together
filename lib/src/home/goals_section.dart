@@ -3,13 +3,18 @@ import 'package:get/get.dart';
 import 'package:mastermind_together/src/goal/goal_card.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
+import 'package:mastermind_together/src/ui/custom_page_indicator.dart';
+import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/button.dart';
 
 class GoalsSection extends GetView<GoalController> {
-  const GoalsSection({Key? key}) : super(key: key);
+  GoalsSection({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    double viewportFraction = MediaQuery.of(context).size.width > 600 ? 0.5 : 0.7;
+    final PageController pageController = PageController(viewportFraction: viewportFraction);
+
     return Expanded(
       child: Column(
         children: [
@@ -32,20 +37,36 @@ class GoalsSection extends GetView<GoalController> {
                         ],
                       ),
                     )
-                  : ListView.builder(
+                  : PageView.builder(
+                      controller: pageController,
                       itemCount: controller.goals.length,
+                      scrollDirection: Axis.horizontal,
+                      pageSnapping: true,
                       itemBuilder: (_, index) {
                         final goal = controller.goals[index];
                         return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Center(
-                            child: GoalCard(goal: goal, index: index),
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: fontSize),
+                          child: GoalCard(goal: goal, index: index),
                         );
                       },
                     ),
             ),
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              controller.goals.isNotEmpty
+                  ? Container(
+                      height: 24,
+                      child: CustomPageIndicator(
+                        pageController: pageController,
+                        itemCount: controller.goals.length,
+                      ),
+                    )
+                  : Container(),
+              const SizedBox(height: 4 * fontSize),
+            ],
+          )
         ],
       ),
     );

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/onboarding/onboard_controller.dart';
 import 'package:mastermind_together/src/onboarding/onboard_page.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:mastermind_together/src/ui/custom_page_indicator.dart';
 
 class OnBoardScreen extends StatelessWidget {
   OnBoardScreen({super.key});
@@ -61,21 +61,7 @@ class OnBoardScreen extends StatelessWidget {
                       child: const Text('SKIP'),
                     ),
                     Center(
-                      child: SmoothPageIndicator(
-                        controller: pageController,
-                        count: 3,
-                        effect: JumpingDotEffect(
-                          verticalOffset: 16,
-                          spacing: 16,
-                          dotColor: Colors.black26,
-                          activeDotColor: Theme.of(context).colorScheme.primary,
-                        ),
-                        onDotClicked: (index) => pageController.animateToPage(
-                          index,
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.easeIn,
-                        ),
-                      ),
+                      child: CustomPageIndicator(pageController: pageController, itemCount: 3),
                     ),
                     TextButton(
                       onPressed: () => pageController.nextPage(

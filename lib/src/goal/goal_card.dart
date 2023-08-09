@@ -60,7 +60,14 @@ class GoalCard extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(goal.goal, style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+        Flexible(
+          child: Text(
+            goal.goal,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
         IconButton(
           icon: const Icon(Icons.share, color: linkColor),
           onPressed: () {
@@ -113,7 +120,14 @@ class GoalCard extends StatelessWidget {
         Obx(() {
           if (_actionController.actions.isNotEmpty) {
             final firstAction = _actionController.actions.first;
-            return Text('Priority: ${firstAction.description}', style: labelText);
+            return Flexible(
+              child: Text(
+                'Priority: ${firstAction.description}',
+                style: body,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            );
           }
           return TextButton(
             onPressed: () {

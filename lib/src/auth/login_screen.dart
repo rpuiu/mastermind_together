@@ -10,10 +10,10 @@ import 'package:mastermind_together/src/ui/widgets/logo.dart';
 import 'package:mastermind_together/src/ui/widgets/text_field.dart';
 
 class LoginScreen extends GetView<AuthController> {
-  // final TextEditingController emailController = TextEditingController();
-  // final TextEditingController passwordController = TextEditingController();
-  final TextEditingController emailController = TextEditingController(text: 'ui@io.com');
-  final TextEditingController passwordController = TextEditingController(text: 'Abcd1234'); //TODO REMOVE
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  // final TextEditingController emailController = TextEditingController(text: 'ui@io.com');
+  // final TextEditingController passwordController = TextEditingController(text: 'Abcd1234'); //TODO REMOVE
 
   LoginScreen({super.key});
 
