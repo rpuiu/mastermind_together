@@ -6,14 +6,14 @@ class AppTheme {
   AppTheme._();
 
   static ThemeData lightTheme = ThemeData(
-    colorScheme: lightThemeColors,
+    // colorScheme: lightThemeColors,
     useMaterial3: true,
     textTheme: textTheme,
-    buttonTheme: ButtonThemeData(
-      buttonColor: lightThemeColors.primary,
-      textTheme: ButtonTextTheme.primary,
-    ),
-    canvasColor: lightThemeColors.surface,
+    // buttonTheme: ButtonThemeData(
+    //   buttonColor: lightThemeColors.primary,
+    //   textTheme: ButtonTextTheme.primary,
+    // ),
+    // canvasColor: lightThemeColors.surface,
   );
 
   static TextTheme textTheme = const TextTheme(

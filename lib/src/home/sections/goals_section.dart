@@ -5,20 +5,22 @@ import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/custom_page_indicator.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
+import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/button.dart';
 
 class GoalsSection extends GetView<GoalController> {
-  GoalsSection({Key? key}) : super(key: key);
+  const GoalsSection({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     double viewportFraction = MediaQuery.of(context).size.width > 600 ? 0.5 : 0.7;
     final PageController pageController = PageController(viewportFraction: viewportFraction);
 
-    return Expanded(
+    return SizedBox(
+      height: 310,
       child: Column(
         children: [
-          const Text("My Goals", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const Text("My Goals", style: headingText),
           Expanded(
             child: Obx(
               () => controller.goals.isEmpty
@@ -64,7 +66,6 @@ class GoalsSection extends GetView<GoalController> {
                       ),
                     )
                   : Container(),
-              const SizedBox(height: 4 * fontSize),
             ],
           )
         ],

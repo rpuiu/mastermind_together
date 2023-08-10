@@ -4,6 +4,7 @@ import 'package:mastermind_together/src/groups/group_card_widget.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/drawer.dart';
+import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/button.dart';
 
 class AllGroupsScreen extends GetView<GroupController> {
@@ -42,6 +43,13 @@ class AllGroupsScreen extends GetView<GroupController> {
                 );
               },
             ),
+            const SizedBox(height: 2 * fontSize),
+            CustomButton(
+              onPressed: () {
+                Get.toNamed(Routes.createGroup);
+              },
+              child: const Text('Create New Group'),
+            ),
             Expanded(
               child: Obx(
                 () {
@@ -50,21 +58,14 @@ class AllGroupsScreen extends GetView<GroupController> {
                       child: CircularProgressIndicator(),
                     );
                   }
-                  return ListView.builder(
-                    itemCount: controller.filteredGroups.value.length,
-                    itemBuilder: (_, index) {
+                  return Row(
+                    children: List.generate(controller.filteredGroups.value.length, (index) {
                       final group = controller.filteredGroups.value[index];
-                      return GroupCard(group: group);
-                    },
+                      return GroupCard(group);
+                    }),
                   );
                 },
               ),
-            ),
-            CustomButton(
-              onPressed: () {
-                Get.toNamed(Routes.createGroup);
-              },
-              child: const Text('Create New Group'),
             ),
           ],
         ),
