@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/services/log/logger_service.dart';
 import 'package:mastermind_together/src/services/sharedprefs/local_storage.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -54,6 +55,7 @@ class TimezoneService extends GetxService {
 
   TimeOfDay convertFromUTC(TimeOfDay utcTime, String timezone) {
     // Get the offset in minutes for the timezone.
+    Log().d('Converting $timezone from UTC');
     final offsetMinutes = "UTC (UTC+0:00)" == timezone ? 0 : _getOffsetMinutesForTimezone(timezone);
 
     // Convert the TimeOfDay to a DateTime object for today's date.

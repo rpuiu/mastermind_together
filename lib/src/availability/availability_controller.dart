@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/availability/day_model.dart';
-import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
 import 'package:mastermind_together/src/services/log/logger_service.dart';
 import 'package:mastermind_together/src/services/mixpanel/analytics_service.dart';
@@ -13,6 +12,7 @@ import 'package:mastermind_together/src/services/supa/auth_service.dart';
 import 'package:mastermind_together/src/services/supa/availability_service.dart';
 import 'package:mastermind_together/src/services/supa/users_extended_service.dart';
 import 'package:mastermind_together/src/services/timezone/timezone_service.dart';
+import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 import 'package:mastermind_together/src/util/date_time_util.dart';
 
 class AvailabilityController extends GetxController {
@@ -31,7 +31,7 @@ class AvailabilityController extends GetxController {
   Future<void> onInit() async {
     super.onInit();
     _initDays();
-    _fetchTimeZones();
+    await _fetchTimeZones();
     await _fetchAvailability();
   }
 
@@ -93,7 +93,8 @@ class AvailabilityController extends GetxController {
     List<DayModel> availability;
     try {
       availability = await _availabilityService.getAvailability(user.id);
-    } catch (e) {
+    } catch (e, s) {
+      Log().e("Unable to fetch availability: ", e, s);
       return;
     }
     _updateAvailabilityWithFetchedData(availability);
@@ -101,9 +102,12 @@ class AvailabilityController extends GetxController {
 
   void _updateAvailabilityWithFetchedData(List<DayModel> availability) {
     for (var day in availability) {
-      final index = days.indexWhere((d) => d.dayName == day.dayName);
-      if (index != -1) {
-        days[index] = _convertDayTimesFromUTC(day, selectedTimezone.value);
+      if (day.fromTime != null && day.toTime != null) {
+        Log().d("Updating availability: ${day.fromTime} ${day.toTime}");
+        final index = days.indexWhere((d) => d.dayName == day.dayName);
+        if (index != -1) {
+          days[index] = _convertDayTimesFromUTC(day, selectedTimezone.value);
+        }
       }
     }
   }

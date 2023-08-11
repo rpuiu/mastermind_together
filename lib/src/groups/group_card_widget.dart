@@ -25,7 +25,8 @@ class GroupCard extends GetView<GroupController> {
           shape: customBorder,
           elevation: 1,
           child: Container(
-            width: 223.20,
+            width: groupCardWidth,
+            height: groupCardHeight,
             padding: const EdgeInsets.only(
               top: 1.5 * fontSize,
               left: fontSize,
@@ -37,29 +38,14 @@ class GroupCard extends GetView<GroupController> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 1.5 * fontSize),
-                      Container(
-                        width: 86,
-                        height: 86,
-                        decoration: ShapeDecoration(
-                          image: const DecorationImage(
-                            image: AssetImage("assets/images/img.png"),
-                            fit: BoxFit.fill,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(60),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircleAvatar(
+                      radius: 43,
+                      child: Image.asset("assets/images/img.png"),
+                    ),
+                  ],
                 ),
                 buildTitleSection(),
                 const SizedBox(height: fontSize),
@@ -105,7 +91,7 @@ class GroupCard extends GetView<GroupController> {
         const SizedBox(height: fontSize),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-          decoration: const BoxDecoration(color: Color(0xFFE8F2F8)),
+          decoration: const BoxDecoration(color: categoryBgColor),
           child: Text(group.category, style: labelText),
         ),
         const SizedBox(height: 0.5 * fontSize),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 
 class ProfileBadge extends StatelessWidget {
   const ProfileBadge({
@@ -14,17 +15,12 @@ class ProfileBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Positioned(
       left: leftOffset,
-      child: Container(
-        width: 30,
-        height: 30,
-        decoration: ShapeDecoration(
-          image: DecorationImage(
-            image: AssetImage(imagePath),
-            fit: BoxFit.fill,
-          ),
-          shape: const OvalBorder(
-            side: BorderSide(width: 2, color: Colors.white),
-          ),
+      child: CircleAvatar(
+        radius: 15,
+        backgroundColor: whiteColor,
+        child: CircleAvatar(
+          radius: 14,
+          child: Image.asset(imagePath),
         ),
       ),
     );

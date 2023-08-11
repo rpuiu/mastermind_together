@@ -5,7 +5,6 @@ import 'package:mastermind_together/src/services/sharedprefs/local_storage.dart'
 import 'package:url_launcher/url_launcher.dart';
 
 class FeedbackController extends GetxController {
-  final GlobalKey supportFormKey = GlobalKey<FormState>();
   final TextEditingController issueTextFieldController = TextEditingController();
   final LocalStorageService _localStorage = Get.find<LocalStorageService>();
 

@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/feedback/feedback_controller.dart';
-import 'package:mastermind_together/src/ui/drawer.dart';
+import 'package:mastermind_together/src/ui/theme/scaffold/custom_scaffold.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/button.dart';
 
 class FeedbackScreen extends GetView<FeedbackController> {
-  const FeedbackScreen({Key? key}) : super(key: key);
+  FeedbackScreen({Key? key}) : super(key: key);
+  final GlobalKey supportFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Feedback'),
-      ),
-      drawer: CustomDrawer(),
+    return CustomScaffold(
       body: Center(
         child: SizedBox(
           width: MediaQuery.of(context).size.width * 0.8, // 80% of screen width
@@ -35,7 +32,7 @@ class FeedbackScreen extends GetView<FeedbackController> {
                 ),
                 const SizedBox(height: 48),
                 Form(
-                  key: controller.supportFormKey,
+                  key: supportFormKey,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

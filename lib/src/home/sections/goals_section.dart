@@ -20,7 +20,13 @@ class GoalsSection extends GetView<GoalController> {
       height: 310,
       child: Column(
         children: [
-          const Text("My Goals", style: headingText),
+          const Align(
+            alignment: Alignment.topLeft,
+            child: Text("Ready for an awesome day?", style: headingText),
+          ),
+          const SizedBox(
+            height: 2 * fontSize,
+          ),
           Expanded(
             child: Obx(
               () => controller.goals.isEmpty

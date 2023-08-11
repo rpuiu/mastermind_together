@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/profile/user_profile_controller.dart';
-import 'package:mastermind_together/src/ui/drawer.dart';
+import 'package:mastermind_together/src/ui/theme/scaffold/custom_scaffold.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
@@ -17,11 +17,7 @@ class UserProfileScreen extends GetView<UserController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('User Profile'),
-      ),
-      drawer: CustomDrawer(),
+    return CustomScaffold(
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

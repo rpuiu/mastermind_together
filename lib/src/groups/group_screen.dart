@@ -4,6 +4,7 @@ import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/groups/chat/chat_widget.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
+import 'package:mastermind_together/src/ui/theme/scaffold/custom_scaffold.dart';
 
 class GroupScreen extends GetView<GroupController> {
   final String groupId = Get.parameters['groupId']!;
@@ -12,14 +13,7 @@ class GroupScreen extends GetView<GroupController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Get.back(),
-        ),
-        title: Text('Group'),
-      ),
+    return CustomScaffold(
       body: FutureBuilder<GroupModel>(
         future: controller.fetchGroup(groupId),
         builder: (context, groupSnapshot) {
@@ -38,57 +32,60 @@ class GroupScreen extends GetView<GroupController> {
                   return Center(child: Text('Error: ${membersSnapshot.error}'));
                 } else {
                   final members = membersSnapshot.data!;
-                  return Column(
-                    children: [
-                      Expanded(
-                        child: ListView(
-                          padding: EdgeInsets.all(16.0),
-                          children: <Widget>[
-                            Text(group.name, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-                            Text('Category: ${group.category}'),
-                            Text('${group.meetingDay}: ${group.meetingTimeLocal.format(context)}'),
-                            Text('Meeting URL: ${group.meetingUrl}'),
-                            Divider(),
-                          ],
+                  return SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.8,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: ListView(
+                            padding: EdgeInsets.all(16.0),
+                            children: <Widget>[
+                              Text(group.name, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                              Text('Category: ${group.category}'),
+                              Text('${group.meetingDay}: ${group.meetingTimeLocal.format(context)}'),
+                              Text('Meeting URL: ${group.meetingUrl}'),
+                              Divider(),
+                            ],
+                          ),
                         ),
-                      ),
-                      Divider(),
-                      Expanded(
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: ListView(
-                                padding: EdgeInsets.all(16.0),
-                                children: [
-                                  Text(
-                                    'Members: ${group.currentMembers} / ${group.maxMembers}',
-                                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                                  ),
-                                  ...members
-                                      .map((member) => ListTile(
-                                            leading: Icon(Icons.person),
-                                            title: Text(member.username),
-                                          ))
-                                      .toList(),
-                                ],
+                        Divider(),
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: ListView(
+                                  padding: EdgeInsets.all(16.0),
+                                  children: [
+                                    Text(
+                                      'Members: ${group.currentMembers} / ${group.maxMembers}',
+                                      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                                    ),
+                                    ...members
+                                        .map((member) => ListTile(
+                                              leading: Icon(Icons.person),
+                                              title: Text(member.username),
+                                            ))
+                                        .toList(),
+                                  ],
+                                ),
                               ),
-                            ),
-                            VerticalDivider(),
-                            Expanded(
-                              flex: 3,
-                              child: Column(
-                                children: [
-                                  Text('Chat:', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-                                  Expanded(
-                                    child: ChatWidget(groupId: groupId),
-                                  ),
-                                ],
+                              VerticalDivider(),
+                              Expanded(
+                                flex: 3,
+                                child: Column(
+                                  children: [
+                                    Text('Chat:', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                                    Expanded(
+                                      child: ChatWidget(groupId: groupId),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   );
                 }
               },

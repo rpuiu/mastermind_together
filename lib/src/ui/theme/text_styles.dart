@@ -17,6 +17,19 @@ const Color buttonActiveBackgroundColor = Color(0xFFD6F2D3); //TODO Updated move
 const Color borderColor = Color(0xFFB6B9C5); //TODO Updated move to color_scheme
 const Color headingTextColor = Color(0xFF0C3E48); //TODO Updated move to color_scheme
 const Color backgroundColor = Color(0xFFFDFEFF); //TODO Updated move to color_scheme
+const Color drawerBgColor = Color(0xFF161618); //TODO Updated move to color_scheme
+const Color menuBtnColor = Color(0xFFEFEFEF); //TODO Updated move to color_scheme
+const Color drawerBorderColor = Color(0xFF1F1F22); //TODO Updated move to color_scheme
+const Color iconColor = Color(0xFFB7DCE4); //TODO Updated move to color_scheme
+const Color categoryBgColor = Color(0xFFE8F2F8); //TODO Updated move to color_scheme
+
+const TextStyle menuBtnTextRegular = TextStyle(
+  color: menuBtnColor,
+  fontSize: 16,
+  fontFamily: fontFamily,
+  fontWeight: FontWeight.w400,
+  height: 1.40,
+);
 
 const TextStyle headingText = TextStyle(
   color: headingTextColor,

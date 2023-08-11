@@ -12,12 +12,15 @@ class GroupCardsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Row(
-        children: List.generate(groups.length, (index) {
+    return SizedBox(
+      height: 344,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: groups.length,
+        itemBuilder: (context, index) {
           final group = groups[index];
           return GroupCard(group);
-        }),
+        },
       ),
     );
   }

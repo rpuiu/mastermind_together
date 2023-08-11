@@ -52,20 +52,19 @@ class Routes {
     GetPage(name: '/:tenantId/$termsOfService', page: () => TermsScreen(documentType: 'TOS')),
     GetPage(name: '/:tenantId/$privacyPolicy', page: () => TermsScreen(documentType: 'Privacy')),
     GetPage(name: userProfile, page: () => UserProfileScreen()),
-    GetPage(name: feedback, page: () => const FeedbackScreen()),
+    GetPage(name: feedback, page: () => FeedbackScreen()),
     GetPage(name: tenantDashboard, page: () => const TenantDashboardScreen()),
     GetPage(name: editTerms, page: () => EditTermsScreen()),
     GetPage(name: categories, page: () => CategoriesScreen()),
     GetPage(name: onboarding, page: () => OnBoardScreen()),
     GetPage(
-      name: '$goal/:goalId',
-      page: () => GoalScreen(),
-      binding: BindingsBuilder(() {
-        String goalId = Get.parameters['goalId']!;
-        Get.put(ActionController(goalId));
-      }),
-      middlewares: [AuthMiddleware()]
-    ),
+        name: '$goal/:goalId',
+        page: () => GoalScreen(),
+        binding: BindingsBuilder(() {
+          String goalId = Get.parameters['goalId']!;
+          Get.put(ActionController(goalId));
+        }),
+        middlewares: [AuthMiddleware()]),
   ];
 
   static String groupRoute(String groupId) => '$group/$groupId';

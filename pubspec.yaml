@@ -46,6 +46,7 @@ dependencies:
   flutter_dotenv: ^5.1.0
   url_launcher: ^6.1.11
   sentry_flutter: ^7.9.0
+  flutter_svg: ^2.0.5
 
 dev_dependencies:
   flutter_test:
@@ -72,6 +73,7 @@ flutter:
   assets:
     - assets/images/logo/
     - assets/images/
+    - assets/icons/
     - .env.prod
     - .env.dev
 

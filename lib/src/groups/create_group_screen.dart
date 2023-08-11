@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
+import 'package:mastermind_together/src/ui/theme/scaffold/custom_scaffold.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/button.dart';
 import 'package:mastermind_together/src/ui/widgets/dropdown/dropdown_widget.dart';
@@ -16,10 +17,7 @@ class CreateGroupScreen extends GetView<GroupController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create Group'),
-      ),
+    return CustomScaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
