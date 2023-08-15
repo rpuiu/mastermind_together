@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/auth/access_denied_screen.dart';
 import 'package:mastermind_together/src/auth/auth_middleware.dart';
 import 'package:mastermind_together/src/auth/login_screen.dart';
 import 'package:mastermind_together/src/auth/register_screen.dart';
@@ -10,6 +11,7 @@ import 'package:mastermind_together/src/goal/add_goal_screen.dart';
 import 'package:mastermind_together/src/goal/goal_screen.dart';
 import 'package:mastermind_together/src/groups/all_groups_screen.dart';
 import 'package:mastermind_together/src/groups/create_group_screen.dart';
+import 'package:mastermind_together/src/groups/group_membership_middleware.dart';
 import 'package:mastermind_together/src/groups/group_screen.dart';
 import 'package:mastermind_together/src/home/home_screen.dart';
 import 'package:mastermind_together/src/onboarding/onboard_screen.dart';
@@ -38,6 +40,7 @@ class Routes {
   static const String categories = '/categories';
   static const String onboarding = '/onboarding';
   static const String goal = '/goal';
+  static const String accessDenied = '/access-denied';
 
   static List<GetPage> routes = [
     GetPage(name: home, page: () => HomeScreen(), middlewares: [AuthMiddleware()]),
@@ -47,7 +50,7 @@ class Routes {
     GetPage(name: availability, page: () => SetAvailabilityScreen(), middlewares: [AuthMiddleware()]),
     GetPage(name: createGroup, page: () => CreateGroupScreen(), middlewares: [AuthMiddleware()]),
     GetPage(name: allGroups, page: () => AllGroupsScreen(), middlewares: [AuthMiddleware()]),
-    GetPage(name: '$group/:groupId', page: () => GroupScreen(), middlewares: [AuthMiddleware()]),
+    GetPage(name: '$group/:groupId', page: () => GroupScreen(), middlewares: [AuthMiddleware(), GroupMembershipMiddleware()]),
     GetPage(name: tenantRegister, page: () => TenantRegisterScreen()), //TODO secure!
     GetPage(name: '/:tenantId/$termsOfService', page: () => TermsScreen(documentType: 'TOS')),
     GetPage(name: '/:tenantId/$privacyPolicy', page: () => TermsScreen(documentType: 'Privacy')),
@@ -65,6 +68,7 @@ class Routes {
           Get.put(ActionController(goalId));
         }),
         middlewares: [AuthMiddleware()]),
+    GetPage(name: accessDenied, page: () => const AccessDeniedScreen()),
   ];
 
   static String groupRoute(String groupId) => '$group/$groupId';
