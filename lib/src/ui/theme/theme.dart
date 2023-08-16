@@ -5,16 +5,27 @@ class AppTheme {
   AppTheme._();
 
   static ThemeData lightTheme = ThemeData(
-      // colorScheme: lightThemeColors,
-      // useMaterial3: true,
-      scrollbarTheme: ScrollbarThemeData(thumbColor: MaterialStateProperty.all(bodyLightTextColor))
-      // textTheme: textTheme,
-      // buttonTheme: ButtonThemeData(
-      //   buttonColor: lightThemeColors.primary,
-      //   textTheme: ButtonTextTheme.primary,
-      // ),
-      // canvasColor: lightThemeColors.surface,
-      );
+    tabBarTheme: tabBarTheme,
+    scrollbarTheme: ScrollbarThemeData(thumbColor: MaterialStateProperty.all(bodyLightTextColor)),
+    // colorScheme: lightThemeColors,
+    // useMaterial3: true,
+    // textTheme: textTheme,
+    // buttonTheme: ButtonThemeData(
+    //   buttonColor: lightThemeColors.primary,
+    //   textTheme: ButtonTextTheme.primary,
+    // ),
+    // canvasColor: lightThemeColors.surface,
+  );
+
+  static TabBarTheme tabBarTheme = const TabBarTheme(
+    unselectedLabelColor: bodyButtonInactiveTextColor, // Unselected tab color
+    labelColor: bodyButtonActiveTextColor, // Selected tab color
+    indicator: BoxDecoration(
+      border: Border(
+        bottom: BorderSide(color: bodyButtonActiveTextColor, width: 0.8),
+      ),
+    ),
+  );
 
   static TextTheme textTheme = const TextTheme(
     displayLarge: h1,

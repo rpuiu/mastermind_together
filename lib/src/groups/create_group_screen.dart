@@ -123,6 +123,7 @@ class CreateGroupScreen extends GetView<GroupController> {
       label: 'Meeting URL',
       hintText: 'Enter the meeting URL',
       validator: (value) => FormValidators.validateEmpty(value, 'Please enter a meeting URL'),
+      //TODO Validate valid URL
       onChanged: (value) => controller.group.value.meetingUrl = value,
     );
   }

@@ -1,0 +1,54 @@
+import 'package:flutter/material.dart';
+import 'package:mastermind_together/src/ui/theme/sizes.dart';
+import 'package:mastermind_together/src/ui/theme/text_styles.dart';
+
+class ChatInputField extends StatelessWidget {
+  final TextEditingController controller;
+  final VoidCallback onSendPressed;
+
+  const ChatInputField({super.key, required this.controller, required this.onSendPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(fontSize),
+      padding: const EdgeInsets.symmetric(horizontal: fontSize),
+      decoration: BoxDecoration(
+        color: whiteColor,
+        borderRadius: BorderRadius.circular(25.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 2,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          hintText: 'Type a message...',
+          border: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          errorBorder: InputBorder.none,
+          disabledBorder: InputBorder.none,
+          contentPadding: const EdgeInsets.all(fontSize),
+          suffixIcon: Container(
+            decoration: BoxDecoration(
+              color: Colors.green.withOpacity(0.5),
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              hoverColor: Colors.transparent,
+              padding: EdgeInsets.zero,
+              icon: const Icon(Icons.send, color: bodyButtonActiveTextColor),
+              onPressed: onSendPressed,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/availability/availability_controller.dart';
-import 'package:mastermind_together/src/services/mixpanel/analytics_service.dart';
-import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
-import 'package:mastermind_together/src/goal/goal_model.dart';
 import 'package:mastermind_together/src/categories/category_controller.dart';
+import 'package:mastermind_together/src/goal/goal_model.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
 import 'package:mastermind_together/src/services/log/logger_service.dart';
+import 'package:mastermind_together/src/services/mixpanel/analytics_service.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';
 import 'package:mastermind_together/src/services/supa/goal_service.dart';
 import 'package:mastermind_together/src/services/supa/user_group_service.dart';
 import 'package:mastermind_together/src/services/timezone/timezone_service.dart';
+import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
+import 'package:mastermind_together/src/util/url_launcher.dart';
 
 class GroupController extends GetxController {
   final UserGroupService _groupService = Get.find<UserGroupService>();
@@ -287,5 +288,14 @@ class GroupController extends GetxController {
       }
     });
     _fetchAvailableGroups();
+  }
+
+  Future<void> launchMeetingUrl(GroupModel group) async {
+    try {
+     await launchURL(group.meetingUrl);
+    } catch (e) {
+      print("Exception: $e");
+      showErrorSnackBar(message: "Unable to launch ${group.meetingUrl}. Please contact the group admin.");
+    }
   }
 }

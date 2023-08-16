@@ -118,4 +118,14 @@ class TimezoneService extends GetxService {
     TimeOfDay utcTime = convertToUTC(localTime, userTimezone)!;
     return utcTime;
   }
+
+  DateTime convertUTCDateTimeToZone(DateTime utcDateTime, String timezone) {
+    final location = tz.getLocation(timezone.split(' ')[0]);
+    return tz.TZDateTime.from(utcDateTime, location);
+  }
+
+  DateTime convertUTCDateTimeToLocalZone(DateTime utcDateTime) {
+    String userTimezone = Get.find<LocalStorageService>().getUser()!.timezone.split(' ')[0];
+    return convertUTCDateTimeToZone(utcDateTime, userTimezone);
+  }
 }
