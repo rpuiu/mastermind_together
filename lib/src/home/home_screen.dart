@@ -4,7 +4,7 @@ import 'package:mastermind_together/src/home/home_controller.dart';
 import 'package:mastermind_together/src/home/sections/goals_section.dart';
 import 'package:mastermind_together/src/home/sections/matching_groups_section.dart';
 import 'package:mastermind_together/src/home/sections/my_groups_section.dart';
-import 'package:mastermind_together/src/ui/theme/scaffold/custom_scaffold.dart';
+import 'package:mastermind_together/src/ui/theme/scaffold/scrollable_custom_scaffold.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 
 class HomeScreen extends GetView<HomeController> {
@@ -12,7 +12,7 @@ class HomeScreen extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
+    return ScrollableCustomScaffold(
       body: Column(
         children: [
           const SizedBox(height: 4 * fontSize),

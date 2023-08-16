@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 
-class ResponsiveMarginWrapper extends StatelessWidget {
+class ResponsivePaddingWrapper extends StatelessWidget {
   final Widget child;
 
-  const ResponsiveMarginWrapper({super.key, required this.child});
+  const ResponsivePaddingWrapper({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -12,9 +12,9 @@ class ResponsiveMarginWrapper extends StatelessWidget {
     double horizontal = calculateHorizontalMargin(screenWidth);
     double vertical = calculateVerticalMargin(screenWidth);
 
-    EdgeInsets margin = EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical);
-    return Container(
-      margin: margin,
+    EdgeInsets padding = EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical);
+    return Padding(
+      padding: padding,
       child: child,
     );
   }

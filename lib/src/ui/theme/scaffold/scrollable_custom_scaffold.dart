@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:mastermind_together/src/ui/theme/scaffold/base_scaffold.dart';
 import 'package:mastermind_together/src/ui/theme/scaffold/responsive_padding_wrapper.dart';
 
-class CustomScaffold extends StatelessWidget {
+class ScrollableCustomScaffold extends StatelessWidget {
   final Widget body;
   final double desktopBreakpoint;
 
-  const CustomScaffold({
+  const ScrollableCustomScaffold({
     Key? key,
     required this.body,
     this.desktopBreakpoint = 800,
@@ -16,7 +16,9 @@ class CustomScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseScaffold(
       desktopBreakpoint: desktopBreakpoint,
-      body: ResponsivePaddingWrapper(child: body),
+      body: SingleChildScrollView(
+        child: ResponsivePaddingWrapper(child: body),
+      ),
     );
   }
 }

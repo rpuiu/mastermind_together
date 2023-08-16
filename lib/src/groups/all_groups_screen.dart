@@ -36,41 +36,45 @@ class AllGroupsScreen extends GetView<GroupController> {
   }
 
   Widget _buildCardGrid(BuildContext context) {
-    return Obx(
-      () {
-        if (controller.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        double screenWidth = MediaQuery.of(context).size.width;
-        double horizontalSpacing = fontSize;
-        double drawerWidth = screenWidth > 800 ? drawerMaxWidth : 0;
-        double responsiveMargin = calculateHorizontalMargin(screenWidth);
-        double availableWidth = screenWidth - drawerWidth - (2 * responsiveMargin);
+    return Obx(() {
+      if (controller.isLoading.value) {
+        return const Center(child: CircularProgressIndicator());
+      }
 
-        int numberOfColumns = ((availableWidth - horizontalSpacing) / (groupCardWidth + horizontalSpacing)).floor();
+      double screenWidth = MediaQuery.of(context).size.width;
+      double horizontalSpacing = fontSize;
+      double drawerWidth = screenWidth > 800 ? drawerMaxWidth : 0;
+      double responsiveMargin = calculateHorizontalMargin(screenWidth);
+      double availableWidth = screenWidth - drawerWidth - (2 * responsiveMargin);
+      int numberOfColumns = ((availableWidth - horizontalSpacing) / (groupCardWidth + horizontalSpacing)).floor();
 
-        List<Widget> rows = [];
-        for (int i = 0; i < controller.filteredGroups.value.length; i += numberOfColumns) {
-          List<Widget> rowChildren = [];
-          for (int j = 0; j < numberOfColumns; j++) {
-            int index = i + j;
-            if (index < controller.filteredGroups.value.length) {
-              final group = controller.filteredGroups.value[index];
-              rowChildren.add(GroupCard(group));
+      return Flexible(
+        child: ListView.builder(
+          itemCount: (controller.filteredGroups.value.length / numberOfColumns).ceil(),
+          itemBuilder: (context, rowIndex) {
+            int start = rowIndex * numberOfColumns;
+            int end = start + numberOfColumns;
+            List<Widget> rowChildren = [];
+            for (int index = start; index < end; index++) {
+              if (index < controller.filteredGroups.value.length) {
+                final group = controller.filteredGroups.value[index];
+                rowChildren.add(GroupCard(group));
+              }
             }
-          }
-          rows.add(
-            Row(
-              mainAxisAlignment: numberOfColumns == 1
-                  ? MainAxisAlignment.center // Center the children if there's only one column
-                  : MainAxisAlignment.start, // Otherwise, align to the start
+            return Row(
+              mainAxisAlignment: numberOfColumns == 1 ? MainAxisAlignment.center : MainAxisAlignment.start,
               children: rowChildren,
-            ),
-          );
-        }
-        return Column(children: rows);
-      },
-    );
+            );
+          },
+        ),
+      );
+    });
+  }
+
+  double computeGridHeight() {
+    double spacing = 20.0;
+    int maxRows = 2;
+    return (maxRows * groupCardHeight) + ((maxRows - 1) * spacing);
   }
 
   CustomButton _buildCreateGroupBtn() {
