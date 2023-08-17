@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/goal/add_goal_modal.dart';
 import 'package:mastermind_together/src/goal/goal_card.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
-import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/custom_page_indicator.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
@@ -38,7 +38,7 @@ class GoalsSection extends GetView<GoalController> {
                           const Text('You haven\'t set any goals yet.'),
                           CustomButton(
                             onPressed: () {
-                              Get.toNamed(Routes.createGoal);
+                              AddGoalModal.show(context);
                             },
                             child: const Text('Set a Goal'),
                           ),

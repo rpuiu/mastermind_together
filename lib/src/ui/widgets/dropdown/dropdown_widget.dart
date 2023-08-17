@@ -21,8 +21,20 @@ class CustomDropDown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<String>(
+      borderRadius: borderRadius,
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      decoration: InputDecoration(labelText: label),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: labelText,
+        fillColor: categoryBgColor,
+        filled: true,
+        border: const OutlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
+          ),
+        ),
+      ),
       value: items.contains(selectedValue) ? selectedValue : null,
       onChanged: onChanged,
       items: items.map<DropdownMenuItem<String>>((String value) {
@@ -30,7 +42,7 @@ class CustomDropDown extends StatelessWidget {
           value: value,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: fontSize),
-            child: Text(value),
+            child: Text(value, style: bodyRegular),
           ),
         );
       }).toList(),
@@ -38,7 +50,7 @@ class CustomDropDown extends StatelessWidget {
       style: body,
       dropdownColor: Theme.of(context).colorScheme.surfaceVariant,
       isExpanded: true,
-      icon: const Icon(Icons.arrow_drop_down),
+      icon: const Icon(Icons.arrow_drop_down, color: bodyButtonInactiveTextColor),
     );
   }
 }

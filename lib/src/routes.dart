@@ -7,7 +7,7 @@ import 'package:mastermind_together/src/auth/tos/terms_screen.dart';
 import 'package:mastermind_together/src/availability/availability_screen.dart';
 import 'package:mastermind_together/src/feedback/feedback_screen.dart';
 import 'package:mastermind_together/src/goal/actions/actions_controller.dart';
-import 'package:mastermind_together/src/goal/add_goal_screen.dart';
+import 'package:mastermind_together/src/goal/all_goals_screen.dart';
 import 'package:mastermind_together/src/goal/goal_screen.dart';
 import 'package:mastermind_together/src/groups/all_groups_screen.dart';
 import 'package:mastermind_together/src/groups/create_group_screen.dart';
@@ -25,7 +25,6 @@ class Routes {
   static const String home = '/home';
   static const String login = '/login';
   static const String register = '/:tenantId/register';
-  static const String createGoal = '/create-goal';
   static const String availability = '/set-availability';
   static const String createGroup = '/create-group';
   static const String allGroups = '/view-groups';
@@ -40,13 +39,14 @@ class Routes {
   static const String categories = '/categories';
   static const String onboarding = '/onboarding';
   static const String goal = '/goal';
+  static const String goals = '/goals';
   static const String accessDenied = '/access-denied';
 
   static List<GetPage> routes = [
     GetPage(name: home, page: () => HomeScreen(), middlewares: [AuthMiddleware()]),
     GetPage(name: login, page: () => LoginScreen()),
     GetPage(name: register, page: () => RegisterScreen()),
-    GetPage(name: createGoal, page: () => AddGoalScreen(), middlewares: [AuthMiddleware()]),
+    GetPage(name: goals, page: () => AllGoalsScreen(), middlewares: [AuthMiddleware()]),
     GetPage(name: availability, page: () => SetAvailabilityScreen(), middlewares: [AuthMiddleware()]),
     GetPage(name: createGroup, page: () => CreateGroupScreen(), middlewares: [AuthMiddleware()]),
     GetPage(name: allGroups, page: () => AllGroupsScreen(), middlewares: [AuthMiddleware()]),

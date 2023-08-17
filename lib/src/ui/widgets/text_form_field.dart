@@ -10,6 +10,9 @@ class CustomTextFormField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final GestureTapCallback? onTap;
   final TextInputType? keyboardType;
+  final int? maxLength;
+  final int? minLines;  // Added this
+  final int? maxLines;  // Added this
 
   const CustomTextFormField({
     Key? key,
@@ -22,6 +25,9 @@ class CustomTextFormField extends StatelessWidget {
     this.onChanged,
     this.onTap,
     this.keyboardType,
+    this.maxLength,
+    this.minLines = 1,  // Defaulting to 1 line
+    this.maxLines,     // Null by default, meaning it can expand indefinitely based on user input.
   }) : super(key: key);
 
   @override
@@ -35,6 +41,9 @@ class CustomTextFormField extends StatelessWidget {
       onTap: onTap,
       readOnly: readOnly,
       keyboardType: keyboardType,
+      maxLength: maxLength,
+      minLines: minLines, // Added this
+      maxLines: maxLines, // Added this
       decoration: InputDecoration(
         filled: true,
         fillColor: Theme.of(context).colorScheme.surfaceVariant,

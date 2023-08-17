@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/goal/add_goal_modal.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
 import 'package:mastermind_together/src/home/sections/group_cards_row.dart';
-import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/button.dart';
@@ -31,7 +31,7 @@ class MatchingGroupsSection extends GetView<GroupController> {
                 const Text('Please set a goal in order to view matching groups.'),
                 CustomButton(
                   onPressed: () {
-                    Get.toNamed(Routes.createGoal);
+                    AddGoalModal.show(context);
                   },
                   child: const Text('Set a Goal'),
                 ),

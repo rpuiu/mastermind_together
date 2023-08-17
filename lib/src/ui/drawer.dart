@@ -48,7 +48,7 @@ class CustomDrawer extends StatelessWidget {
                         const SizedBox(height: fontSize),
                         DrawerButton(text: 'Groups', icon: AppIcons.profile2user, onTap: () => Get.toNamed(Routes.allGroups)),
                         const SizedBox(height: fontSize),
-                        DrawerButton(text: 'Goals', icon: AppIcons.award, onTap: () => Get.toNamed(Routes.createGoal)),
+                        DrawerButton(text: 'Goals', icon: AppIcons.award, onTap: () => Get.toNamed(Routes.goals)),
                         const SizedBox(height: fontSize),
                         DrawerButton(text: 'Availability', icon: AppIcons.calendar2, onTap: () => Get.toNamed(Routes.availability)),
                         const SizedBox(height: fontSize),
