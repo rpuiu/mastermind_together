@@ -18,13 +18,16 @@ const Color borderColor = Color(0xFFB6B9C5); //TODO Updated move to color_scheme
 const Color headingTextColor = Color(0xFF0C3E48); //TODO Updated move to color_scheme
 const Color backgroundColor = Color(0xFFFDFEFF); //TODO Updated move to color_scheme
 const Color drawerBgColor = Color(0xFF161618); //TODO Updated move to color_scheme
-const Color menuBtnColor = Color(0xFFEFEFEF); //TODO Updated move to color_scheme
 const Color drawerBorderColor = Color(0xFF1F1F22); //TODO Updated move to color_scheme
-const Color iconColor = Color(0xFFB7DCE4); //TODO Updated move to color_scheme
 const Color categoryBgColor = Color(0xFFE8F2F8); //TODO Updated move to color_scheme
+const Color defaultMenuIconColor = Color(0xFF6D7C80); //TODO Updated move to color_scheme
+const Color defaultMenuTextColor = Color(0xFF9B9B9B); //TODO Updated move to color_scheme
+const Color hoverMenuIconColor = Color(0xFF22B2CF); //TODO Updated move to color_scheme
+const Color hoverMenuTextColor = Color(0xFFEFEFEF); //TODO Updated move to color_scheme
+const Color activeMenuIconColor = Color(0xFFB7DCE4); //TODO Updated move to color_scheme
 
 const TextStyle menuBtnTextRegular = TextStyle(
-  color: menuBtnColor,
+  color: hoverMenuTextColor,
   fontSize: 16,
   fontFamily: fontFamily,
   fontWeight: FontWeight.w400,

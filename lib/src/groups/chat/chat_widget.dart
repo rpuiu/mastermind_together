@@ -18,7 +18,7 @@ class ChatWidget extends GetView<MessageController> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: menuBtnColor,
+      color: hoverMenuTextColor,
       shape: customBorder,
       child: Column(
         children: [

@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/auth/auth_controller.dart';
-import 'package:mastermind_together/src/routes.dart';
-import 'package:mastermind_together/src/ui/drawer_button.dart';
-import 'package:mastermind_together/src/ui/theme/app_icons.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
+import 'package:mastermind_together/src/ui/widgets/drawer/drawer_button.dart';
+import 'package:mastermind_together/src/ui/widgets/drawer/drawer_state_controller.dart';
 
-class TenantDrawer extends StatelessWidget {
-  final AuthController _authController = Get.find<AuthController>();
+class BaseDrawer extends StatelessWidget {
+  final List<Widget> children;
+  final VoidCallback onLogout;
 
-  TenantDrawer({Key? key}) : super(key: key);
+  const BaseDrawer({
+    Key? key,
+    required this.children,
+    required this.onLogout,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Get.put(DrawerStateController());
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(fontSize / 2, fontSize, fontSize / 2, fontSize),
       child: ConstrainedBox(
@@ -43,32 +48,11 @@ class TenantDrawer extends StatelessWidget {
                   Expanded(
                     child: ListView(
                       shrinkWrap: true,
-                      children: [
-                        //TODO Icons
-                        DrawerButton(text: 'Home', icon: AppIcons.home, onTap: () => Get.toNamed(Routes.tenantDashboard)),
-                        const SizedBox(height: fontSize),
-                        DrawerButton(
-                            text: 'Terms of Service & Privacy Policy',
-                            icon: const Icon(
-                              Icons.policy_outlined,
-                              color: iconColor,
-                            ), //TODO change icon
-                            onTap: () => Get.toNamed(Routes.editTerms)),
-                        const SizedBox(height: fontSize),
-                        DrawerButton(
-                            text: 'Goal & Group Categories',
-                            icon: const Icon(
-                              Icons.category_outlined,
-                              color: iconColor,
-                            ), //TODO change icon
-                            onTap: () => Get.toNamed(Routes.categories)),
-                        // const SizedBox(height: fontSize),
-                        // DrawerButton(text: 'Logo & Colors', icon: const Icon(Icons.color_lens), onTap: () => {}), //TODO
-                      ],
+                      children: children,
                     ),
                   ),
                   const SizedBox(height: 2 * fontSize),
-                  DrawerButton(text: 'Logout', icon: AppIcons.logout, onTap: _authController.logout),
+                  DrawerButton(text: 'Logout', iconName: 'logout', onTap: onLogout),
                   const SizedBox(height: 2 * fontSize),
                 ],
               ),

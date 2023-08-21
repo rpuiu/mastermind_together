@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mastermind_together/src/ui/drawer.dart';
+import 'package:mastermind_together/src/ui/widgets/drawer/user_drawer.dart';
+import 'package:mastermind_together/src/ui/theme/app_icons.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 
 class BaseScaffold extends StatelessWidget {
@@ -22,10 +23,10 @@ class BaseScaffold extends StatelessWidget {
           appBar: !isDesktop
               ? AppBar(
                   backgroundColor: drawerBgColor,
-                  foregroundColor: menuBtnColor,
+                  foregroundColor: hoverMenuTextColor,
                   leading: Builder(
                     builder: (BuildContext context) => IconButton(
-                      icon: const Icon(Icons.menu), //TODO change icon
+                      icon: AppIcons.getIcon('menu', IconState.activeState),
                       onPressed: () => Scaffold.of(context).openDrawer(),
                     ),
                   ),

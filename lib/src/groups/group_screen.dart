@@ -124,7 +124,7 @@ class GroupScreen extends GetView<GroupController> {
           ),
           Expanded(
             child: Card(
-              color: menuBtnColor,
+              color: hoverMenuTextColor,
               shape: customBorder,
               child: Padding(
                 padding: const EdgeInsets.all(fontSize),

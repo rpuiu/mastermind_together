@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/categories/category_controller.dart';
-import 'package:mastermind_together/src/ui/tenant_drawer.dart';
+import 'package:mastermind_together/src/ui/widgets/drawer/tenant_drawer.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 
 class CategoriesScreen extends GetView<CategoryController> {
