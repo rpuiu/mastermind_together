@@ -15,7 +15,7 @@ class LinkText extends StatelessWidget {
         children: [
           TextSpan(
             text: textValue,
-            style: linkStyle,
+            style: robotoSubtitleTextStyle.copyWith(color: linkTextColor),
             recognizer: TapGestureRecognizer()..onTap = callback,
           )
         ],

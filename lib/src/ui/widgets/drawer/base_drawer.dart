@@ -28,12 +28,12 @@ class BaseDrawer extends StatelessWidget {
           elevation: 0,
           backgroundColor: Colors.transparent,
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: borderRadius,
             child: Container(
               padding: const EdgeInsets.only(left: 1.5 * fontSize, right: 1.5 * fontSize),
               decoration: BoxDecoration(
                 color: drawerBgColor,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: borderRadius,
                 border: Border.all(color: drawerBorderColor, width: 1),
               ),
               child: Column(
@@ -43,7 +43,7 @@ class BaseDrawer extends StatelessWidget {
                 children: [
                   DrawerHeader(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    child: SvgPicture.asset(width: 212, height: 18, 'assets//images/logo/logo-small.svg'),
+                    child: SvgPicture.asset(width: 212, height: 18, 'assets/images/logo/logo-small-white.svg'),
                   ),
                   Expanded(
                     child: ListView(

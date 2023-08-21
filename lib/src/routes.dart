@@ -20,6 +20,7 @@ import 'package:mastermind_together/src/tenant/categories/categories_screen.dart
 import 'package:mastermind_together/src/tenant/tenant_dashboard_screen.dart';
 import 'package:mastermind_together/src/tenant/tenant_register_screen.dart';
 import 'package:mastermind_together/src/tenant/terms/edit_terms_screen.dart';
+import 'package:mastermind_together/src/ui/widgets/images/right_side_image_controller.dart';
 
 class Routes {
   static const String home = '/home';
@@ -44,7 +45,7 @@ class Routes {
 
   static List<GetPage> routes = [
     GetPage(name: home, page: () => HomeScreen(), middlewares: [AuthMiddleware()]),
-    GetPage(name: login, page: () => LoginScreen()),
+    GetPage(name: login, page: () => const LoginScreen(), binding: RightSideImageBinding()),
     GetPage(name: register, page: () => RegisterScreen()),
     GetPage(name: goals, page: () => AllGoalsScreen(), middlewares: [AuthMiddleware()]),
     GetPage(name: availability, page: () => SetAvailabilityScreen(), middlewares: [AuthMiddleware()]),

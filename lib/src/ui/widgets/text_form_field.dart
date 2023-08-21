@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mastermind_together/src/ui/theme/sizes.dart';
+import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 
 class CustomTextFormField extends StatelessWidget {
   final TextEditingController controller;
@@ -11,8 +13,8 @@ class CustomTextFormField extends StatelessWidget {
   final GestureTapCallback? onTap;
   final TextInputType? keyboardType;
   final int? maxLength;
-  final int? minLines;  // Added this
-  final int? maxLines;  // Added this
+  final int? minLines;
+  final int? maxLines;
 
   const CustomTextFormField({
     Key? key,
@@ -26,40 +28,53 @@ class CustomTextFormField extends StatelessWidget {
     this.onTap,
     this.keyboardType,
     this.maxLength,
-    this.minLines = 1,  // Defaulting to 1 line
-    this.maxLines,     // Null by default, meaning it can expand indefinitely based on user input.
+    this.minLines = 1,
+    this.maxLines,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      controller: controller,
-      obscureText: obscureText,
-      validator: validator,
-      onChanged: onChanged,
-      onTap: onTap,
-      readOnly: readOnly,
-      keyboardType: keyboardType,
-      maxLength: maxLength,
-      minLines: minLines, // Added this
-      maxLines: maxLines, // Added this
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: Theme.of(context).colorScheme.surfaceVariant,
-        contentPadding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-        labelText: label,
-        labelStyle: Theme.of(context).textTheme.labelSmall,
-        hintText: hintText,
-        hintStyle: Theme.of(context).textTheme.labelMedium,
-        border: OutlineInputBorder(
-          borderSide: BorderSide(width: 0.50, color: Theme.of(context).colorScheme.primary),
-          gapPadding: 0,
-          borderRadius: const BorderRadius.all(
-            Radius.circular(10),
+    bool isMobile = MediaQuery.of(context).size.width < 600;
+    EdgeInsets mobileContentPadding = const EdgeInsets.symmetric(vertical: 14.0, horizontal: 16.0);
+
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: isMobile ? mobileLabelTextStyle : formLabelTextStyle,
+        ),
+        const SizedBox(height: fontSize / 2),
+        TextFormField(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          controller: controller,
+          obscureText: obscureText,
+          validator: validator,
+          onChanged: onChanged,
+          onTap: onTap,
+          readOnly: readOnly,
+          keyboardType: keyboardType,
+          maxLength: maxLength,
+          minLines: minLines,
+          maxLines: maxLines,
+          decoration: InputDecoration(
+            contentPadding: isMobile ? mobileContentPadding : null,
+            hintText: hintText,
+            hintStyle: isMobile ? mobileLabelTextStyle.copyWith(color: textFieldHintColor) : formHintTextStyle,
+            filled: true,
+            fillColor: formTextFieldFillColor,
+            enabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: textFieldBorderColor, width: 0.5),
+              borderRadius: borderRadius,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: textFieldBorderColor, width: 0.5),
+              borderRadius: borderRadius,
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 }

@@ -62,13 +62,13 @@ class GroupCard extends GetView<GroupController> {
                   child: userIsMember
                       ? const CustomButton(
                           label: 'Joined',
-                          textColor: bodyButtonInactiveTextColor,
+                          labelTextStyle: bodyMediumInactive,
                           backgroundColor: buttonInactiveBackgroundColor,
                           isEnabled: false,
                         )
                       : CustomButton(
                           label: 'Join Group',
-                          textColor: bodyButtonActiveTextColor,
+                          labelTextStyle: bodyMediumInactive.copyWith(color: bodyButtonActiveTextColor),
                           backgroundColor: buttonActiveBackgroundColor,
                           isEnabled: true,
                           onPressed: () => controller.joinGroup(group.id),

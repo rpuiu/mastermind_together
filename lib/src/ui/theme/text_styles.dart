@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mastermind_together/src/ui/theme/color_scheme.dart';
 
 const String fontFamily = 'Inter';
+const String robotoFontFamily = 'Roboto';
 const Color textColor = darkerPrimaryColor;
 const Color textPlaceholderColor = placeholderColor;
 
@@ -25,6 +26,65 @@ const Color defaultMenuTextColor = Color(0xFF9B9B9B); //TODO Updated move to col
 const Color hoverMenuIconColor = Color(0xFF22B2CF); //TODO Updated move to color_scheme
 const Color hoverMenuTextColor = Color(0xFFEFEFEF); //TODO Updated move to color_scheme
 const Color activeMenuIconColor = Color(0xFFB7DCE4); //TODO Updated move to color_scheme
+const Color textFieldLabelColor = Color(0xFF0B1420); //TODO Updated move to color_scheme
+const Color textFieldHintColor = Color(0xFF8796AD); //TODO Updated move to color_scheme
+const Color formTextFieldFillColor = Color(0xFFF6FAFF); //TODO Updated move to color_scheme
+const Color textFieldBorderColor = Color(0xFFD3D7E3); //TODO Updated move to color_scheme
+const Color buttonBackgroundColor = Color(0xFF162D3A); //TODO Updated move to color_scheme
+const Color welcomeTextColor = Color(0xFF161619); //TODO Updated move to color_scheme
+const Color subtitleTextColor = Color(0xFF313957); //TODO Updated move to color_scheme
+const Color linkTextColor = Color(0xFF1D4AE8); //TODO Updated move to color_scheme
+const Color copyrightTextColor = Color(0xFF959CB5); //TODO Updated move to color_scheme
+
+TextStyle copyrightTextStyle = linkTextStyle.copyWith(color: copyrightTextColor);
+TextStyle robotoSubtitleTextStyle = subtitleTextStyle.copyWith(fontFamily: robotoFontFamily);
+
+TextStyle linkTextStyle = const TextStyle(
+  color: linkTextColor,
+  fontSize: 16,
+  fontFamily: robotoFontFamily,
+  fontWeight: FontWeight.w400,
+  height: 1,
+  letterSpacing: 0.16,
+);
+
+TextStyle subtitleTextStyle = const TextStyle(
+  color: subtitleTextColor,
+  fontSize: 18,
+  fontFamily: fontFamily,
+  fontWeight: FontWeight.w400,
+  height: 1.60,
+  letterSpacing: 0.18,
+);
+
+TextStyle welcomeTextStyle = const TextStyle(
+  color: welcomeTextColor,
+  fontSize: 32,
+  fontFamily: fontFamily,
+  fontWeight: FontWeight.w600,
+  height: 1,
+  letterSpacing: 0.32,
+);
+
+const TextStyle buttonTextStyle = TextStyle(
+  color: whiteColor,
+  fontSize: 20,
+  fontFamily: robotoFontFamily,
+  fontWeight: FontWeight.w400,
+  height: 1,
+  letterSpacing: 0.20,
+); //UPDATED
+
+const formLabelTextStyle = TextStyle(
+  color: textFieldLabelColor,
+  fontSize: 16,
+  fontFamily: fontFamily,
+  fontWeight: FontWeight.w400,
+  height: 1,
+  letterSpacing: 0.16,
+); //UPDATED
+
+TextStyle formHintTextStyle = formLabelTextStyle.copyWith(color: textFieldHintColor); //UPDATED
 
 const TextStyle menuBtnTextRegular = TextStyle(
   color: hoverMenuTextColor,
@@ -32,7 +92,7 @@ const TextStyle menuBtnTextRegular = TextStyle(
   fontFamily: fontFamily,
   fontWeight: FontWeight.w400,
   height: 1.40,
-);
+); //UPDATED
 
 const TextStyle headingText = TextStyle(
   color: headingTextColor,
@@ -49,6 +109,8 @@ const TextStyle labelText = TextStyle(
   fontWeight: FontWeight.w400,
   height: 1.40,
 ); //Updated
+
+TextStyle mobileLabelTextStyle = labelText.copyWith(height: 1, letterSpacing: 0.14, color: textFieldLabelColor);
 
 const TextStyle bodySemiBold = TextStyle(
   color: bodyTextColor,

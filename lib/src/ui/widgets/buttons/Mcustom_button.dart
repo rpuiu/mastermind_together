@@ -1,45 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:mastermind_together/src/ui/theme/sizes.dart';
 
 class CustomButton extends StatelessWidget {
   final String label;
-  final Color textColor;
   final Color backgroundColor;
   final bool isEnabled;
   final VoidCallback? onPressed;
 
+  final TextStyle labelTextStyle;
+
   const CustomButton({
     Key? key,
     required this.label,
-    required this.textColor,
     required this.backgroundColor,
     this.isEnabled = true,
     this.onPressed,
+    required this.labelTextStyle,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    bool isMobile = MediaQuery.of(context).size.width < 600;
+
+    TextStyle mobileLabelTextStyle = labelTextStyle.copyWith(fontSize: fontSize, letterSpacing: 0.16);
+
+    EdgeInsets buttonPadding = isMobile ? const EdgeInsets.symmetric(vertical: 14.0) : const EdgeInsets.symmetric(vertical: fontSize);
+
     return ElevatedButton(
       onPressed: isEnabled ? onPressed : null,
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(backgroundColor),
         elevation: MaterialStateProperty.all(0),
-        padding: MaterialStateProperty.all(EdgeInsets.zero),
+        padding: MaterialStateProperty.all(buttonPadding),
         shape: MaterialStateProperty.all(
           RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: borderRadius,
             side: const BorderSide(color: Colors.transparent),
           ),
         ),
       ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: textColor,
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-          height: 1.50,
-        ),
-      ),
+      child: Text(label, style: isMobile ? mobileLabelTextStyle : labelTextStyle),
     );
   }
 }

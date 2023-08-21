@@ -59,6 +59,7 @@ class RegisterScreen extends GetView<AuthController> {
                       label: 'Password',
                       hintText: "What is your password?",
                       obscureText: true,
+                      maxLines: 1,
                       validator: FormValidators.validatePassword,
                     ),
                     const SizedBox(height: 2 * fontSize),
@@ -67,6 +68,7 @@ class RegisterScreen extends GetView<AuthController> {
                       label: 'Confirm Password',
                       hintText: "Confirm your password",
                       obscureText: true,
+                      maxLines: 1,
                       validator: (value) {
                         return FormValidators.validateConfirmPassword(value, passwordController.text);
                       },
