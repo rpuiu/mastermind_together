@@ -8,7 +8,7 @@ import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/scaffold/custom_scaffold.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
-import 'package:mastermind_together/src/ui/widgets/buttons/button.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/add_button.dart';
 
 class AllGoalsScreen extends GetView<GoalController> {
   const AllGoalsScreen({super.key});
@@ -32,8 +32,8 @@ class AllGoalsScreen extends GetView<GoalController> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         const Text("All Goals", style: headingText),
-        const SizedBox(width: 1.5 * fontSize),
-        _buildCreateGoalBtn(context),
+        const SizedBox(width: fontSize / 2),
+        AddButton(onPressed: () => AddGoalModal.show(context)),
       ],
     );
   }
@@ -86,14 +86,5 @@ class AllGoalsScreen extends GetView<GoalController> {
     }
     final GoalModel item = controller.goals.removeAt(oldIndex);
     controller.goals.insert(newIndex, item);
-  }
-
-  CustomButton _buildCreateGoalBtn(BuildContext context) {
-    return CustomButton(
-      onPressed: () {
-        AddGoalModal.show(context);
-      },
-      child: const Text('Create New'),
-    );
   }
 }

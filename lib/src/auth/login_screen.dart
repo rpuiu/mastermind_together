@@ -5,7 +5,7 @@ import 'package:mastermind_together/src/auth/auth_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
-import 'package:mastermind_together/src/ui/widgets/buttons/Mcustom_button.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/link_text.dart';
 import 'package:mastermind_together/src/ui/widgets/images/right_side_image_widget.dart';
 import 'package:mastermind_together/src/ui/widgets/text_form_field.dart';
@@ -81,8 +81,6 @@ class LoginForm extends GetView<AuthController> {
 
   @override
   Widget build(BuildContext context) {
-    bool isMobile = MediaQuery.of(context).size.width < 600;
-
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 406),
       child: Column(
@@ -114,15 +112,11 @@ class LoginForm extends GetView<AuthController> {
             child: Text('Forgot Password?', style: linkTextStyle), //TODO MAIN-T-49
           ),
           const SizedBox(height: 1.5 * fontSize),
-          SizedBox(
-            width: double.infinity,
-            height: isMobile ? 44 : 52,
-            child: CustomButton(
-              label: 'Sign in',
-              labelTextStyle: buttonTextStyle,
-              backgroundColor: buttonBackgroundColor,
-              onPressed: () => controller.login(emailController.text, passwordController.text),
-            ),
+          CustomButton(
+            label: 'Sign in',
+            labelTextStyle: buttonTextStyle,
+            backgroundColor: buttonBackgroundColor,
+            onPressed: () => controller.login(emailController.text, passwordController.text),
           ),
           const SizedBox(height: 3 * fontSize),
           Wrap(

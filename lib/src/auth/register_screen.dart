@@ -5,7 +5,7 @@ import 'package:mastermind_together/src/auth/tos/terms_and_conditions_widget.dar
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
-import 'package:mastermind_together/src/ui/widgets/buttons/button.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/link_text.dart';
 import 'package:mastermind_together/src/ui/widgets/logo.dart';
 import 'package:mastermind_together/src/ui/widgets/text_form_field.dart';
@@ -83,8 +83,10 @@ class RegisterScreen extends GetView<AuthController> {
                             controller.register(usernameController.text, emailController.text, passwordController.text);
                           }
                         },
-                        enabled: termsOfService.isChecked.value,
-                        child: const Text('Create Account'),
+                        isEnabled: termsOfService.isChecked.value,
+                        label: 'Create Account',
+                        labelTextStyle: buttonTextStyle,
+                        backgroundColor: buttonBackgroundColor,
                       ),
                     ),
                     const SizedBox(height: 2 * fontSize),

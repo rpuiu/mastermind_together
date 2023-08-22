@@ -4,7 +4,8 @@ import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/scaffold/custom_scaffold.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
-import 'package:mastermind_together/src/ui/widgets/buttons/button.dart';
+import 'package:mastermind_together/src/ui/theme/text_styles.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
 import 'package:mastermind_together/src/ui/widgets/dropdown/dropdown_widget.dart';
 import 'package:mastermind_together/src/ui/widgets/text_form_field.dart';
 import 'package:mastermind_together/src/util/date_time_util.dart';
@@ -141,7 +142,6 @@ class CreateGroupScreen extends GetView<GroupController> {
 
   CustomButton _buildSubmitButton(BuildContext context) {
     return CustomButton(
-      child: const Text('Create Group'),
       onPressed: () {
         if (_formKey.currentState!.validate()) {
           _formKey.currentState!.save();
@@ -149,6 +149,9 @@ class CreateGroupScreen extends GetView<GroupController> {
           Get.toNamed(Routes.allGroups);
         }
       },
+      label: 'Create Group',
+      labelTextStyle: buttonTextStyle,
+      backgroundColor: buttonBackgroundColor,
     );
   }
 }

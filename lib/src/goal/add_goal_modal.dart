@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
-import 'package:mastermind_together/src/ui/widgets/buttons/button.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
 import 'package:mastermind_together/src/ui/widgets/dropdown/dropdown_widget.dart';
 import 'package:mastermind_together/src/ui/widgets/text_form_field.dart';
 import 'package:mastermind_together/src/util/form_validators.dart';
@@ -81,7 +81,9 @@ class AddGoalModal extends GetView<GoalController> {
                       Get.back();
                     }
                   },
-                  child: const Text('Save Goal'),
+                  label: 'Save Goal',
+                  labelTextStyle: buttonTextStyle,
+                  backgroundColor: buttonBackgroundColor,
                 ),
               ],
             ),

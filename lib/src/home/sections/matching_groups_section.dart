@@ -8,7 +8,7 @@ import 'package:mastermind_together/src/groups/group_model.dart';
 import 'package:mastermind_together/src/home/sections/group_cards_row.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
-import 'package:mastermind_together/src/ui/widgets/buttons/button.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
 
 class MatchingGroupsSection extends GetView<GroupController> {
   final GoalController goalController = Get.find<GoalController>();
@@ -33,7 +33,9 @@ class MatchingGroupsSection extends GetView<GroupController> {
                   onPressed: () {
                     AddGoalModal.show(context);
                   },
-                  child: const Text('Set a Goal'),
+                  label: 'Set a Goal',
+                  labelTextStyle: buttonTextStyle,
+                  backgroundColor: buttonBackgroundColor,
                 ),
               ],
             );

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/feedback/feedback_controller.dart';
 import 'package:mastermind_together/src/ui/theme/scaffold/custom_scaffold.dart';
-import 'package:mastermind_together/src/ui/widgets/buttons/button.dart';
+import 'package:mastermind_together/src/ui/theme/sizes.dart';
+import 'package:mastermind_together/src/ui/theme/text_styles.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
 
 class FeedbackScreen extends GetView<FeedbackController> {
   FeedbackScreen({Key? key}) : super(key: key);
@@ -47,10 +49,12 @@ class FeedbackScreen extends GetView<FeedbackController> {
                         ),
                         // validator: validator?,
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: fontSize),
                       CustomButton(
-                        child: const Text('Send'),
                         onPressed: () => controller.sendEmail(),
+                        label: 'Send',
+                        labelTextStyle: buttonTextStyle,
+                        backgroundColor: buttonBackgroundColor,
                       )
                     ],
                   ),

@@ -6,7 +6,7 @@ import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/scaffold/custom_scaffold.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
-import 'package:mastermind_together/src/ui/widgets/buttons/button.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/add_button.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/filter_chip.dart';
 
 class AllGroupsScreen extends GetView<GroupController> {
@@ -22,8 +22,12 @@ class AllGroupsScreen extends GetView<GroupController> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const Text("All Groups", style: headingText),
-              const SizedBox(width: 1.5 * fontSize),
-              _buildCreateGroupBtn(),
+              const SizedBox(width: fontSize / 2),
+              AddButton(
+                onPressed: () {
+                  Get.toNamed(Routes.createGroup);
+                },
+              ),
             ],
           ),
           const SizedBox(height: 1.5 * fontSize),
@@ -75,15 +79,6 @@ class AllGroupsScreen extends GetView<GroupController> {
     double spacing = 20.0;
     int maxRows = 2;
     return (maxRows * groupCardHeight) + ((maxRows - 1) * spacing);
-  }
-
-  CustomButton _buildCreateGroupBtn() {
-    return CustomButton(
-      onPressed: () {
-        Get.toNamed(Routes.createGroup);
-      },
-      child: const Text('Create New'),
-    );
   }
 
   Obx _buildFilterChips() {

@@ -6,7 +6,7 @@ import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/tenant/tenant_controller.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
-import 'package:mastermind_together/src/ui/widgets/buttons/button.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/link_text.dart';
 import 'package:mastermind_together/src/ui/widgets/logo.dart';
 import 'package:mastermind_together/src/ui/widgets/text_form_field.dart';
@@ -83,8 +83,10 @@ class TenantRegisterScreen extends GetView<TenantController> {
                             controller.registerTenant(tenantNameController.text, adminEmailController.text, adminPasswordController.text);
                           }
                         },
-                        enabled: termsOfService.isChecked.value,
-                        child: const Text('Register Tenant'),
+                        isEnabled: termsOfService.isChecked.value,
+                        label: 'Register Tenant',
+                        labelTextStyle: buttonTextStyle,
+                        backgroundColor: buttonBackgroundColor,
                       ),
                     ),
                     const SizedBox(height: 2 * fontSize),

@@ -26,12 +26,16 @@ class CustomButton extends StatelessWidget {
 
     EdgeInsets buttonPadding = isMobile ? const EdgeInsets.symmetric(vertical: 14.0) : const EdgeInsets.symmetric(vertical: fontSize);
 
+    double buttonHeightMobile = mobileLabelTextStyle.fontSize! + (2 * fontSize);
+    double buttonHeightDesktop = labelTextStyle.fontSize! + (2 * fontSize);
+
     return ElevatedButton(
       onPressed: isEnabled ? onPressed : null,
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(backgroundColor),
         elevation: MaterialStateProperty.all(0),
         padding: MaterialStateProperty.all(buttonPadding),
+        minimumSize: MaterialStateProperty.all(Size(double.infinity, isMobile ? buttonHeightMobile : buttonHeightDesktop)),
         shape: MaterialStateProperty.all(
           RoundedRectangleBorder(
             borderRadius: borderRadius,

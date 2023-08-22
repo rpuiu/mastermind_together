@@ -43,6 +43,8 @@ class AppIcons {
 
   static Widget categories([IconState state = IconState.defaultState]) => _icon('assets/icons/categories.svg', state);
 
+  static Widget add([IconState state = IconState.defaultState]) => _icon('assets/icons/add.svg', state);
+
   static Widget getIcon(String iconName, IconState state) {
     switch (iconName) {
       case 'home':
@@ -67,6 +69,8 @@ class AppIcons {
         return privacyPolicy(state);
       case 'categories':
         return categories(state);
+      case 'add':
+        return add(state);
       default:
         return home(state);
     }

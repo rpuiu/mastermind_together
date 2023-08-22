@@ -5,7 +5,7 @@ import 'package:mastermind_together/src/groups/group_model.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
-import 'package:mastermind_together/src/ui/widgets/buttons/Mcustom_button.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
 import 'package:mastermind_together/src/ui/widgets/profile_badge.dart';
 
 class GroupCard extends GetView<GroupController> {
@@ -56,24 +56,20 @@ class GroupCard extends GetView<GroupController> {
                 const SizedBox(height: fontSize),
                 buildParticipantsSection(),
                 const SizedBox(height: fontSize),
-                SizedBox(
-                  width: double.infinity,
-                  height: 40,
-                  child: userIsMember
-                      ? const CustomButton(
-                          label: 'Joined',
-                          labelTextStyle: bodyMediumInactive,
-                          backgroundColor: buttonInactiveBackgroundColor,
-                          isEnabled: false,
-                        )
-                      : CustomButton(
-                          label: 'Join Group',
-                          labelTextStyle: bodyMediumInactive.copyWith(color: bodyButtonActiveTextColor),
-                          backgroundColor: buttonActiveBackgroundColor,
-                          isEnabled: true,
-                          onPressed: () => controller.joinGroup(group.id),
-                        ),
-                ),
+                userIsMember
+                    ?  const CustomButton(
+                        label: 'Joined',
+                        labelTextStyle: bodyMediumInactive,
+                        backgroundColor: buttonInactiveBackgroundColor,
+                        isEnabled: false,
+                      )
+                    : CustomButton(
+                        label: 'Join Group',
+                        labelTextStyle: bodyMediumInactive.copyWith(color: bodyButtonActiveTextColor),
+                        backgroundColor: buttonActiveBackgroundColor,
+                        isEnabled: true,
+                        onPressed: () => controller.joinGroup(group.id),
+                      ),
               ],
             ),
           ),

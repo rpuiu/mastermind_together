@@ -4,7 +4,8 @@ import 'package:mastermind_together/src/availability/availability_controller.dar
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/scaffold/custom_scaffold.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
-import 'package:mastermind_together/src/ui/widgets/buttons/button.dart';
+import 'package:mastermind_together/src/ui/theme/text_styles.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
 import 'package:mastermind_together/src/ui/widgets/dropdown/dropdown_widget.dart';
 import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 
@@ -110,7 +111,9 @@ class SetAvailabilityScreen extends GetView<AvailabilityController> {
                   Get.snackbar("Error", "There was an error saving your availability. Please try again.");
                 }
               },
-              child: const Text("Save"),
+              label: 'Save',
+              labelTextStyle: buttonTextStyle,
+              backgroundColor: buttonBackgroundColor,
             ),
           ],
         ),
