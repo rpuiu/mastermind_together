@@ -46,7 +46,7 @@ class Routes {
   static List<GetPage> routes = [
     GetPage(name: home, page: () => HomeScreen(), middlewares: [AuthMiddleware()]),
     GetPage(name: login, page: () => const LoginScreen(), binding: RightSideImageBinding()),
-    GetPage(name: register, page: () => RegisterScreen()),
+    GetPage(name: register, page: () => const RegisterScreen(), binding: RightSideImageBinding()),
     GetPage(name: goals, page: () => AllGoalsScreen(), middlewares: [AuthMiddleware()]),
     GetPage(name: availability, page: () => SetAvailabilityScreen(), middlewares: [AuthMiddleware()]),
     GetPage(name: createGroup, page: () => CreateGroupScreen(), middlewares: [AuthMiddleware()]),

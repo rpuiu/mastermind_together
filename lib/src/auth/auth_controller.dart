@@ -47,7 +47,6 @@ class AuthController extends GetxController {
       UserModel user = await _authService.signInWithPassword(email, password);
       _analytics.identify(user.id);
       _analytics.track('USER_AUTHENTICATED', properties: {'user': '${user.toJson()}'});
-      showSuccessSnackBar(message: 'Logged in successfully');
       _redirect();
     } on AuthException catch (e) {
       if (e.message == 'Invalid login credentials') {

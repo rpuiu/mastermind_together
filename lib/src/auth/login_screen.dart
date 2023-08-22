@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/auth_controller.dart';
+import 'package:mastermind_together/src/auth/common_auth_layout.dart';
+import 'package:mastermind_together/src/auth/mobile_aware_layout.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/link_text.dart';
-import 'package:mastermind_together/src/ui/widgets/images/right_side_image_widget.dart';
 import 'package:mastermind_together/src/ui/widgets/text_form_field.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -15,18 +16,7 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isMobile = MediaQuery.of(context).size.width < 600;
-
-    return Scaffold(
-      body: isMobile
-          ? const LeftLoginForm()
-          : Row(
-              children: const [
-                Expanded(child: LeftLoginForm()),
-                RightSideImage(),
-              ],
-            ),
-    );
+    return MobileAwareLayout(child: CommonAuthLayout(form: LoginForm()));
   }
 }
 
@@ -41,7 +31,6 @@ class LeftLoginForm extends StatelessWidget {
           child: ConstrainedBox(
             constraints: BoxConstraints(minHeight: constraints.maxHeight),
             child: IntrinsicHeight(
-              // Add this widget
               child: Padding(
                 padding: const EdgeInsets.all(2 * fontSize),
                 child: Center(
@@ -123,7 +112,7 @@ class LoginForm extends GetView<AuthController> {
             alignment: WrapAlignment.center,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              Text("Don't you have an account?", style: robotoSubtitleTextStyle),
+              Text("Don't you have an account?", style: subtitleTextStyle),
               const SizedBox(width: fontSize / 2),
               LinkText(textValue: 'Sign Up', callback: () => Get.toNamed(Routes.register)),
             ],

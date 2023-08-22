@@ -14,42 +14,44 @@ class TermsAndConditionsWidget extends GetView<AuthController> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => Row(
-          children: [
-            CustomCheckbox(
-              value: isChecked.value,
-              onChanged: (value) {
-                isChecked.value = value!;
-              },
-            ),
-            Expanded(
-              child: RichText(
-                text: TextSpan(
-                  style: body,
-                  children: <TextSpan>[
-                    const TextSpan(text: 'By checking this box, you agree to our '),
-                    TextSpan(
-                      text: 'Terms of Service',
-                      style: linkStyle,
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () => Get.toNamed(
-                              Routes.termsOfServiceRoute(tenantId),
-                            ),
-                    ),
-                    const TextSpan(text: ' and '),
-                    TextSpan(
-                      text: 'Privacy Policy',
-                      style: linkStyle,
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () => Get.toNamed(
-                              Routes.privacyPolicyRoute(tenantId),
-                            ),
-                    ),
-                  ],
-                ),
+    return Obx(
+      () => Row(
+        children: [
+          CustomCheckbox(
+            value: isChecked.value,
+            onChanged: (value) {
+              isChecked.value = value!;
+            },
+          ),
+          Expanded(
+            child: RichText(
+              text: TextSpan(
+                style: body,
+                children: <TextSpan>[
+                  const TextSpan(text: 'By checking this box, you agree to our ', style: bodyRegular),
+                  TextSpan(
+                    text: 'Terms of Service',
+                    style: linkTextStyle.copyWith(fontWeight: FontWeight.w500),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () => Get.toNamed(
+                            Routes.termsOfServiceRoute(tenantId),
+                          ),
+                  ),
+                  const TextSpan(text: ' and '),
+                  TextSpan(
+                    text: 'Privacy Policy',
+                    style: linkTextStyle.copyWith(fontWeight: FontWeight.w500),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () => Get.toNamed(
+                            Routes.privacyPolicyRoute(tenantId),
+                          ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 }

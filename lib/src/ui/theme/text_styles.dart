@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mastermind_together/src/ui/theme/color_scheme.dart';
 
 const String fontFamily = 'Inter';
-const String robotoFontFamily = 'Roboto';
 const Color textColor = darkerPrimaryColor;
 const Color textPlaceholderColor = placeholderColor;
 
@@ -37,12 +36,11 @@ const Color linkTextColor = Color(0xFF1D4AE8); //TODO Updated move to color_sche
 const Color copyrightTextColor = Color(0xFF959CB5); //TODO Updated move to color_scheme
 
 TextStyle copyrightTextStyle = linkTextStyle.copyWith(color: copyrightTextColor);
-TextStyle robotoSubtitleTextStyle = subtitleTextStyle.copyWith(fontFamily: robotoFontFamily);
 
 TextStyle linkTextStyle = const TextStyle(
   color: linkTextColor,
   fontSize: 16,
-  fontFamily: robotoFontFamily,
+  fontFamily: fontFamily,
   fontWeight: FontWeight.w400,
   height: 1,
   letterSpacing: 0.16,
@@ -69,11 +67,13 @@ TextStyle welcomeTextStyle = const TextStyle(
 const TextStyle buttonTextStyle = TextStyle(
   color: whiteColor,
   fontSize: 20,
-  fontFamily: robotoFontFamily,
+  fontFamily: fontFamily,
   fontWeight: FontWeight.w400,
   height: 1,
   letterSpacing: 0.20,
 ); //UPDATED
+
+TextStyle inactiveButtonTextStyle = buttonTextStyle.copyWith(color: defaultMenuTextColor);
 
 const formLabelTextStyle = TextStyle(
   color: textFieldLabelColor,
