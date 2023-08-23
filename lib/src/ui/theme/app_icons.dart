@@ -6,6 +6,8 @@ enum IconState {
   defaultState,
   hoverState,
   activeState,
+  done,
+  fail,
 }
 
 class AppIcons {
@@ -47,6 +49,12 @@ class AppIcons {
 
   static Widget arrowDown([IconState state = IconState.defaultState]) => _icon('assets/icons/arrow-down.svg', state);
 
+  static Widget check([IconState state = IconState.done]) => _icon('assets/icons/check.svg', state);
+
+  static Widget close([IconState state = IconState.fail]) => _icon('assets/icons/close.svg', state);
+
+  static Widget info([IconState state = IconState.defaultState]) => _icon('assets/icons/info.svg', state);
+
   static Widget getIcon(String iconName, IconState state) {
     switch (iconName) {
       case 'home':
@@ -75,6 +83,12 @@ class AppIcons {
         return add(state);
       case 'arrow-down':
         return arrowDown(state);
+      case 'check':
+        return check(state);
+      case 'close':
+        return close(state);
+      case 'info':
+        return info(state);
       default:
         return home(state);
     }
@@ -91,6 +105,12 @@ class AppIcons {
         break;
       case IconState.activeState:
         color = activeMenuIconColor;
+        break;
+      case IconState.done:
+        color = doneColor;
+        break;
+      case IconState.fail:
+        color = errorColor;
         break;
     }
     return SizedBox(

@@ -28,7 +28,7 @@ class HomeScreen extends GetView<HomeController> {
           if (goalController.goals.isEmpty) {
             return Center(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 376),
+                constraints: const BoxConstraints(maxWidth: oneColContentWidth),
                 child: Form(
                   key: formKey,
                   child: Column(

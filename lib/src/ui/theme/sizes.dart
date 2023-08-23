@@ -5,6 +5,7 @@ const double fontSize = 16;
 const double groupCardWidth = 223.20;
 const double groupCardHeight = 336;
 const double drawerMaxWidth = 260.0;
+const oneColContentWidth = 376.0;
 
 BorderRadius borderRadius = BorderRadius.circular(8);
 

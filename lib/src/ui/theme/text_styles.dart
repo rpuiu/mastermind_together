@@ -35,6 +35,9 @@ const Color subtitleTextColor = Color(0xFF313957); //TODO Updated move to color_
 const Color linkTextColor = Color(0xFF1D4AE8); //TODO Updated move to color_scheme
 const Color copyrightTextColor = Color(0xFF959CB5); //TODO Updated move to color_scheme
 
+const Color doneColor = Color(0xFF2C9D1A); //TODO check this color. Not included in the design
+const Color errorColor = Color(0xFFCF2A22); //TODO check this color. Not included in the design
+
 TextStyle copyrightTextStyle = linkTextStyle.copyWith(color: copyrightTextColor);
 
 TextStyle linkTextStyle = const TextStyle(

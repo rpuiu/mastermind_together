@@ -10,6 +10,7 @@ class CustomDropDown extends StatelessWidget {
   final String? label;
   final String? hint;
   final String? Function(String?)? validator;
+  final Widget? icon;
 
   const CustomDropDown({
     Key? key,
@@ -19,6 +20,7 @@ class CustomDropDown extends StatelessWidget {
     this.label,
     this.validator,
     this.hint,
+    this.icon,
   }) : super(key: key);
 
   @override
@@ -29,7 +31,13 @@ class CustomDropDown extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (label != null) Text(label!, style: isMobile ? mobileLabelTextStyle : formLabelTextStyle),
+        if (label != null)
+          Row(
+            children: [
+              Text(label!, style: isMobile ? mobileLabelTextStyle : formLabelTextStyle),
+              if (icon != null) icon!,
+            ],
+          ),
         const SizedBox(height: fontSize / 2),
         DropdownButtonFormField<String>(
           borderRadius: borderRadius,

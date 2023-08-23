@@ -27,6 +27,8 @@ class AvailabilityController extends GetxController {
   final RxString selectedTimezone = ''.obs;
   final RxList<String> allTimezones = <String>[].obs;
 
+  final RxBool isLoading = false.obs;
+
   @override
   Future<void> onInit() async {
     super.onInit();
@@ -36,27 +38,30 @@ class AvailabilityController extends GetxController {
   }
 
   Future<bool> saveAvailability() async {
+    isLoading.value = true;
+
     UserModel? currentUser = _authService.getUser();
-    if (currentUser == null) {
-      return false;
-    }
-
-    try {
-      await _updateTimezone(currentUser.id);
-      for (var day in days) {
-        await _saveDayAvailability(currentUser.id, day);
+    bool success = false;
+    if (currentUser != null) {
+      try {
+        await _updateTimezone(currentUser.id);
+        for (var day in days) {
+          await _saveDayAvailability(currentUser.id, day);
+        }
+        await _fetchAvailability();
+        success = true;
+      } catch (e, s) {
+        Log().e("Error while subscribing to goal changes:", e, s);
       }
-      await _fetchAvailability();
-    } catch (e, s) {
-      Log().e("Error while subscribing to goal changes:", e, s);
-      return false;
+      _analytics.track('AVAILABILITY_SET', properties: {
+        'user': currentUser.toJson(),
+        'availability': jsonEncode(days.map((day) => day.toJson()).toList()),
+      });
     }
-    _analytics.track('AVAILABILITY_SET', properties: {
-      'user': currentUser.toJson(),
-      'availability': jsonEncode(days.map((day) => day.toJson()).toList()),
-    });
 
-    return true;
+    isLoading.value = false;
+
+    return success;
   }
 
   Future<bool> checkMatchingAvailability(String userId, GroupModel group) async {
@@ -188,4 +193,12 @@ class AvailabilityController extends GetxController {
         meetingTime.hour > endTimeMinus30.hour ||
         (meetingTime.hour == endTimeMinus30.hour && meetingTime.minute > endTimeMinus30.minute));
   }
+
+  void resetAvailability(DayModel day) {
+    day.fromTime = null;
+    day.toTime = null;
+    days.refresh();
+  }
+
+  bool isSet(DayModel day) => day.fromTime != null && day.toTime != null;
 }
