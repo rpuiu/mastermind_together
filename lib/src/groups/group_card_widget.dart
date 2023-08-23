@@ -26,7 +26,6 @@ class GroupCard extends GetView<GroupController> {
           elevation: 1,
           child: Container(
             width: groupCardWidth,
-            height: groupCardHeight,
             padding: const EdgeInsets.only(
               top: 1.5 * fontSize,
               left: fontSize,
@@ -57,7 +56,7 @@ class GroupCard extends GetView<GroupController> {
                 buildParticipantsSection(),
                 const SizedBox(height: fontSize),
                 userIsMember
-                    ?  const CustomButton(
+                    ? const CustomButton(
                         label: 'Joined',
                         labelTextStyle: bodyMediumInactive,
                         backgroundColor: buttonInactiveBackgroundColor,
@@ -91,7 +90,14 @@ class GroupCard extends GetView<GroupController> {
           child: Text(group.category, style: labelText),
         ),
         const SizedBox(height: 0.5 * fontSize),
-        Text(group.name, style: bodySemiBold),
+        Tooltip(
+          message: group.name,
+          child: Text(
+            group.name,
+            style: bodySemiBold,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
       ],
     );
   }

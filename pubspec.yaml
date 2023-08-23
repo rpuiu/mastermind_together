@@ -73,6 +73,7 @@ flutter:
   assets:
     - assets/images/logo/
     - assets/images/login/
+    - assets/images/home/
     - assets/images/
     - assets/icons/
     - .env.prod

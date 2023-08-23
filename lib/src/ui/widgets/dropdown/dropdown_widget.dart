@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mastermind_together/src/ui/theme/app_icons.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 
@@ -7,6 +8,7 @@ class CustomDropDown extends StatelessWidget {
   final List<String> items;
   final ValueChanged<String?> onChanged;
   final String? label;
+  final String? hint;
   final String? Function(String?)? validator;
 
   const CustomDropDown({
@@ -16,41 +18,55 @@ class CustomDropDown extends StatelessWidget {
     required this.onChanged,
     this.label,
     this.validator,
+    this.hint,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButtonFormField<String>(
-      borderRadius: borderRadius,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: labelText,
-        fillColor: categoryBgColor,
-        filled: true,
-        border: const OutlineInputBorder(
-          borderSide: BorderSide.none,
-          borderRadius: BorderRadius.all(
-            Radius.circular(10),
+    bool isMobile = MediaQuery.of(context).size.width < 600;
+    EdgeInsets mobileContentPadding = const EdgeInsets.symmetric(vertical: 14.0, horizontal: fontSize);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (label != null) Text(label!, style: isMobile ? mobileLabelTextStyle : formLabelTextStyle),
+        const SizedBox(height: fontSize / 2),
+        DropdownButtonFormField<String>(
+          borderRadius: borderRadius,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          value: items.contains(selectedValue) ? selectedValue : null,
+          onChanged: onChanged,
+          items: items.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: fontSize),
+                child: Text(value, style: bodyRegular),
+              ),
+            );
+          }).toList(),
+          validator: validator,
+          decoration: InputDecoration(
+            contentPadding: isMobile ? mobileContentPadding : null,
+            hintText: hint,
+            hintStyle: isMobile ? mobileLabelTextStyle.copyWith(color: textFieldHintColor) : formHintTextStyle,
+            filled: true,
+            fillColor: formTextFieldFillColor,
+            enabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: textFieldBorderColor, width: 0.5),
+              borderRadius: borderRadius,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: textFieldBorderColor, width: 0.5),
+              borderRadius: borderRadius,
+            ),
           ),
+          isExpanded: true,
+          icon: AppIcons.getIcon('arrow-down', IconState.hoverState),
+          dropdownColor: formTextFieldFillColor,
+          style: body,
         ),
-      ),
-      value: items.contains(selectedValue) ? selectedValue : null,
-      onChanged: onChanged,
-      items: items.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: fontSize),
-            child: Text(value, style: bodyRegular),
-          ),
-        );
-      }).toList(),
-      validator: validator,
-      style: body,
-      dropdownColor: Theme.of(context).colorScheme.surfaceVariant,
-      isExpanded: true,
-      icon: const Icon(Icons.arrow_drop_down, color: bodyButtonInactiveTextColor),
+      ],
     );
   }
 }

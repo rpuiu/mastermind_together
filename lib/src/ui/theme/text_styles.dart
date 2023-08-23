@@ -80,7 +80,7 @@ const formLabelTextStyle = TextStyle(
   fontSize: 16,
   fontFamily: fontFamily,
   fontWeight: FontWeight.w400,
-  height: 1,
+  height: 1.4,
   letterSpacing: 0.16,
 ); //UPDATED
 

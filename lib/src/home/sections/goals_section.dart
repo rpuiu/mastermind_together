@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/goal/add_goal_modal.dart';
 import 'package:mastermind_together/src/goal/goal_card.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:mastermind_together/src/ui/custom_page_indicator.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
-import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
 
 class GoalsSection extends GetView<GoalController> {
   const GoalsSection({Key? key}) : super(key: key);
@@ -29,51 +27,31 @@ class GoalsSection extends GetView<GoalController> {
           ),
           Expanded(
             child: Obx(
-              () => controller.goals.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const SizedBox(height: 10), // Spacer
-                          const Text('You haven\'t set any goals yet.'),
-                          CustomButton(
-                            onPressed: () {
-                              AddGoalModal.show(context);
-                            },
-                            label: 'Set a Goal',
-                            labelTextStyle: buttonTextStyle,
-                            backgroundColor: buttonBackgroundColor,
-                          ),
-                        ],
-                      ),
-                    )
-                  : PageView.builder(
-                      controller: pageController,
-                      itemCount: controller.goals.length,
-                      scrollDirection: Axis.horizontal,
-                      pageSnapping: true,
-                      itemBuilder: (_, index) {
-                        final goal = controller.goals[index];
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: fontSize),
-                          child: GoalCard(goal: goal, index: index),
-                        );
-                      },
-                    ),
+              () => PageView.builder(
+                controller: pageController,
+                itemCount: controller.goals.length,
+                scrollDirection: Axis.horizontal,
+                pageSnapping: true,
+                itemBuilder: (_, index) {
+                  final goal = controller.goals[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: fontSize),
+                    child: GoalCard(goal: goal, index: index),
+                  );
+                },
+              ),
             ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              controller.goals.isNotEmpty
-                  ? Container(
-                      height: 24,
-                      child: CustomPageIndicator(
-                        pageController: pageController,
-                        itemCount: controller.goals.length,
-                      ),
-                    )
-                  : Container(),
+              SizedBox(
+                height: 24,
+                child: CustomPageIndicator(
+                  pageController: pageController,
+                  itemCount: controller.goals.length,
+                ),
+              )
             ],
           )
         ],

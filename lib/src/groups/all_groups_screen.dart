@@ -87,6 +87,7 @@ class AllGroupsScreen extends GetView<GroupController> {
         final categories = controller.categoryController.categoryNames;
         return Wrap(
           spacing: fontSize / 2,
+          runSpacing: fontSize,
           children: categories.map((String category) {
             return CustomFilterChip(
               category: category,

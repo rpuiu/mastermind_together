@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/goal/add_goal_modal.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
-import 'package:mastermind_together/src/goal/goal_model.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
 import 'package:mastermind_together/src/home/sections/group_cards_row.dart';
+import 'package:mastermind_together/src/routes.dart';
+import 'package:mastermind_together/src/ui/theme/app_icons.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
-import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
 
 class MatchingGroupsSection extends GetView<GroupController> {
   final GoalController goalController = Get.find<GoalController>();
@@ -23,26 +22,48 @@ class MatchingGroupsSection extends GetView<GroupController> {
         const Text("Matching Groups", style: headingText),
         const SizedBox(height: 1.5 * fontSize),
         Obx(() {
-          List<GoalModel> userGoals = goalController.goals.value;
-          if (userGoals.isEmpty) {
+          List<GroupModel> matchingGroups = controller.matchingGroups;
+          List<GroupModel> sameCategoryGroups = controller.sameCategoryGroups;
+
+          if (matchingGroups.isNotEmpty) {
+            return GroupCardsRow(groups: matchingGroups);
+          } else if (sameCategoryGroups.isNotEmpty) {
             return Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Please set a goal in order to view matching groups.'),
-                CustomButton(
-                  onPressed: () {
-                    AddGoalModal.show(context);
-                  },
-                  label: 'Set a Goal',
-                  labelTextStyle: buttonTextStyle,
-                  backgroundColor: buttonBackgroundColor,
+                const Text(
+                  'Found groups related to your goal, but they don\'t align with your availability.',
+                  style: bodyRegular,
                 ),
+                const SizedBox(height: fontSize),
+                ListTile(
+                  leading: AppIcons.getIcon('calendar2', IconState.hoverState),
+                  title: const Text('Update your availability to discover better matches.', style: bodyRegular),
+                  onTap: () => Get.toNamed(Routes.availability),
+                ),
+                const SizedBox(height: 2 * fontSize),
+                GroupCardsRow(groups: sameCategoryGroups),
               ],
             );
           } else {
-            List<GroupModel> matchingGroups = controller.matchingGroups;
-            List<GroupModel> displayGroups = matchingGroups.isEmpty ? controller.sameCategoryGroups : matchingGroups;
-            return GroupCardsRow(groups: displayGroups);
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Currently, no groups align with your goal.', style: bodyRegular),
+                const SizedBox(height: fontSize),
+                const Text('Broaden your availability to explore more group options.', style: bodyRegular),
+                ListTile(
+                  leading: AppIcons.getIcon('calendar2', IconState.hoverState),
+                  title: const Text('Update availability', style: bodyRegular),
+                  onTap: () => Get.toNamed(Routes.availability),
+                ),
+                ListTile(
+                  leading: AppIcons.getIcon('profile2user', IconState.hoverState),
+                  title: const Text('Browse all groups', style: bodyRegular),
+                  onTap: () => Get.toNamed(Routes.allGroups),
+                ),
+              ],
+            );
           }
         }),
       ],

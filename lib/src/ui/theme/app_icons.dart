@@ -45,6 +45,8 @@ class AppIcons {
 
   static Widget add([IconState state = IconState.defaultState]) => _icon('assets/icons/add.svg', state);
 
+  static Widget arrowDown([IconState state = IconState.defaultState]) => _icon('assets/icons/arrow-down.svg', state);
+
   static Widget getIcon(String iconName, IconState state) {
     switch (iconName) {
       case 'home':
@@ -71,6 +73,8 @@ class AppIcons {
         return categories(state);
       case 'add':
         return add(state);
+      case 'arrow-down':
+        return arrowDown(state);
       default:
         return home(state);
     }

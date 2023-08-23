@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/home/sections/group_cards_row.dart';
+import 'package:mastermind_together/src/routes.dart';
+import 'package:mastermind_together/src/ui/theme/app_icons.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 
@@ -10,19 +12,47 @@ class MyGroupsSection extends GetView<GroupController> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text("My Groups", style: headingText),
-        const SizedBox(height: 1.5 * fontSize),
-        Obx(() {
-          if (controller.userGroups.isEmpty) {
-            return const Center(child: Text('No groups yet.'));
-          } else {
-            return GroupCardsRow(groups: controller.userGroups);
-          }
-        }),
-      ],
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text("My Groups", style: headingText),
+          const SizedBox(height: 1.5 * fontSize),
+          Obx(() {
+            if (controller.userGroups.isEmpty) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'You aren\'t part of any groups yet. Here\'s what you can do:',
+                    style: bodyRegular,
+                  ),
+                  const SizedBox(height: fontSize),
+                  ListTile(
+                    //TODO check if the user has availability set
+                    leading: AppIcons.getIcon('calendar2', IconState.hoverState),
+                    title: const Text('Set your availability to get group suggestions.', style: bodyRegular),
+                    onTap: () => Get.toNamed(Routes.availability),
+                  ),
+                  ListTile(
+                    leading: AppIcons.getIcon('profile2user', IconState.hoverState),
+                    title: const Text('Join a group from the same category as your goal.', style: bodyRegular),
+                    onTap: () => Get.toNamed(Routes.allGroups),
+                  ),
+                  ListTile(
+                    leading: AppIcons.getIcon('add', IconState.hoverState),
+                    title: const Text('Create your own group.', style: bodyRegular),
+                    onTap: () => Get.toNamed(Routes.createGroup),
+                  ),
+                ],
+              );
+            } else {
+              return GroupCardsRow(groups: controller.userGroups);
+            }
+          }),
+        ],
+      ),
     );
   }
 }
