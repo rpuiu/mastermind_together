@@ -49,7 +49,8 @@ class AppTheme {
     hourMinuteTextColor: labelTextColor,
     dayPeriodTextColor: labelTextColor,
     shape: customBorder,
-    //TODO cancelButtonStyle:
-    //TODO update flutter confirmButtonStyle:
+    //TODO implement OK CANCEL buttons for the time picker
+    // cancelButtonStyle:,
+    // confirmButtonStyle:,
   );
 }

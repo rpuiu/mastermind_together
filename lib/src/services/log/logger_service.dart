@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:http/http.dart' as http;
 
 class Log {
   late final Logger _logger;
@@ -30,7 +29,7 @@ class Log {
   }
 
   void e(String message, [dynamic error, StackTrace? stackTrace, String tenant = "default"]) {
-    _logger.e("[$tenant] $message", [error, stackTrace]);
+    _logger.e("[$tenant] $message", error: error, stackTrace: stackTrace);
   }
 }
 

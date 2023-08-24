@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/ui/space.dart';
 import 'package:mastermind_together/src/ui/theme/app_icons.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/drawer/drawer_btn_controller.dart';
 import 'package:mastermind_together/src/ui/widgets/drawer/drawer_state_controller.dart';
 
-class DrawerButton extends StatelessWidget {
+class CustomDrawerButton extends StatelessWidget {
   final String iconName;
   final String text;
   final VoidCallback onTap;
 
-  const DrawerButton({
+  const CustomDrawerButton({
     Key? key,
     required this.iconName,
     required this.text,
@@ -51,7 +52,7 @@ class DrawerButton extends StatelessWidget {
           title: Row(
             children: [
               iconWidget,
-              const SizedBox(width: fontSize),
+              wXSpace,
               Flexible(
                   child: Text(
                 text,

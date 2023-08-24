@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/ui/space.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
-import 'package:mastermind_together/src/ui/widgets/drawer/drawer_button.dart';
+import 'package:mastermind_together/src/ui/widgets/drawer/custom_drawer_button.dart';
 import 'package:mastermind_together/src/ui/widgets/drawer/drawer_state_controller.dart';
 
 class BaseDrawer extends StatelessWidget {
@@ -51,9 +52,9 @@ class BaseDrawer extends StatelessWidget {
                       children: children,
                     ),
                   ),
-                  const SizedBox(height: 2 * fontSize),
-                  DrawerButton(text: 'Logout', iconName: 'logout', onTap: onLogout),
-                  const SizedBox(height: 2 * fontSize),
+                  xxSpace,
+                  CustomDrawerButton(text: 'Logout', iconName: 'logout', onTap: onLogout),
+                  xxSpace,
                 ],
               ),
             ),
