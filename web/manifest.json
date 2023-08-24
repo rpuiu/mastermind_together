@@ -1,11 +1,11 @@
 {
-    "name": "mastermind_together",
-    "short_name": "mastermind_together",
+    "name": "Mastermind Together",
+    "short_name": "MMT",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Connect, empower, and grow together.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
