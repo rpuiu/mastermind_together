@@ -100,7 +100,7 @@ class CreateGroupScreen extends GetView<GroupController> {
           );
           if (timeOfDay != null) {
             controller.group.value.meetingTimeUTC = timeOfDay;
-            controller.meetingTimeController.value.text = timeOfDay.format(context);
+            controller.meetingTimeController.value.text = formatTimeOfDay(timeOfDay);
           }
         },
         validator: (value) => FormValidators.validateEmpty(value, 'Please select a meeting time'),

@@ -7,6 +7,7 @@ import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
 import 'package:mastermind_together/src/ui/widgets/profile_badge.dart';
+import 'package:mastermind_together/src/util/date_time_util.dart';
 
 class GroupCard extends GetView<GroupController> {
   final GroupModel group;
@@ -49,7 +50,7 @@ class GroupCard extends GetView<GroupController> {
                 buildTitleSection(),
                 xSpace,
                 Text(
-                  '${group.meetingDay}: ${group.meetingTimeLocal.hour}:${group.meetingTimeLocal.minute}',
+                  '${group.meetingDay}: ${formatTimeOfDay(group.meetingTimeLocal)}',
                   style: bodyRegular,
                 ),
                 xSpace,
