@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/tenant/terms/terms_controller.dart';
+import 'package:mastermind_together/src/ui/theme/sizes.dart';
+import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 
 class TermsScreen extends GetView<TermsController> {
   final String documentType;
@@ -26,12 +28,12 @@ class TermsScreen extends GetView<TermsController> {
                     return Text(
                       documentType == 'TOS' ? controller.termsOfService.value : controller.privacyPolicy.value,
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 16),
+                      style: bodyRegular,
                     );
                   }),
                 ),
               ),
-              const SizedBox(height: 16),
+              xSpace,
               ElevatedButton(
                 onPressed: () {
                   Get.back();

@@ -32,11 +32,11 @@ class SetAvailabilityScreen extends GetView<AvailabilityController> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 1.5 * fontSize),
+        xHalfSpace,
         const Text("Set Your Availability", style: headingText),
-        const SizedBox(height: fontSize / 2),
+        halfSpace,
         const Text("We'll find groups that match your goal and fit your schedule.", style: bodyRegular),
-        const SizedBox(height: 2 * fontSize),
+        xxSpace,
         Center(
           child: SizedBox(
             width: oneColContentWidth,
@@ -44,14 +44,14 @@ class SetAvailabilityScreen extends GetView<AvailabilityController> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 _buildTimezoneDropDown(context),
-                const SizedBox(height: 2 * fontSize),
+                xxSpace,
                 const Align(
                   alignment: Alignment.centerLeft,
                   child: Text("Set Your Daily Availability", style: formLabelTextStyle),
                 ),
-                const SizedBox(height: fontSize / 2),
+                halfSpace,
                 _buildDaysList(context),
-                const SizedBox(height: fontSize),
+                xSpace,
                 _buildSaveButton(),
               ],
             ),
@@ -75,7 +75,7 @@ class SetAvailabilityScreen extends GetView<AvailabilityController> {
           },
           items: controller.allTimezones.value,
         ),
-        const SizedBox(height: 2 * fontSize),
+        xxSpace,
         Align(
           alignment: Alignment.centerLeft,
           child: Text("All times are in ${controller.selectedTimezone.value} timezone", style: labelText),

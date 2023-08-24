@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/tenant/terms/terms_controller.dart';
+import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/widgets/drawer/tenant_drawer.dart';
 
 class EditTermsScreen extends GetView<TermsController> {
@@ -26,7 +27,7 @@ class EditTermsScreen extends GetView<TermsController> {
                       labelText: 'Terms of Service',
                     ),
                   )),
-              const SizedBox(height: 16),
+              xSpace,
               Obx(() => TextField(
                     controller: controller.ppController.value,
                     maxLines: 10,
@@ -35,7 +36,7 @@ class EditTermsScreen extends GetView<TermsController> {
                       labelText: 'Privacy Policy',
                     ),
                   )),
-              const SizedBox(height: 16),
+              xSpace,
               ElevatedButton(
                 onPressed: () => controller.updateTerms(),
                 child: const Text('Save Changes'),

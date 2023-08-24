@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mastermind_together/src/ui/theme/sizes.dart';
 
 class AccessDeniedScreen extends StatelessWidget {
   const AccessDeniedScreen({super.key});
@@ -16,14 +17,14 @@ class AccessDeniedScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: const [
-            Icon(
+          children: [
+            const Icon(
               Icons.block,
               size: 100,
               color: Colors.red,
             ),
-            SizedBox(height: 20),
-            Text(
+            xSpace,
+            const Text(
               'You do not have permission to view this content.',
               style: TextStyle(
                 fontSize: 18,

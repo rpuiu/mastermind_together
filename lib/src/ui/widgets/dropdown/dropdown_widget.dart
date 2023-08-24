@@ -38,7 +38,7 @@ class CustomDropDown extends StatelessWidget {
               if (icon != null) icon!,
             ],
           ),
-        const SizedBox(height: fontSize / 2),
+        halfSpace,
         DropdownButtonFormField<String>(
           borderRadius: borderRadius,
           autovalidateMode: AutovalidateMode.onUserInteraction,

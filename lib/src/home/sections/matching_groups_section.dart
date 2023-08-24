@@ -20,7 +20,7 @@ class MatchingGroupsSection extends GetView<GroupController> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text("Matching Groups", style: headingText),
-        const SizedBox(height: 1.5 * fontSize),
+        xHalfSpace,
         Obx(() {
           List<GroupModel> matchingGroups = controller.matchingGroups;
           List<GroupModel> sameCategoryGroups = controller.sameCategoryGroups;
@@ -35,13 +35,13 @@ class MatchingGroupsSection extends GetView<GroupController> {
                   'Found groups related to your goal, but they don\'t align with your availability.',
                   style: bodyRegular,
                 ),
-                const SizedBox(height: fontSize),
+                xSpace,
                 ListTile(
                   leading: AppIcons.getIcon('calendar2', IconState.hoverState),
                   title: const Text('Update your availability to discover better matches.', style: bodyRegular),
                   onTap: () => Get.toNamed(Routes.availability),
                 ),
-                const SizedBox(height: 2 * fontSize),
+                xxSpace,
                 GroupCardsRow(groups: sameCategoryGroups),
               ],
             );
@@ -50,7 +50,7 @@ class MatchingGroupsSection extends GetView<GroupController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text('Currently, no groups align with your goal.', style: bodyRegular),
-                const SizedBox(height: fontSize),
+                xSpace,
                 const Text('Broaden your availability to explore more group options.', style: bodyRegular),
                 ListTile(
                   leading: AppIcons.getIcon('calendar2', IconState.hoverState),

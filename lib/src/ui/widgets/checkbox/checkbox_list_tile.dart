@@ -22,7 +22,7 @@ class CustomCheckboxListTile extends StatelessWidget {
       title: Row(
         children: [
           Text(title),
-          const SizedBox(width: fontSize / 2),
+          wHalfSpace,
           Tooltip(
             message: tooltip,
             child: Icon(Icons.info_outline, color: Theme.of(context).colorScheme.onBackground,),

@@ -38,11 +38,11 @@ class LeftLoginForm extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 3 * fontSize),
+                      xxxSpace,
                       SvgPicture.asset(width: 308, height: 30, 'assets/images/logo/logo-small-black.svg'),
-                      const SizedBox(height: 3 * fontSize),
+                      xxxSpace,
                       LoginForm(),
-                      const SizedBox(height: 3 * fontSize),
+                      xxxSpace,
                       Text(
                         '© 2023 ALL RIGHTS RESERVED MASTERMINDTOGETHER',
                         textAlign: TextAlign.center,
@@ -76,18 +76,18 @@ class LoginForm extends GetView<AuthController> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const WelcomeWidget(),
-          const SizedBox(height: 1.5 * fontSize),
+          xHalfSpace,
           Text(
             'Today is a new day. It\'s your day. You shape it.',
             style: subtitleTextStyle,
           ),
-          const SizedBox(height: 3 * fontSize),
+          xxxSpace,
           CustomTextFormField(
             label: "Email",
             controller: emailController,
             hintText: "Example@email.com",
           ),
-          const SizedBox(height: 1.5 * fontSize),
+          xHalfSpace,
           CustomTextFormField(
             label: "Password",
             controller: passwordController,
@@ -95,25 +95,25 @@ class LoginForm extends GetView<AuthController> {
             obscureText: true,
             maxLines: 1,
           ),
-          const SizedBox(height: 1.5 * fontSize),
+          xHalfSpace,
           Align(
             alignment: Alignment.centerRight,
             child: Text('Forgot Password?', style: linkTextStyle), //TODO MAIN-T-49
           ),
-          const SizedBox(height: 1.5 * fontSize),
+          xHalfSpace,
           CustomButton(
             label: 'Sign in',
             labelTextStyle: buttonTextStyle,
             backgroundColor: buttonBackgroundColor,
             onPressed: () => controller.login(emailController.text, passwordController.text),
           ),
-          const SizedBox(height: 3 * fontSize),
+          xxxSpace,
           Wrap(
             alignment: WrapAlignment.center,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               Text("Don't you have an account?", style: subtitleTextStyle),
-              const SizedBox(width: fontSize / 2),
+              wHalfSpace,
               LinkText(textValue: 'Sign Up', callback: () => Get.toNamed(Routes.register)),
             ],
           ),

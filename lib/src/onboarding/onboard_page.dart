@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mastermind_together/src/ui/theme/sizes.dart';
 
 class OnboardPage extends StatelessWidget {
   final Color color;
@@ -20,7 +21,7 @@ class OnboardPage extends StatelessWidget {
             fit: BoxFit.cover,
             width: double.infinity,
           ),
-          const SizedBox(height: 64),
+          xxxxSpace,
           Text(
             title,
             style: TextStyle(
@@ -29,7 +30,7 @@ class OnboardPage extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 24),
+          xHalfSpace,
           Container(
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
             child: Text(

@@ -26,13 +26,13 @@ class FeedbackScreen extends GetView<FeedbackController> {
                   style: Theme.of(context).textTheme.headlineMedium,
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 16),
+                xSpace,
                 Text(
                   "When you press send, an email window will open. Please send the email manually after checking your message.",
                   style: Theme.of(context).textTheme.labelMedium,
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 48),
+                xxxSpace,
                 Form(
                   key: supportFormKey,
                   child: Column(
@@ -49,7 +49,7 @@ class FeedbackScreen extends GetView<FeedbackController> {
                         ),
                         // validator: validator?,
                       ),
-                      const SizedBox(height: fontSize),
+                      xSpace,
                       CustomButton(
                         onPressed: () => controller.sendEmail(),
                         label: 'Send',

@@ -43,9 +43,9 @@ class GroupScreen extends GetView<GroupController> {
                       } else {
                         return Column(
                           children: [
-                            const SizedBox(height: 2 * fontSize),
+                            xxSpace,
                             _buildGroupInfo(group),
-                            const SizedBox(height: 3 * fontSize),
+                            xxxSpace,
                             Expanded(
                               child: Row(
                                 children: [
@@ -74,7 +74,7 @@ class GroupScreen extends GetView<GroupController> {
       child: Column(
         children: [
           _buildGroupInfo(group),
-          const SizedBox(height: 2 * fontSize),
+          xxSpace,
           const TabBar(
             tabs: [
               Tab(text: 'Members'),
@@ -148,7 +148,7 @@ class GroupScreen extends GetView<GroupController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(group.name, style: headingText),
-            const SizedBox(height: fontSize / 2),
+            halfSpace,
             Align(
               alignment: Alignment.centerLeft,
               child: Container(
@@ -157,12 +157,12 @@ class GroupScreen extends GetView<GroupController> {
                 child: Text(group.category, style: labelText),
               ),
             ),
-            const SizedBox(height: fontSize),
+            xSpace,
             Text(
               '${group.meetingDay}: ${group.meetingTimeLocal.hour}:${group.meetingTimeLocal.minute}',
               style: bodyRegular,
             ),
-            const SizedBox(height: fontSize),
+            xSpace,
             RichText(
               text: TextSpan(
                 children: [

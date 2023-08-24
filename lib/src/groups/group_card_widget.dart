@@ -47,14 +47,14 @@ class GroupCard extends GetView<GroupController> {
                   ],
                 ),
                 buildTitleSection(),
-                const SizedBox(height: fontSize),
+                xSpace,
                 Text(
                   '${group.meetingDay}: ${group.meetingTimeLocal.hour}:${group.meetingTimeLocal.minute}',
                   style: bodyRegular,
                 ),
-                const SizedBox(height: fontSize),
+                xSpace,
                 buildParticipantsSection(),
-                const SizedBox(height: fontSize),
+                xSpace,
                 userIsMember
                     ? const CustomButton(
                         label: 'Joined',
@@ -83,13 +83,13 @@ class GroupCard extends GetView<GroupController> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: fontSize),
+        xSpace,
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
           decoration: const BoxDecoration(color: categoryBgColor),
           child: Text(group.category, style: labelText),
         ),
-        const SizedBox(height: 0.5 * fontSize),
+        halfSpace,
         Tooltip(
           message: group.name,
           child: Text(
@@ -109,7 +109,7 @@ class GroupCard extends GetView<GroupController> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text('${group.currentMembers}/${group.maxMembers}', style: bodyRegular),
-        const SizedBox(width: 0.5 * fontSize),
+        wHalfSpace,
         const SizedBox(
           width: 120,
           height: 30,

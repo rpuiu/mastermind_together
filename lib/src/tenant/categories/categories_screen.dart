@@ -17,7 +17,7 @@ class CategoriesScreen extends GetView<CategoryController> {
       appBar: AppBar(
         title: const Text('Goal & Group Categories'),
       ),
-      drawer: TenantDrawer(),
+      drawer: const TenantDrawer(),
       body: Center(
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: maxWidth),
@@ -45,7 +45,7 @@ class CategoriesScreen extends GetView<CategoryController> {
                   ],
                 ),
               ),
-              const SizedBox(height: 2 * fontSize),
+              xxSpace,
               Expanded(
                 child: Obx(() {
                   return ListView.builder(
@@ -58,7 +58,7 @@ class CategoriesScreen extends GetView<CategoryController> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                              icon: const Icon(Icons.edit),
+                              icon: const Icon(Icons.edit), //TODO add edit icon
                               onPressed: () async {
                                 final newName = await showDialog<String>(
                                   context: context,
@@ -70,7 +70,7 @@ class CategoriesScreen extends GetView<CategoryController> {
                               },
                             ),
                             IconButton(
-                              icon: const Icon(Icons.delete),
+                              icon: const Icon(Icons.delete), //TODO add delete icon
                               onPressed: () {
                                 controller.deleteCategory(category.id);
                               },

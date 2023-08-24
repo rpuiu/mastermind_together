@@ -7,6 +7,17 @@ const double groupCardHeight = 336;
 const double drawerMaxWidth = 260.0;
 const oneColContentWidth = 376.0;
 
+SizedBox halfSpace = const SizedBox(height: fontSize / 2);
+SizedBox xSpace = const SizedBox(height: fontSize * 1);
+SizedBox xHalfSpace = const SizedBox(height: fontSize * 1.5);
+SizedBox xxSpace = const SizedBox(height: fontSize * 2);
+SizedBox xxxSpace = const SizedBox(height: fontSize * 3);
+SizedBox xxxxSpace = const SizedBox(height: fontSize * 4);
+
+SizedBox wHalfSpace = const SizedBox(width: fontSize / 2);
+SizedBox wXSpace = const SizedBox(width: fontSize * 1);
+SizedBox wXXSpace = const SizedBox(width: fontSize * 2);
+
 BorderRadius borderRadius = BorderRadius.circular(8);
 
 RoundedRectangleBorder customBorder = RoundedRectangleBorder(

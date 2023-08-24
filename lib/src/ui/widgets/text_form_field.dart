@@ -45,7 +45,7 @@ class CustomTextFormField extends StatelessWidget {
           label,
           style: isMobile ? mobileLabelTextStyle : formLabelTextStyle,
         ),
-        const SizedBox(height: fontSize / 2),
+        halfSpace,
         TextFormField(
           autovalidateMode: AutovalidateMode.onUserInteraction,
           controller: controller,

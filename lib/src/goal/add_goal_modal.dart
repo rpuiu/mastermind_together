@@ -44,14 +44,14 @@ class AddGoalModal extends GetView<GoalController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text('Add a Goal', style: bodySemiBold),
-                  const SizedBox(height: 1.5 * fontSize),
+                  xHalfSpace,
                   CategoryDropdown(
                     selectedCategory: controller.selectedCategory,
                     onCategoryChanged: (String newValue) => controller.selectedCategory!.value = newValue,
                   ),
-                  const SizedBox(height: 1.5 * fontSize),
+                  xHalfSpace,
                   GoalInput(controller: goalController),
-                  const SizedBox(height: 1.5 * fontSize),
+                  xHalfSpace,
                   GoalButton(
                     controller: controller,
                     goalController: goalController,

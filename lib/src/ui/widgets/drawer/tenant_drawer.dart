@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/auth_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
-import 'package:mastermind_together/src/ui/space.dart';
+import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/widgets/drawer/base_drawer.dart';
 import 'package:mastermind_together/src/ui/widgets/drawer/custom_drawer_button.dart';
 
@@ -28,7 +28,7 @@ class TenantDrawer extends StatelessWidget {
           iconName: 'categories',
           onTap: () => Get.toNamed(Routes.categories),
         ),
-        // const SizedBox(height: fontSize),
+        // xSpace,
         // DrawerButton(text: 'Logo & Colors', icon: const Icon(Icons.color_lens), onTap: () => {}), //TODO
       ],
     );

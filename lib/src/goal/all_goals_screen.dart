@@ -18,9 +18,9 @@ class AllGoalsScreen extends GetView<GoalController> {
     return CustomScaffold(
       body: Column(
         children: <Widget>[
-          const SizedBox(height: 1.5 * fontSize),
+          xHalfSpace,
           _buildHeader(context),
-          const SizedBox(height: 1.5 * fontSize),
+          xHalfSpace,
           _buildGoalList(),
         ],
       ),
@@ -32,7 +32,7 @@ class AllGoalsScreen extends GetView<GoalController> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         const Text("All Goals", style: headingText),
-        const SizedBox(width: fontSize / 2),
+        wHalfSpace,
         AddButton(onPressed: () => AddGoalModal.show(context)),
       ],
     );

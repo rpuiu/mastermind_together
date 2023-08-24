@@ -20,7 +20,7 @@ class UserProfileScreen extends GetView<UserController> {
     return CustomScaffold(
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(fontSize),
           child: Obx(() {
             UserModel user = controller.user.value!;
             return Column(
@@ -30,21 +30,16 @@ class UserProfileScreen extends GetView<UserController> {
                   radius: 50,
                   backgroundColor: Colors.grey,
                   child: Icon(
+                    //TODO change icon
                     Icons.person,
                     size: 50,
                   ),
                 ),
-                const SizedBox(height: 20.0),
-                Text(
-                  user.username,
-                  style: const TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 10.0),
+                xSpace,
+                Text(user.username, style: headingText),
+                xSpace,
                 Text(user.email, style: labelText),
-                const SizedBox(height: 2 * fontSize),
+                xxSpace,
                 ElevatedButton(
                   onPressed: () {
                     showDialog(
@@ -84,7 +79,7 @@ class UserProfileScreen extends GetView<UserController> {
                   },
                   child: const Text("Change Username"),
                 ),
-                const SizedBox(height: 20.0),
+                xSpace,
                 ElevatedButton(
                   onPressed: () {
                     showDialog(
@@ -104,7 +99,7 @@ class UserProfileScreen extends GetView<UserController> {
                                   obscureText: true,
                                   validator: FormValidators.validatePassword,
                                 ),
-                                const SizedBox(height: 20.0), // Add space
+                                xSpace, // Add space
                                 CustomTextFormField(
                                   controller: controller.newPasswordController,
                                   label: 'New Password',
@@ -112,7 +107,7 @@ class UserProfileScreen extends GetView<UserController> {
                                   obscureText: true,
                                   validator: FormValidators.validatePassword,
                                 ),
-                                const SizedBox(height: 20.0), // Add space
+                                xSpace,
                                 CustomTextFormField(
                                   controller: controller.confirmPasswordController,
                                   label: 'Confirm Password',
@@ -150,7 +145,7 @@ class UserProfileScreen extends GetView<UserController> {
                   },
                   child: const Text("Change Password"),
                 ),
-                const SizedBox(height: 2 * fontSize),
+                xxSpace,
               ],
             );
           }),

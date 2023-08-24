@@ -18,7 +18,7 @@ class MyGroupsSection extends GetView<GroupController> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text("My Groups", style: headingText),
-          const SizedBox(height: 1.5 * fontSize),
+          xHalfSpace,
           Obx(() {
             if (controller.userGroups.isEmpty) {
               return Column(
@@ -28,7 +28,7 @@ class MyGroupsSection extends GetView<GroupController> {
                     'You aren\'t part of any groups yet. Here\'s what you can do:',
                     style: bodyRegular,
                   ),
-                  const SizedBox(height: fontSize),
+                  xSpace,
                   ListTile(
                     //TODO check if the user has availability set
                     leading: AppIcons.getIcon('calendar2', IconState.hoverState),

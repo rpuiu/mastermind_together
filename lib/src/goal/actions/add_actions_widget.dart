@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/goal/actions/actions_controller.dart';
+import 'package:mastermind_together/src/ui/theme/sizes.dart';
+import 'package:mastermind_together/src/ui/widgets/text_form_field.dart';
 
 class AddActionsWidget extends StatelessWidget {
   final TextEditingController actionController = TextEditingController();
@@ -41,7 +43,7 @@ class AddActionsWidget extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            xSpace,
             Expanded(
               child: Obx(() {
                 return ListView.builder(
@@ -54,7 +56,7 @@ class AddActionsWidget extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
-                            icon: const Icon(Icons.edit),
+                            icon: const Icon(Icons.edit), //TODO change icon
                             onPressed: () async {
                               final newDescription = await showDialog<String>(
                                 context: context,
@@ -66,9 +68,8 @@ class AddActionsWidget extends StatelessWidget {
                             },
                           ),
                           IconButton(
-                            icon: const Icon(Icons.delete),
+                            icon: const Icon(Icons.delete), //TODO change icon
                             onPressed: () {
-                              // Delete logic here
                               _actionController.deleteAction(action.id);
                             },
                           ),
@@ -89,11 +90,10 @@ class AddActionsWidget extends StatelessWidget {
     final TextEditingController editController = TextEditingController(text: currentName);
     return AlertDialog(
       title: const Text('Edit Description'),
-      content: TextFormField(
+      content: CustomTextFormField(
         controller: editController,
-        decoration: const InputDecoration(
-          hintText: 'New Action Description',
-        ),
+        hintText: 'E.g. Do 100 push-ups',
+        label: 'New Action',
       ),
       actions: [
         TextButton(

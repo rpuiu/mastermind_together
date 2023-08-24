@@ -18,12 +18,12 @@ class AllGroupsScreen extends GetView<GroupController> {
     return CustomScaffold(
       body: Column(
         children: <Widget>[
-          const SizedBox(height: 1.5 * fontSize),
+          xHalfSpace,
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const Text("All Groups", style: headingText),
-              const SizedBox(width: fontSize / 2),
+              wHalfSpace,
               AddButton(
                 onPressed: () {
                   Get.toNamed(Routes.createGroup);
@@ -31,9 +31,9 @@ class AllGroupsScreen extends GetView<GroupController> {
               ),
             ],
           ),
-          const SizedBox(height: 1.5 * fontSize),
+          xHalfSpace,
           _buildFilterChips(),
-          const SizedBox(height: 1.5 * fontSize),
+          xHalfSpace,
           _buildCardGrid(context),
         ],
       ),

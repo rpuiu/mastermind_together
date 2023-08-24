@@ -40,11 +40,11 @@ class LeftRegisterForm extends GetView<AuthController> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 3 * fontSize),
+                      xxxSpace,
                       SvgPicture.asset(width: 308, height: 30, 'assets/images/logo/logo-small-black.svg'),
-                      const SizedBox(height: 3 * fontSize),
+                      xxxSpace,
                       RegisterForm(),
-                      const SizedBox(height: 3 * fontSize),
+                      xxxSpace,
                       Text(
                         '© 2023 ALL RIGHTS RESERVED MASTERMINDTOGETHER',
                         textAlign: TextAlign.center,
@@ -83,21 +83,21 @@ class RegisterForm extends GetView<AuthController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Craft Your Success Story', style: welcomeTextStyle),
-            const SizedBox(height: 2 * fontSize),
+            xxSpace,
             CustomTextFormField(
               controller: usernameController,
               label: 'Username',
               hintText: "What username would you like to use?",
               validator: FormValidators.validateUsername,
             ),
-            const SizedBox(height: 2 * fontSize),
+            xxSpace,
             CustomTextFormField(
               controller: emailController,
               label: 'Email',
               hintText: "What is your email?",
               validator: FormValidators.validateEmail,
             ),
-            const SizedBox(height: 2 * fontSize),
+            xxSpace,
             CustomTextFormField(
               controller: passwordController,
               label: 'Password',
@@ -106,7 +106,7 @@ class RegisterForm extends GetView<AuthController> {
               maxLines: 1,
               validator: FormValidators.validatePassword,
             ),
-            const SizedBox(height: 2 * fontSize),
+            xxSpace,
             CustomTextFormField(
               controller: confirmPasswordController,
               label: 'Confirm Password',
@@ -117,9 +117,9 @@ class RegisterForm extends GetView<AuthController> {
                 return FormValidators.validateConfirmPassword(value, passwordController.text);
               },
             ),
-            const SizedBox(height: 2 * fontSize),
+            xxSpace,
             termsOfService,
-            const SizedBox(height: 2 * fontSize),
+            xxSpace,
             Obx(
               () => CustomButton(
                 onPressed: () {
@@ -133,13 +133,13 @@ class RegisterForm extends GetView<AuthController> {
                 backgroundColor: buttonBackgroundColor,
               ),
             ),
-            const SizedBox(height: 2 * fontSize),
+            xxSpace,
             Wrap(
               alignment: WrapAlignment.center,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 Text("Already have an account?", style: subtitleTextStyle),
-                const SizedBox(width: fontSize / 2),
+                wHalfSpace,
                 LinkText(textValue: 'Sign In', callback: () => Get.toNamed(Routes.login)),
               ],
             ),

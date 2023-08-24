@@ -39,23 +39,23 @@ class TenantRegisterScreen extends GetView<TenantController> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Logo(),
-                    const SizedBox(height: 2 * fontSize),
+                    xxSpace,
                     const Text('Register Tenant', style: h3),
-                    const SizedBox(height: 2 * fontSize),
+                    xxSpace,
                     CustomTextFormField(
                       controller: tenantNameController,
                       label: 'Tenant Name',
                       hintText: "Enter your tenant name",
                       validator: FormValidators.validateUsername, // update this as per your requirements
                     ),
-                    const SizedBox(height: 2 * fontSize),
+                    xxSpace,
                     CustomTextFormField(
                       controller: adminEmailController,
                       label: 'Admin Email',
                       hintText: "Enter your admin email",
                       validator: FormValidators.validateEmail,
                     ),
-                    const SizedBox(height: 2 * fontSize),
+                    xxSpace,
                     CustomTextFormField(
                       controller: adminPasswordController,
                       label: 'Admin Password',
@@ -63,7 +63,7 @@ class TenantRegisterScreen extends GetView<TenantController> {
                       obscureText: true,
                       validator: FormValidators.validatePassword,
                     ),
-                    const SizedBox(height: 2 * fontSize),
+                    xxSpace,
                     CustomTextFormField(
                       controller: confirmAdminPasswordController,
                       label: 'Confirm Admin Password',
@@ -73,9 +73,9 @@ class TenantRegisterScreen extends GetView<TenantController> {
                         return FormValidators.validateConfirmPassword(value, adminPasswordController.text);
                       },
                     ),
-                    const SizedBox(height: 2 * fontSize),
+                    xxSpace,
                     termsOfService,
-                    const SizedBox(height: 2 * fontSize),
+                    xxSpace,
                     Obx(
                       () => CustomButton(
                         onPressed: () {
@@ -89,12 +89,12 @@ class TenantRegisterScreen extends GetView<TenantController> {
                         backgroundColor: buttonBackgroundColor,
                       ),
                     ),
-                    const SizedBox(height: 2 * fontSize),
+                    xxSpace,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text("Already have an account?"),
-                        const SizedBox(width: fontSize / 2),
+                        wHalfSpace,
                         LinkText(textValue: 'Sign In', callback: () => Get.toNamed(Routes.login)),
                       ],
                     ),

@@ -82,9 +82,9 @@ class GoalCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 8),
+        halfSpace,
         Text(goal.category.toUpperCase(), style: labelText),
-        const SizedBox(height: fontSize),
+        xSpace,
       ],
     );
   }
@@ -100,9 +100,9 @@ class GoalCard extends StatelessWidget {
             Text('Due: ${goal.dueDate ?? ''}', style: labelText),
           ],
         ),
-        const SizedBox(height: fontSize),
+        xSpace,
         const LinearProgressIndicator(value: 0.5, color: Colors.blue), // Example value
-        const SizedBox(height: fontSize),
+        xSpace,
       ],
     );
   }

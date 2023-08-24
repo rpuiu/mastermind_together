@@ -23,11 +23,11 @@ class CommonAuthLayout extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 3 * fontSize),
+                      xxxSpace,
                       SvgPicture.asset(width: 308, height: 30, 'assets/images/logo/logo-small-black.svg'),
-                      const SizedBox(height: 3 * fontSize),
+                      xxxSpace,
                       form,
-                      const SizedBox(height: 3 * fontSize),
+                      xxxSpace,
                       Text(
                         '© 2023 ALL RIGHTS RESERVED MASTERMINDTOGETHER',
                         textAlign: TextAlign.center,

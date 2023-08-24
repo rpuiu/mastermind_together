@@ -35,18 +35,18 @@ class HomeScreen extends GetView<HomeController> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset(width: 156, height: 162, 'assets/images/home/target.png'),
-                      const SizedBox(height: 3 * fontSize),
+                      xxxSpace,
                       const Text("Create your first goal", style: headingText),
-                      const SizedBox(height: fontSize),
+                      xSpace,
                       const Text("So we can suggest groups that match your interest!", style: labelText),
-                      const SizedBox(height: 2 * fontSize),
+                      xxSpace,
                       CategoryDropdown(
                         selectedCategory: goalController.selectedCategory,
                         onCategoryChanged: (String newValue) => goalController.selectedCategory!.value = newValue,
                       ),
-                      const SizedBox(height: 1.5 * fontSize),
+                      xHalfSpace,
                       GoalInput(controller: goalInputController),
-                      const SizedBox(height: 2 * fontSize),
+                      xxSpace,
                       GoalButton(
                         controller: goalController,
                         goalController: goalInputController,
@@ -62,13 +62,13 @@ class HomeScreen extends GetView<HomeController> {
             // If the user has goals, display the regular content
             return Column(
               children: [
-                const SizedBox(height: 4 * fontSize),
+                xxxxSpace,
                 const GoalsSection(),
-                const SizedBox(height: 4 * fontSize),
+                xxxxSpace,
                 const MyGroupsSection(),
-                const SizedBox(height: 4 * fontSize),
+                xxxxSpace,
                 MatchingGroupsSection(),
-                const SizedBox(height: 4 * fontSize),
+                xxxxSpace,
               ],
             );
           }
