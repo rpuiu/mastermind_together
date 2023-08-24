@@ -40,7 +40,10 @@ class HomeScreen extends GetView<HomeController> {
                       const SizedBox(height: fontSize),
                       const Text("So we can suggest groups that match your interest!", style: labelText),
                       const SizedBox(height: 2 * fontSize),
-                      CategoryDropdown(controller: goalController),
+                      CategoryDropdown(
+                        selectedCategory: goalController.selectedCategory,
+                        onCategoryChanged: (String newValue) => goalController.selectedCategory!.value = newValue,
+                      ),
                       const SizedBox(height: 1.5 * fontSize),
                       GoalInput(controller: goalInputController),
                       const SizedBox(height: 2 * fontSize),

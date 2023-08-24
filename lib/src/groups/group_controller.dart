@@ -72,6 +72,7 @@ class GroupController extends GetxController {
         'group': groupResponse.toJson(),
       });
 
+      selectedCategory!.value = '';
       showSuccessSnackBar(message: 'The group has been created!');
     } catch (e, s) {
       Log().e("Error while creating group:", e, s);
@@ -292,7 +293,7 @@ class GroupController extends GetxController {
 
   Future<void> launchMeetingUrl(GroupModel group) async {
     try {
-     await launchURL(group.meetingUrl);
+      await launchURL(group.meetingUrl);
     } catch (e) {
       print("Exception: $e");
       showErrorSnackBar(message: "Unable to launch ${group.meetingUrl}. Please contact the group admin.");

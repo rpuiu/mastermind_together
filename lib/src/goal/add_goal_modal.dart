@@ -45,7 +45,10 @@ class AddGoalModal extends GetView<GoalController> {
                 children: [
                   const Text('Add a Goal', style: bodySemiBold),
                   const SizedBox(height: 1.5 * fontSize),
-                  CategoryDropdown(controller: controller),
+                  CategoryDropdown(
+                    selectedCategory: controller.selectedCategory,
+                    onCategoryChanged: (String newValue) => controller.selectedCategory!.value = newValue,
+                  ),
                   const SizedBox(height: 1.5 * fontSize),
                   GoalInput(controller: goalController),
                   const SizedBox(height: 1.5 * fontSize),

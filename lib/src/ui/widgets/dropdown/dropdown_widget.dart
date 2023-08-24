@@ -47,10 +47,7 @@ class CustomDropDown extends StatelessWidget {
           items: items.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: fontSize),
-                child: Text(value, style: bodyRegular),
-              ),
+              child: Text(value, style: bodyRegular),
             );
           }).toList(),
           validator: validator,

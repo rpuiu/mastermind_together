@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/goal/widgets/category_dropdown_widget.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
-import 'package:mastermind_together/src/ui/theme/scaffold/custom_scaffold.dart';
-import 'package:mastermind_together/src/ui/theme/sizes.dart';
+import 'package:mastermind_together/src/ui/space.dart';
+import 'package:mastermind_together/src/ui/theme/scaffold/scrollable_custom_scaffold.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
 import 'package:mastermind_together/src/ui/widgets/dropdown/dropdown_widget.dart';
@@ -18,53 +19,41 @@ class CreateGroupScreen extends GetView<GroupController> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                _buildCategoryField(),
-                const SizedBox(height: 2 * fontSize),
-                _buildNameField(),
-                const SizedBox(height: 2 * fontSize),
-                Row(
-                  children: [
-                    Expanded(child: _buildDayField()),
-                    const SizedBox(height: 2 * fontSize),
-                    Expanded(child: _buildTimeField(context)),
-                    const SizedBox(height: 2 * fontSize),
-                  ],
-                ),
-                const SizedBox(height: 2 * fontSize),
-                _buildUrlField(),
-                const SizedBox(height: 2 * fontSize),
-                _buildMaxMembersField(),
-                const SizedBox(height: 2 * fontSize),
-                _buildSubmitButton(context),
-              ],
-            ),
+    return ScrollableCustomScaffold(
+      body: Form(
+        key: _formKey,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              xHalfSpace,
+              const Text("Create a New Group", style: headingText),
+              halfSpace,
+              const Text("Bring together like-minded individuals and achieve your goals.", style: bodyRegular),
+              xxxSpace,
+              CategoryDropdown(
+                selectedCategory: controller.selectedCategory,
+                onCategoryChanged: (String newValue) {
+                  controller.group.value.category = newValue;
+                  controller.selectedCategory!.value = newValue;
+                },
+              ),
+              xxSpace,
+              _buildNameField(),
+              xxSpace,
+              _buildDayField(),
+              xxSpace,
+              _buildTimeField(context),
+              xxSpace,
+              _buildUrlField(),
+              xxSpace,
+              _buildMaxMembersField(),
+              xxxSpace,
+              _buildSubmitButton(context),
+            ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildCategoryField() {
-    return Obx(
-      () => CustomDropDown(
-        label: 'Category',
-        selectedValue: controller.selectedCategory?.value,
-        onChanged: (value) {
-          if (value != null) {
-            controller.group.value.category = value;
-            controller.selectedCategory!.value = value;
-          }
-        },
-        items: controller.categoryController.categoryNames,
-        validator: (value) => FormValidators.validateEmpty(value, 'Please select a category'),
       ),
     );
   }
@@ -73,6 +62,7 @@ class CreateGroupScreen extends GetView<GroupController> {
     return Obx(
       () => CustomDropDown(
         label: 'Meeting Day',
+        hint: 'Please select...',
         selectedValue: controller.selectedDay?.value,
         onChanged: (value) {
           if (value != null) {
@@ -90,7 +80,7 @@ class CreateGroupScreen extends GetView<GroupController> {
     return CustomTextFormField(
       controller: TextEditingController(),
       label: 'Name',
-      hintText: 'Enter a name',
+      hintText: 'E.g. Fitness Enthusiasts',
       validator: (value) => FormValidators.validateEmpty(value, 'Please enter a name'),
       onChanged: (value) => controller.group.value.name = value,
     );
@@ -102,7 +92,7 @@ class CreateGroupScreen extends GetView<GroupController> {
         readOnly: true,
         controller: controller.meetingTimeController.value,
         label: 'Meeting Time',
-        hintText: 'Please select a meeting time',
+        hintText: 'Please select...',
         onTap: () async {
           final timeOfDay = await showTimePicker(
             context: context,
@@ -122,9 +112,8 @@ class CreateGroupScreen extends GetView<GroupController> {
     return CustomTextFormField(
       controller: TextEditingController(),
       label: 'Meeting URL',
-      hintText: 'Enter the meeting URL',
-      validator: (value) => FormValidators.validateEmpty(value, 'Please enter a meeting URL'),
-      //TODO Validate valid URL
+      hintText: 'E.g. https://zoom.us/j/123456789',
+      validator: (value) => FormValidators.validateUrl(value),
       onChanged: (value) => controller.group.value.meetingUrl = value,
     );
   }
@@ -132,9 +121,9 @@ class CreateGroupScreen extends GetView<GroupController> {
   CustomTextFormField _buildMaxMembersField() {
     return CustomTextFormField(
       controller: TextEditingController(),
-      label: 'Max Number of Members',
-      hintText: 'Enter the maximum number of members',
-      validator: (value) => FormValidators.validateEmpty(value, 'Please enter a maximum number of members'),
+      label: 'Group Capacity',
+      hintText: 'E.g. 10',
+      validator: (value) => FormValidators.validateMaxMembers(value),
       keyboardType: TextInputType.number,
       onChanged: (value) => controller.group.value.maxMembers = int.parse(value),
     );

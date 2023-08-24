@@ -59,4 +59,33 @@ class FormValidators {
   static String? validateEmpty(String? value, String errorMessage) {
     return (value == null || value.isEmpty) ? errorMessage : null;
   }
+
+  static String? validateUrl(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter the URL';
+    }
+    if (!Uri.parse(value).isAbsolute) {
+      return 'Please enter a valid URL';
+    }
+    return null;
+  }
+
+  static String? validateMaxMembers(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter the maximum number of members';
+    }
+
+    int? intValue;
+    try {
+      intValue = int.parse(value);
+    } catch (e) {
+      return 'Please enter a valid number';
+    }
+
+    if (intValue < 2 || intValue > 100) {
+      return 'Members should be between 2 and 100';
+    }
+
+    return null;
+  }
 }
