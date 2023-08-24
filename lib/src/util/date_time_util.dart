@@ -1,9 +1,6 @@
-import 'package:intl/intl.dart';
+List<String> days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 String getDayName(int index) {
-  return DateFormat.E().format(DateTime(2022, 1, index + 1));
+  return days[index];
 }
 
-List<String> getWeekDaysNames() {
-  return List.generate(7, (index) => getDayName(index));
-}
