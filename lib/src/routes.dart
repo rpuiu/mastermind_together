@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/auth/access_denied_screen.dart';
 import 'package:mastermind_together/src/auth/auth_middleware.dart';
 import 'package:mastermind_together/src/auth/login_screen.dart';
 import 'package:mastermind_together/src/auth/register_screen.dart';
@@ -41,7 +40,6 @@ class Routes {
   static const String onboarding = '/onboarding';
   static const String goal = '/goal';
   static const String goals = '/goals';
-  static const String accessDenied = '/access-denied';
 
   static List<GetPage> routes = [
     GetPage(name: home, page: () => HomeScreen(), middlewares: [AuthMiddleware()]),
@@ -69,7 +67,6 @@ class Routes {
           Get.put(ActionController(goalId));
         }),
         middlewares: [AuthMiddleware()]),
-    GetPage(name: accessDenied, page: () => const AccessDeniedScreen()),
   ];
 
   static String groupRoute(String groupId) => '$group/$groupId';

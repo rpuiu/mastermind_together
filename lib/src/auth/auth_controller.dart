@@ -69,13 +69,20 @@ class AuthController extends GetxController {
   }
 
   void _redirect() {
-    if (_authService.isTenant()) {
-      Get.offAllNamed(Routes.tenantDashboard);
+    String? originalRoute = _localStorage.getOriginalRoute();
+
+    if (originalRoute != null) {
+      Get.offAllNamed(originalRoute);
+      _localStorage.clearOriginalRoute(); // Clear the original route after using it
     } else {
-      if (_localStorage.isOnboardingComplete()) {
-        Get.offAllNamed(Routes.home);
+      if (_authService.isTenant()) {
+        Get.offAllNamed(Routes.tenantDashboard);
       } else {
-        Get.offAllNamed(Routes.onboarding);
+        if (_localStorage.isOnboardingComplete()) {
+          Get.offAllNamed(Routes.home);
+        } else {
+          Get.offAllNamed(Routes.onboarding);
+        }
       }
     }
   }

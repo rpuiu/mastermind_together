@@ -8,6 +8,7 @@ import 'package:mastermind_together/src/groups/group_model.dart';
 import 'package:mastermind_together/src/ui/theme/scaffold/custom_scaffold.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
 import 'package:mastermind_together/src/ui/widgets/custom_progress_indicator.dart';
 
 class GroupScreen extends GetView<GroupController> {
@@ -17,6 +18,8 @@ class GroupScreen extends GetView<GroupController> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isMember = controller.isUserMemberOfGroup(groupId);
+
     return CustomScaffold(
       body: FutureBuilder<GroupModel>(
         future: controller.fetchGroup(groupId),
@@ -27,41 +30,63 @@ class GroupScreen extends GetView<GroupController> {
             return Center(child: Text('Error: ${groupSnapshot.error}'));
           } else {
             final group = groupSnapshot.data!;
-            return FutureBuilder<List<UserModel>>(
-              future: controller.fetchGroupMembers(groupId),
-              builder: (context, membersSnapshot) {
-                if (membersSnapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CustomProgressIndicator());
-                } else if (membersSnapshot.hasError) {
-                  return Center(child: Text('Error: ${membersSnapshot.error}'));
-                } else {
-                  final members = membersSnapshot.data!;
-                  return LayoutBuilder(
-                    builder: (BuildContext context, BoxConstraints constraints) {
-                      if (constraints.maxWidth < 600) {
-                        return _buildMobileView(group, members);
-                      } else {
-                        return Column(
-                          children: [
-                            xxSpace,
-                            _buildGroupInfo(group),
-                            xxxSpace,
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  _buildMembersWidget(group, members),
-                                  _buildChatWidget(),
-                                ],
+            if (!isMember) {
+              return Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: oneColContentWidth),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildGroupInfo(group),
+                      xSpace,
+                      CustomButton(
+                        label: 'Join Group',
+                        labelTextStyle: bodyMediumInactive.copyWith(color: bodyButtonActiveTextColor),
+                        backgroundColor: buttonActiveBackgroundColor,
+                        isEnabled: true,
+                        onPressed: () => controller.joinGroup(group.id),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            } else {
+              return FutureBuilder<List<UserModel>>(
+                future: controller.fetchGroupMembers(groupId),
+                builder: (context, membersSnapshot) {
+                  if (membersSnapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CustomProgressIndicator());
+                  } else if (membersSnapshot.hasError) {
+                    return Center(child: Text('Error: ${membersSnapshot.error}'));
+                  } else {
+                    final members = membersSnapshot.data!;
+                    return LayoutBuilder(
+                      builder: (BuildContext context, BoxConstraints constraints) {
+                        if (constraints.maxWidth < 600) {
+                          return _buildMobileView(group, members);
+                        } else {
+                          return Column(
+                            children: [
+                              xxSpace,
+                              _buildGroupInfo(group),
+                              xxxSpace,
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    _buildMembersWidget(group, members),
+                                    _buildChatWidget(),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        );
-                      }
-                    },
-                  );
-                }
-              },
-            );
+                            ],
+                          );
+                        }
+                      },
+                    );
+                  }
+                },
+              );
+            }
           }
         },
       ),

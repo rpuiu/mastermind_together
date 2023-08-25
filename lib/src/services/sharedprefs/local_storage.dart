@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LocalStorageService {
   static const String currentUser = 'currentUser';
   static const String onboardingSeen = 'onboardingSeen';
+  static const String originalRouteKey = 'originalRoute';
 
   SharedPreferences prefs = Get.find<SharedPreferences>();
 
@@ -26,7 +27,7 @@ class LocalStorageService {
   }
 
   Future<void> clear() async {
-   await prefs.clear();
+    await prefs.clear();
   }
 
   Future<void> completeOnboarding() async {
@@ -35,5 +36,17 @@ class LocalStorageService {
 
   bool isOnboardingComplete() {
     return prefs.getBool(onboardingSeen) ?? false;
+  }
+
+  void setOriginalRoute(String route) async {
+    await prefs.setString(originalRouteKey, route);
+  }
+
+  String? getOriginalRoute() {
+    return prefs.getString(originalRouteKey);
+  }
+
+  void clearOriginalRoute() async {
+    await prefs.remove(originalRouteKey);
   }
 }
