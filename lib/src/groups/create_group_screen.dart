@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:mastermind_together/src/goal/widgets/category_dropdown_widget.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
+import 'package:mastermind_together/src/subscription/limit_alert_widget.dart';
+import 'package:mastermind_together/src/subscription/subscription_controller.dart';
 import 'package:mastermind_together/src/ui/theme/scaffold/scrollable_custom_scaffold.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
@@ -14,6 +16,7 @@ import 'package:mastermind_together/src/util/form_validators.dart';
 
 class CreateGroupScreen extends GetView<GroupController> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final SubscriptionController _subscriptionController = Get.find<SubscriptionController>();
 
   CreateGroupScreen({Key? key}) : super(key: key);
 
@@ -133,9 +136,16 @@ class CreateGroupScreen extends GetView<GroupController> {
     return CustomButton(
       onPressed: () {
         if (_formKey.currentState!.validate()) {
-          _formKey.currentState!.save();
-          controller.createGroup();
-          Get.toNamed(Routes.allGroups);
+          final localContext = context;
+          _subscriptionController.canUserCreateGroup().then((canCreate) {
+            if (!canCreate) {
+              showLimitReachedAlert(localContext);
+              return;
+            }
+            _formKey.currentState!.save();
+            controller.createGroup();
+            Get.toNamed(Routes.allGroups);
+          });
         }
       },
       label: 'Create Group',

@@ -5,6 +5,7 @@ import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/services/log/logger_service.dart';
 import 'package:mastermind_together/src/services/sharedprefs/local_storage.dart';
+import 'package:mastermind_together/src/services/supa/subscription_service.dart';
 import 'package:mastermind_together/src/services/supa/users_extended_service.dart';
 import 'package:mastermind_together/src/services/timezone/timezone_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -14,6 +15,7 @@ class AuthService extends GetxService {
   final UsersExtendedService _userExtendedService = Get.find<UsersExtendedService>();
   final TimezoneService _timezoneService = Get.find<TimezoneService>();
   final LocalStorageService _localStorage = Get.find<LocalStorageService>();
+  final SubscriptionService _subscriptionService = Get.find<SubscriptionService>();
 
   final Rx<UserModel?> _currentUser = Rx<UserModel?>(null);
 
@@ -53,9 +55,10 @@ class AuthService extends GetxService {
     try {
       final AuthResponse response = await _client.auth.signUp(email: email, password: password);
       final User user = response.user!;
+      final String freeTierSubscriptionId = await _subscriptionService.getFreeTierSubscriptionId();
 
       String timezone = await _timezoneService.getCurrentTimezoneWithOffset();
-      UserModel userModel = await _userExtendedService.createUserExtended(user.id, username, user.email!, timezone, tenantId);
+      UserModel userModel = await _userExtendedService.createUserExtended(user.id, username, user.email!, timezone, tenantId, freeTierSubscriptionId);
       currentUser = userModel;
       _localStorage.saveUser(userModel);
 

@@ -3,6 +3,7 @@ import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/services/log/logger_service.dart';
 import 'package:mastermind_together/src/services/sharedprefs/local_storage.dart';
 import 'package:mastermind_together/src/services/supa/settings_service.dart';
+import 'package:mastermind_together/src/services/supa/subscription_service.dart';
 import 'package:mastermind_together/src/services/supa/users_extended_service.dart';
 import 'package:mastermind_together/src/services/timezone/timezone_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -13,6 +14,7 @@ class TenantService extends GetxService {
   final UsersExtendedService _userExtendedService = Get.find<UsersExtendedService>();
   final LocalStorageService _localStorage = Get.find<LocalStorageService>();
   final SettingsService _settingsService = Get.find<SettingsService>();
+  final SubscriptionService _subscriptionService = Get.find<SubscriptionService>();
 
   Future<void> registerTenant(String tenantName, String adminEmail, String adminPassword) async {
     try {
@@ -31,7 +33,8 @@ class TenantService extends GetxService {
       await _settingsService.createInitialSettings(userId, 'Initial Terms of Service', 'Initial Privacy Policy');
 
       String timezone = await _timezoneService.getCurrentTimezoneWithOffset();
-      UserModel userModel = await _userExtendedService.createUserExtended(userId, tenantName, adminEmail, timezone, userId);
+      String freeTierSubscription = await _subscriptionService.getFreeTierSubscriptionId(); //TODO Create tenant subscription
+      UserModel userModel = await _userExtendedService.createUserExtended(userId, tenantName, adminEmail, timezone, userId, freeTierSubscription);
       _localStorage.saveUser(userModel);
     } catch (e, s) {
       Log().e('Failed to create tenant: ', e, s);

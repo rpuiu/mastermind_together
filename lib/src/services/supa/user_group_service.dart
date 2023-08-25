@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UserGroupService {
   final SupabaseClient _client = Get.find<SupabaseClient>();
+
   late RealtimeChannel groupSubscription;
 
   static const String groupsTable = 'groups';
@@ -16,6 +17,7 @@ class UserGroupService {
   static const String idField = 'id';
   static const String categoryField = 'category';
   static const String tenantIdField = 'tenant_id';
+  static const String createdByField = 'created_by';
 
   Future<T> _runQuery<T>(Future<T> Function() query) async {
     try {
@@ -37,10 +39,10 @@ class UserGroupService {
     });
   }
 
-  Future<GroupModel> createGroup(GroupModel groupModel, String tenantId) async {
+  Future<GroupModel> createGroup(GroupModel groupModel, UserModel user) async {
     return _runQuery(() async {
       List<Map<String, dynamic>> groupResponse = await _client.from(groupsTable).insert(
-        {...groupModel.toJson(), tenantIdField: tenantId},
+        {...groupModel.toJson(), tenantIdField: user.tenantId},
       ).select();
       if (groupResponse.isNotEmpty) {
         return GroupModel.fromJson(groupResponse[0]);
@@ -50,7 +52,7 @@ class UserGroupService {
     });
   }
 
-  Future<void> joinGroup(UserModel user, String groupId) async {
+  Future<GroupModel> joinGroup(UserModel user, String groupId) async {
     return _runQuery(() async {
       final groupResponse = await _client.from(groupsTable).select().eq(idField, groupId).single();
 
@@ -66,7 +68,12 @@ class UserGroupService {
           throw Exception('You are already a member of this group.');
         }
         await addUserToGroup(user.id, groupId, user.tenantId);
+
+        /*Race condition between checking if the group is full (isGroupFull(group))
+        and incrementing the group members (incrementGroupMembers(group, groupId)). Use DB transactions when possible
+         */
         await incrementGroupMembers(group, groupId);
+        return group;
       } else {
         throw Exception('Group not found.');
       }
@@ -186,5 +193,21 @@ class UserGroupService {
 
   Future<void> unsubscribeFromGroupChanges() async {
     await _client.removeChannel(groupSubscription);
+  }
+
+  Future<int> getUserCreatedGroupCount(String userId) async {
+    return _runQuery(() async {
+      final res = await _client.from(groupsTable).select(createdByField, const FetchOptions(count: CountOption.exact)).eq(createdByField, userId);
+
+      return res.count ?? 0;
+    });
+  }
+
+  Future<int> getUserJoinedGroupCount(String userId) async {
+    return _runQuery(() async {
+      final res = await _client.from(groupMembersTable).select(userIdField, const FetchOptions(count: CountOption.exact)).eq(userIdField, userId);
+
+      return res.count ?? 0;
+    });
   }
 }

@@ -4,6 +4,7 @@ class UserModel {
   final String timezone;
   final String username;
   final String tenantId;
+  final String subscriptionId;
 
   UserModel({
     required this.id,
@@ -11,6 +12,7 @@ class UserModel {
     required this.timezone,
     required this.username,
     required this.tenantId,
+    required this.subscriptionId,
   });
 
   UserModel copyWith({
@@ -19,6 +21,7 @@ class UserModel {
     String? timezone,
     String? username,
     String? tenantId,
+    String? subscriptionId,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -26,6 +29,7 @@ class UserModel {
       timezone: timezone ?? this.timezone,
       username: username ?? this.username,
       tenantId: tenantId ?? this.tenantId,
+      subscriptionId: subscriptionId ?? this.subscriptionId,
     );
   }
 
@@ -36,6 +40,7 @@ class UserModel {
       'timezone': timezone,
       'username': username,
       'tenant_id': tenantId,
+      'subscription_id': subscriptionId,
     };
   }
 
@@ -46,6 +51,7 @@ class UserModel {
       timezone: json['timezone'],
       username: json['username'],
       tenantId: json['tenant_id'],
+      subscriptionId: json['subscription_id'],
     );
   }
 }

@@ -12,6 +12,9 @@ class GroupModel {
   int maxMembers;
   int currentMembers;
   String meetingUrl;
+  String? createdBy;
+  String? admin;
+  String? description;
 
   GroupModel({
     required this.id,
@@ -23,6 +26,9 @@ class GroupModel {
     required this.maxMembers,
     required this.currentMembers,
     required this.meetingUrl,
+    required this.createdBy,
+    required this.admin,
+    required this.description,
   });
 
   GroupModel.empty({
@@ -35,6 +41,9 @@ class GroupModel {
     this.maxMembers = 0,
     this.currentMembers = 0,
     this.meetingUrl = '',
+    this.createdBy = '',
+    this.admin = '',
+    this.description = '',
   });
 
   factory GroupModel.fromJson(Map<String, dynamic> json) {
@@ -51,6 +60,9 @@ class GroupModel {
       maxMembers: json['max_members'],
       currentMembers: json['current_members'],
       meetingUrl: json['meeting_url'],
+      createdBy: json['created_by'] ?? '',
+      admin: json['admin'] ?? '',
+      description: json['description'] ?? '',
     );
   }
 
@@ -59,10 +71,13 @@ class GroupModel {
       'category': category,
       'name': name,
       'meeting_time': '${meetingTimeUTC.hour}:${meetingTimeUTC.minute}',
-      'meeting_day': meetingDay, // Serialize the meeting day
+      'meeting_day': meetingDay,
       'max_members': maxMembers,
       'current_members': currentMembers,
       'meeting_url': meetingUrl,
+      'created_by': createdBy,
+      'admin': admin,
+      'description': description,
     };
   }
 }

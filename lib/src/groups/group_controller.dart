@@ -11,6 +11,7 @@ import 'package:mastermind_together/src/services/supa/auth_service.dart';
 import 'package:mastermind_together/src/services/supa/goal_service.dart';
 import 'package:mastermind_together/src/services/supa/user_group_service.dart';
 import 'package:mastermind_together/src/services/timezone/timezone_service.dart';
+import 'package:mastermind_together/src/subscription/subscription_controller.dart';
 import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 import 'package:mastermind_together/src/util/url_launcher.dart';
 
@@ -23,6 +24,7 @@ class GroupController extends GetxController {
 
   final AvailabilityController _availabilityController = Get.find<AvailabilityController>();
   final CategoryController categoryController = Get.find<CategoryController>();
+  final SubscriptionController _subscriptionController = Get.find<SubscriptionController>();
 
   final RxList<String> selectedCategories = RxList<String>();
 
@@ -61,11 +63,14 @@ class GroupController extends GetxController {
 
   Future<void> createGroup() async {
     try {
+      UserModel user = _authService.getUser()!;
+
       GroupModel groupCopy = group.value;
       groupCopy.meetingTimeUTC = _tzService.convertLocalTimeToUTC(group.value.meetingTimeUTC);
+      groupCopy.createdBy = user.id;
+      groupCopy.admin = user.id;
 
-      UserModel user = _authService.getUser()!;
-      GroupModel groupResponse = await _groupService.createGroup(groupCopy, user.tenantId);
+      GroupModel groupResponse = await _groupService.createGroup(groupCopy, user);
 
       _analytics.track('GROUP_CREATED', properties: {
         'user': user.toJson(),
@@ -85,10 +90,11 @@ class GroupController extends GetxController {
     if (user == null) return;
 
     try {
-      await _groupService.joinGroup(user, groupId);
+      final GroupModel joinedGroup = await _groupService.joinGroup(user, groupId);
+      userGroupStatus[groupId]?.value = true;
+
       showSuccessSnackBar(message: 'Successfully joined group');
 
-      final GroupModel joinedGroup = await _groupService.readGroup(groupId);
       userGroups.add(joinedGroup);
       userGroups.refresh();
       _fetchAvailableGroups(); // Refresh the matching groups
@@ -101,7 +107,6 @@ class GroupController extends GetxController {
       Log().e("Error while joining group $groupId:", e, s, user.tenantId);
       showErrorSnackBar(message: 'Unable to join group: ${e.toString()}');
     }
-    userGroupStatus[groupId]?.value = true;
   }
 
   void leaveGroup(String groupId) async {
@@ -298,5 +303,10 @@ class GroupController extends GetxController {
       print("Exception: $e");
       showErrorSnackBar(message: "Unable to launch ${group.meetingUrl}. Please contact the group admin.");
     }
+  }
+
+  Future<bool> canJoin() async {
+    bool canJoin = await _subscriptionController.canUserJoinGroup();
+    return canJoin;
   }
 }

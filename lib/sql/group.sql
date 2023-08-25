@@ -9,6 +9,12 @@ CREATE TABLE groups (
     current_members int DEFAULT 0,
     meeting_url text
 );
+
+ALTER TABLE groups
+ADD COLUMN created_by uuid REFERENCES users_extended (user_id) ON DELETE CASCADE,
+ADD COLUMN admin uuid REFERENCES users_extended (user_id) ON DELETE CASCADE,
+ADD COLUMN description text;
+
 -- *** Add tables to the publication to enable real time subscription ***
 alter publication supabase_realtime add table public.groups;
 

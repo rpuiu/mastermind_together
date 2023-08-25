@@ -194,7 +194,7 @@ class SetAvailabilityScreen extends GetView<AvailabilityController> {
 
     if (fromTime == null) return;
 
-    final toTime = await showTimePicker(
+    final toTime = await showTimePicker( //TODO extract the context in a local variable like in the JoinGroupButton
       context: context,
       initialTime: day.toTime ?? TimeOfDay.now(),
       helpText: 'TO:',

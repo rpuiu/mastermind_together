@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
+import 'package:mastermind_together/src/groups/join_group_button.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
@@ -63,13 +64,7 @@ class GroupCard extends GetView<GroupController> {
                         backgroundColor: buttonInactiveBackgroundColor,
                         isEnabled: false,
                       )
-                    : CustomButton(
-                        label: 'Join Group',
-                        labelTextStyle: bodyMediumInactive.copyWith(color: bodyButtonActiveTextColor),
-                        backgroundColor: buttonActiveBackgroundColor,
-                        isEnabled: true,
-                        onPressed: () => controller.joinGroup(group.id),
-                      ),
+                    : JoinGroupButton(groupId: group.id),
               ],
             ),
           ),

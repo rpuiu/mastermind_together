@@ -5,10 +5,10 @@ import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/groups/chat/chat_widget.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
+import 'package:mastermind_together/src/groups/join_group_button.dart';
 import 'package:mastermind_together/src/ui/theme/scaffold/custom_scaffold.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
-import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
 import 'package:mastermind_together/src/ui/widgets/custom_progress_indicator.dart';
 
 class GroupScreen extends GetView<GroupController> {
@@ -39,13 +39,7 @@ class GroupScreen extends GetView<GroupController> {
                     children: [
                       _buildGroupInfo(group),
                       xSpace,
-                      CustomButton(
-                        label: 'Join Group',
-                        labelTextStyle: bodyMediumInactive.copyWith(color: bodyButtonActiveTextColor),
-                        backgroundColor: buttonActiveBackgroundColor,
-                        isEnabled: true,
-                        onPressed: () => controller.joinGroup(group.id),
-                      ),
+                      JoinGroupButton(groupId: group.id),
                     ],
                   ),
                 ),
