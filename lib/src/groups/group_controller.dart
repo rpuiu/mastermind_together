@@ -91,7 +91,7 @@ class GroupController extends GetxController {
 
     try {
       final GroupModel joinedGroup = await _groupService.joinGroup(user, groupId);
-      userGroupStatus[groupId]?.value = true;
+      userGroupStatus[groupId] = true.obs;
 
       showSuccessSnackBar(message: 'Successfully joined group');
 
