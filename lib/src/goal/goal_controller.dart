@@ -15,6 +15,7 @@ class GoalController extends GetxController {
   final GoalService _goalService = Get.find<GoalService>();
   final CategoryController categoryController = Get.find<CategoryController>();
   final AnalyticsService _analytics = Get.find<AnalyticsService>();
+  final isLoading = Rx<bool>(true);
 
   RxString? selectedCategory = ''.obs;
   RxBool autoSelectGroup = false.obs;
@@ -40,6 +41,7 @@ class GoalController extends GetxController {
         actionControllers[goal.id] = ActionController(goal.id);
       }
     }
+    isLoading.value = false;
   }
 
   void toggleGoalExpansion(int index) {

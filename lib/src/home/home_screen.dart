@@ -12,6 +12,8 @@ import 'package:mastermind_together/src/ui/theme/scaffold/scrollable_custom_scaf
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 
+import '../ui/widgets/custom_progress_indicator.dart';
+
 class HomeScreen extends GetView<HomeController> {
   final GoalController goalController = Get.find<GoalController>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -24,6 +26,9 @@ class HomeScreen extends GetView<HomeController> {
     return ScrollableCustomScaffold(
       body: Obx(
         () {
+          if (goalController.isLoading.value) {
+            return const Center(child: CustomProgressIndicator());
+          }
           // If the user has no goals
           if (goalController.goals.isEmpty) {
             return Center(
