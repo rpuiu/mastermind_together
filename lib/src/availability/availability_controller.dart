@@ -29,6 +29,7 @@ class AvailabilityController extends GetxController {
   final RxList<String> allTimezones = <String>[].obs;
 
   final RxBool isLoading = false.obs;
+  final RxBool availabilityChanged = false.obs;
 
   @override
   Future<void> onInit() async {
@@ -36,6 +37,7 @@ class AvailabilityController extends GetxController {
     _initDays();
     await _fetchTimeZones();
     await _fetchAvailability();
+    availabilityChanged.value = false;
   }
 
   Future<bool> saveAvailability() async {
@@ -53,6 +55,7 @@ class AvailabilityController extends GetxController {
         }
         await _fetchAvailability();
         success = true;
+        availabilityChanged.value = true;
       } catch (e, s) {
         Log().e("Error while saving availability:", e, s);
       }

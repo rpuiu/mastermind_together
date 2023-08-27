@@ -53,6 +53,7 @@ class GroupController extends GetxController {
     _listenToGroupChanges();
     filteredGroups.value = groups;
     _updateSameCategoryGroupsFromUserGoal();
+    ever(_availabilityController.availabilityChanged, (_) => _fetchAvailableGroups());
   }
 
   @override
@@ -105,7 +106,6 @@ class GroupController extends GetxController {
       });
 
       if (onJoined != null) onJoined();
-
     } catch (e, s) {
       Log().e("Error while joining group $groupId:", e, s, user.tenantId);
       showErrorSnackBar(message: 'Unable to join group: ${e.toString()}');
