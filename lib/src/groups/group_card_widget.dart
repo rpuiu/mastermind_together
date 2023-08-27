@@ -6,7 +6,6 @@ import 'package:mastermind_together/src/groups/join_group_button.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
-import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
 import 'package:mastermind_together/src/ui/widgets/profile_badge.dart';
 import 'package:mastermind_together/src/util/date_time_util.dart';
 
@@ -17,60 +16,49 @@ class GroupCard extends GetView<GroupController> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      bool userIsMember = controller.isUserMemberOfGroup(group.id);
-
-      return InkWell(
-        onTap: () => Get.toNamed(Routes.groupRoute(group.id)),
-        customBorder: customBorder,
-        child: Card(
-          shape: customBorder,
-          elevation: 1,
-          child: Container(
-            width: groupCardWidth,
-            padding: const EdgeInsets.only(
-              top: 1.5 * fontSize,
-              left: fontSize,
-              right: fontSize,
-              bottom: fontSize,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      radius: 43,
-                      child: Image.asset("assets/images/img.png"),
-                    ),
-                  ],
-                ),
-                buildTitleSection(),
-                xSpace,
-                Text(
-                  '${group.meetingDay}: ${formatTimeOfDay(group.meetingTimeLocal)}',
-                  style: bodyRegular,
-                ),
-                xSpace,
-                buildParticipantsSection(),
-                xSpace,
-                userIsMember
-                    ? const CustomButton(
-                        label: 'Joined',
-                        labelTextStyle: bodyMediumInactive,
-                        backgroundColor: buttonInactiveBackgroundColor,
-                        isEnabled: false,
-                      )
-                    : JoinGroupButton(groupId: group.id),
-              ],
-            ),
+    return InkWell(
+      onTap: () => Get.toNamed(Routes.groupRoute(group.id)),
+      customBorder: customBorder,
+      child: Card(
+        shape: customBorder,
+        elevation: 1,
+        child: Container(
+          width: groupCardWidth,
+          padding: const EdgeInsets.only(
+            top: 1.5 * fontSize,
+            left: fontSize,
+            right: fontSize,
+            bottom: fontSize,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 43,
+                    child: Image.asset("assets/images/img.png"),
+                  ),
+                ],
+              ),
+              buildTitleSection(),
+              xSpace,
+              Text(
+                '${group.meetingDay}: ${formatTimeOfDay(group.meetingTimeLocal)}',
+                style: bodyRegular,
+              ),
+              xSpace,
+              buildParticipantsSection(),
+              xSpace,
+              JoinGroupButton(groupId: group.id),
+            ],
           ),
         ),
-      );
-    });
+      ),
+    );
   }
 
   Widget buildTitleSection() {
@@ -121,9 +109,9 @@ class ProfileBadges extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return const Stack(
       alignment: Alignment.center,
-      children: const [
+      children: [
         ProfileBadge(leftOffset: 80, imagePath: "assets/images/img.png"),
         ProfileBadge(leftOffset: 60, imagePath: "assets/images/img.png"),
         ProfileBadge(leftOffset: 40, imagePath: "assets/images/img.png"),

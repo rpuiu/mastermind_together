@@ -85,7 +85,7 @@ class GroupController extends GetxController {
     }
   }
 
-  void joinGroup(String groupId) async {
+  Future<void> joinGroup(String groupId, {Function? onJoined}) async {
     final UserModel? user = _authService.getUser();
     if (user == null) return;
 
@@ -103,6 +103,9 @@ class GroupController extends GetxController {
         'user': user.toJson(),
         'group': joinedGroup.toJson(),
       });
+
+      if (onJoined != null) onJoined();
+
     } catch (e, s) {
       Log().e("Error while joining group $groupId:", e, s, user.tenantId);
       showErrorSnackBar(message: 'Unable to join group: ${e.toString()}');

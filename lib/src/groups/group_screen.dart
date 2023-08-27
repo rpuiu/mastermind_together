@@ -18,8 +18,6 @@ class GroupScreen extends GetView<GroupController> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isMember = controller.isUserMemberOfGroup(groupId);
-
     return CustomScaffold(
       body: FutureBuilder<GroupModel>(
         future: controller.fetchGroup(groupId),
@@ -30,20 +28,9 @@ class GroupScreen extends GetView<GroupController> {
             return Center(child: Text('Error: ${groupSnapshot.error}'));
           } else {
             final group = groupSnapshot.data!;
+            final bool isMember = controller.isUserMemberOfGroup(groupId);
             if (!isMember) {
-              return Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: oneColContentWidth),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildGroupInfo(group),
-                      xSpace,
-                      JoinGroupButton(groupId: group.id),
-                    ],
-                  ),
-                ),
-              );
+              return _buildSharedGroupView(group);
             } else {
               return FutureBuilder<List<UserModel>>(
                 future: controller.fetchGroupMembers(groupId),
@@ -83,6 +70,22 @@ class GroupScreen extends GetView<GroupController> {
             }
           }
         },
+      ),
+    );
+  }
+
+  Widget _buildSharedGroupView(GroupModel group) {
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: oneColContentWidth),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildGroupInfo(group),
+            xSpace,
+            JoinGroupButton(groupId: group.id),
+          ],
+        ),
       ),
     );
   }
