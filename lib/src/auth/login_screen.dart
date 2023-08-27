@@ -103,6 +103,9 @@ class LoginForm extends GetView<AuthController> {
                 hintText: "At least 8 characters",
                 obscureText: true,
                 maxLines: 1,
+                onFieldSubmitted: (_) {
+                  controller.login(emailController.text, passwordController.text);
+                },
               ),
               xHalfSpace,
               Align(

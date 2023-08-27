@@ -15,6 +15,7 @@ class CustomTextFormField extends StatelessWidget {
   final int? maxLength;
   final int? minLines;
   final int? maxLines;
+  final ValueChanged<String>? onFieldSubmitted;
 
   const CustomTextFormField({
     Key? key,
@@ -29,14 +30,14 @@ class CustomTextFormField extends StatelessWidget {
     this.keyboardType,
     this.maxLength,
     this.minLines = 1,
-    this.maxLines,
+    this.maxLines = 1,
+    this.onFieldSubmitted,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     bool isMobile = MediaQuery.of(context).size.width < 600;
     EdgeInsets mobileContentPadding = const EdgeInsets.symmetric(vertical: 14.0, horizontal: 16.0);
-
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,6 +59,7 @@ class CustomTextFormField extends StatelessWidget {
           maxLength: maxLength,
           minLines: minLines,
           maxLines: maxLines,
+          onFieldSubmitted: onFieldSubmitted,
           decoration: InputDecoration(
             contentPadding: isMobile ? mobileContentPadding : null,
             hintText: hintText,
