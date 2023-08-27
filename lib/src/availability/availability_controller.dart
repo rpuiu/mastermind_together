@@ -24,6 +24,7 @@ class AvailabilityController extends GetxController {
   final RxList<DayModel> days = RxList<DayModel>();
   final AnalyticsService _analytics = Get.find<AnalyticsService>();
 
+  final RxString initialTimezone = ''.obs;
   final RxString selectedTimezone = ''.obs;
   final RxList<String> allTimezones = <String>[].obs;
 
@@ -44,14 +45,16 @@ class AvailabilityController extends GetxController {
     bool success = false;
     if (currentUser != null) {
       try {
-        await _updateTimezone(currentUser.id);
+        if (selectedTimezone.value != initialTimezone.value) {
+          await _updateTimezone(currentUser.id);
+        }
         for (var day in days) {
           await _saveDayAvailability(currentUser.id, day);
         }
         await _fetchAvailability();
         success = true;
       } catch (e, s) {
-        Log().e("Error while subscribing to goal changes:", e, s);
+        Log().e("Error while saving availability:", e, s);
       }
       _analytics.track('AVAILABILITY_SET', properties: {
         'user': currentUser.toJson(),
@@ -158,9 +161,11 @@ class AvailabilityController extends GetxController {
       String dbTimezone = await _ueService.readTimezone(user.id);
       if (dbTimezone.isEmpty) {
         selectedTimezone.value = await _tzService.getCurrentTimezoneWithOffset();
+        initialTimezone.value = selectedTimezone.value;
         await _updateTimezone(user.id);
       } else {
         selectedTimezone.value = dbTimezone;
+        initialTimezone.value = dbTimezone;
       }
       allTimezones.value = _tzService.getAllTimeZonesWithOffset();
     } catch (e) {
@@ -169,9 +174,13 @@ class AvailabilityController extends GetxController {
   }
 
   Future<void> _updateTimezone(String userId) async {
+    if (selectedTimezone.value == initialTimezone.value) {
+      return; // No change in timezone, so no need to update.
+    }
     try {
       UserModel updatedUser = await _ueService.updateTimezone(userId, selectedTimezone.value);
       _localStorage.saveUser(updatedUser);
+      initialTimezone.value = selectedTimezone.value; // Update the initialTimezone after successful update.
     } catch (e) {
       showErrorSnackBar(message: 'Unable to update your timezone. Please try again');
     }
