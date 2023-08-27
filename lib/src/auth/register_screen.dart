@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/auth_controller.dart';
@@ -75,75 +76,87 @@ class RegisterForm extends GetView<AuthController> {
   Widget build(BuildContext context) {
     final TermsAndConditionsWidget termsOfService = TermsAndConditionsWidget(tenantId: controller.getTenantId());
 
-    return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 406),
-      child: Form(
-        key: formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Craft Your Success Story', style: welcomeTextStyle),
-            xxSpace,
-            CustomTextFormField(
-              controller: usernameController,
-              label: 'Username',
-              hintText: "What username would you like to use?",
-              validator: FormValidators.validateUsername,
-            ),
-            xxSpace,
-            CustomTextFormField(
-              controller: emailController,
-              label: 'Email',
-              hintText: "What is your email?",
-              validator: FormValidators.validateEmail,
-            ),
-            xxSpace,
-            CustomTextFormField(
-              controller: passwordController,
-              label: 'Password',
-              hintText: "What is your password?",
-              obscureText: true,
-              maxLines: 1,
-              validator: FormValidators.validatePassword,
-            ),
-            xxSpace,
-            CustomTextFormField(
-              controller: confirmPasswordController,
-              label: 'Confirm Password',
-              hintText: "Confirm your password",
-              obscureText: true,
-              maxLines: 1,
-              validator: (value) {
-                return FormValidators.validateConfirmPassword(value, passwordController.text);
-              },
-            ),
-            xxSpace,
-            termsOfService,
-            xxSpace,
-            Obx(
-              () => CustomButton(
-                onPressed: () {
-                  if (formKey.currentState?.validate() ?? false) {
-                    controller.register(usernameController.text, emailController.text, passwordController.text);
-                  }
-                },
-                isEnabled: termsOfService.isChecked.value,
-                label: 'Create Account',
-                labelTextStyle: termsOfService.isChecked.value ? buttonTextStyle : inactiveButtonTextStyle,
-                backgroundColor: buttonBackgroundColor,
-              ),
-            ),
-            xxSpace,
-            Wrap(
-              alignment: WrapAlignment.center,
-              crossAxisAlignment: WrapCrossAlignment.center,
+    return FocusScope(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 406),
+        child: RawKeyboardListener(
+          focusNode: FocusNode(),
+          onKey: (event) {
+            if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.enter) {
+              if (formKey.currentState?.validate() ?? false) {
+                controller.register(usernameController.text, emailController.text, passwordController.text);
+              }
+            }
+          },
+          child: Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Already have an account?", style: subtitleTextStyle),
-                wHalfSpace,
-                LinkText(textValue: 'Sign In', callback: () => Get.toNamed(Routes.login)),
+                Text('Craft Your Success Story', style: welcomeTextStyle),
+                xxSpace,
+                CustomTextFormField(
+                  controller: usernameController,
+                  label: 'Username',
+                  hintText: "What username would you like to use?",
+                  validator: FormValidators.validateUsername,
+                ),
+                xxSpace,
+                CustomTextFormField(
+                  controller: emailController,
+                  label: 'Email',
+                  hintText: "What is your email?",
+                  validator: FormValidators.validateEmail,
+                ),
+                xxSpace,
+                CustomTextFormField(
+                  controller: passwordController,
+                  label: 'Password',
+                  hintText: "What is your password?",
+                  obscureText: true,
+                  maxLines: 1,
+                  validator: FormValidators.validatePassword,
+                ),
+                xxSpace,
+                CustomTextFormField(
+                  controller: confirmPasswordController,
+                  label: 'Confirm Password',
+                  hintText: "Confirm your password",
+                  obscureText: true,
+                  maxLines: 1,
+                  validator: (value) {
+                    return FormValidators.validateConfirmPassword(value, passwordController.text);
+                  },
+                ),
+                xxSpace,
+                termsOfService,
+                xxSpace,
+                Obx(
+                  () => CustomButton(
+                    onPressed: () {
+                      if (formKey.currentState?.validate() ?? false) {
+                        controller.register(usernameController.text, emailController.text, passwordController.text);
+                      }
+                    },
+                    isEnabled: termsOfService.isChecked.value,
+                    label: 'Create Account',
+                    labelTextStyle: termsOfService.isChecked.value ? buttonTextStyle : inactiveButtonTextStyle,
+                    backgroundColor: buttonBackgroundColor,
+                  ),
+                ),
+                xxSpace,
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Text("Already have an account?", style: subtitleTextStyle),
+                    wHalfSpace,
+                    LinkText(textValue: 'Sign In', callback: () => Get.toNamed(Routes.login)),
+                  ],
+                ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );

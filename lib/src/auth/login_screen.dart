@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/auth_controller.dart';
@@ -70,54 +71,64 @@ class LoginForm extends GetView<AuthController> {
 
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 406),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const WelcomeWidget(),
-          xHalfSpace,
-          Text(
-            'Today is a new day. It\'s your day. You shape it.',
-            style: subtitleTextStyle,
-          ),
-          xxxSpace,
-          CustomTextFormField(
-            label: "Email",
-            controller: emailController,
-            hintText: "Example@email.com",
-          ),
-          xHalfSpace,
-          CustomTextFormField(
-            label: "Password",
-            controller: passwordController,
-            hintText: "At least 6 characters",
-            obscureText: true,
-            maxLines: 1,
-          ),
-          xHalfSpace,
-          Align(
-            alignment: Alignment.centerRight,
-            child: Text('Forgot Password?', style: linkTextStyle), //TODO MAIN-T-49
-          ),
-          xHalfSpace,
-          CustomButton(
-            label: 'Sign in',
-            labelTextStyle: buttonTextStyle,
-            backgroundColor: buttonBackgroundColor,
-            onPressed: () => controller.login(emailController.text, passwordController.text),
-          ),
-          xxxSpace,
-          Wrap(
-            alignment: WrapAlignment.center,
-            crossAxisAlignment: WrapCrossAlignment.center,
+    return FocusScope(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 406),
+        child: RawKeyboardListener(
+          focusNode: FocusNode(),
+          onKey: (event) {
+            if (event is RawKeyDownEvent && event.logicalKey == LogicalKeyboardKey.enter) {
+              controller.login(emailController.text, passwordController.text);
+            }
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Don't you have an account?", style: subtitleTextStyle),
-              wHalfSpace,
-              LinkText(textValue: 'Sign Up', callback: () => Get.toNamed(Routes.register)),
+              const WelcomeWidget(),
+              xHalfSpace,
+              Text(
+                'Today is a new day. It\'s your day. You shape it.',
+                style: subtitleTextStyle,
+              ),
+              xxxSpace,
+              CustomTextFormField(
+                label: "Email",
+                controller: emailController,
+                hintText: "Example@email.com",
+              ),
+              xHalfSpace,
+              CustomTextFormField(
+                label: "Password",
+                controller: passwordController,
+                hintText: "At least 8 characters",
+                obscureText: true,
+                maxLines: 1,
+              ),
+              xHalfSpace,
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text('Forgot Password?', style: linkTextStyle), //TODO MAIN-T-49
+              ),
+              xHalfSpace,
+              CustomButton(
+                label: 'Sign in',
+                labelTextStyle: buttonTextStyle,
+                backgroundColor: buttonBackgroundColor,
+                onPressed: () => controller.login(emailController.text, passwordController.text),
+              ),
+              xxxSpace,
+              Wrap(
+                alignment: WrapAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Text("Don't you have an account?", style: subtitleTextStyle),
+                  wHalfSpace,
+                  LinkText(textValue: 'Sign Up', callback: () => Get.toNamed(Routes.register)),
+                ],
+              ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
