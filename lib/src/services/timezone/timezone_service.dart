@@ -55,7 +55,7 @@ class TimezoneService extends GetxService {
 
   TimeOfDay convertFromUTC(TimeOfDay utcTime, String timezone) {
     // Get the offset in minutes for the timezone.
-    Log().d('Converting $timezone from UTC');
+    // Log().d('Converting $timezone from UTC');
     final offsetMinutes = "UTC (UTC+0:00)" == timezone ? 0 : _getOffsetMinutesForTimezone(timezone);
 
     // Convert the TimeOfDay to a DateTime object for today's date.

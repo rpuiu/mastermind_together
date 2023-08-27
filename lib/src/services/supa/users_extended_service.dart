@@ -24,7 +24,8 @@ class UsersExtendedService extends GetxService {
   }
 
   Future<UserModel> createUserExtended(String userId, String username, String email, String timezone, String tenantId, String subscriptionId) async {
-    return _runQuery(() async { //TODO userModel.toJson
+    return _runQuery(() async {
+      //TODO userModel.toJson
       final userExtended = await _client.from(_usersExtendedTable).insert({
         _userIdField: userId,
         _emailField: email,
@@ -51,8 +52,12 @@ class UsersExtendedService extends GetxService {
 
   Future<UserModel> updateTimezone(String userId, String value) async {
     return _runQuery(() async {
-      final response = await _client.from(_usersExtendedTable).update({_timezoneField: value}).eq(_userIdField, userId).single();
-      return UserModel.fromJson(response);
+      final List<dynamic> response = await _client.from(_usersExtendedTable).update({_timezoneField: value}).eq(_userIdField, userId).select();
+      if (response[0] != null) {
+        return UserModel.fromJson(response[0]);
+      } else {
+        throw Exception('Unable to update timezone due to no changes');
+      }
     });
   }
 
