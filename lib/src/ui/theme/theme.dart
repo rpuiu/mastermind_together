@@ -5,19 +5,17 @@ import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 class AppTheme {
   AppTheme._();
 
-  static ThemeData lightTheme = ThemeData(
-    tabBarTheme: tabBarTheme,
-    scrollbarTheme: ScrollbarThemeData(thumbColor: MaterialStateProperty.all(bodyLightTextColor)),
-    timePickerTheme: timePickerThemeData,
-    // colorScheme: lightThemeColors,
-    // useMaterial3: true,
-    // textTheme: textTheme,
-    // buttonTheme: ButtonThemeData(
-    //   buttonColor: lightThemeColors.primary,
-    //   textTheme: ButtonTextTheme.primary,
-    // ),
-    // canvasColor: lightThemeColors.surface,
-  );
+  static ThemeData lightTheme =
+      ThemeData(tabBarTheme: tabBarTheme, scrollbarTheme: scrollBarTheme, timePickerTheme: timePickerThemeData, progressIndicatorTheme: progressIndicatorTheme
+          // colorScheme: lightThemeColors,
+          // useMaterial3: true,
+          // textTheme: textTheme,
+          // buttonTheme: ButtonThemeData(
+          //   buttonColor: lightThemeColors.primary,
+          //   textTheme: ButtonTextTheme.primary,
+          // ),
+          // canvasColor: lightThemeColors.surface,
+          );
 
   static TabBarTheme tabBarTheme = const TabBarTheme(
     unselectedLabelColor: bodyButtonInactiveTextColor, // Unselected tab color
@@ -52,5 +50,13 @@ class AppTheme {
     //TODO implement OK CANCEL buttons for the time picker
     // cancelButtonStyle:,
     // confirmButtonStyle:,
+  );
+  static ScrollbarThemeData scrollBarTheme = ScrollbarThemeData(
+    thumbColor: MaterialStateProperty.all(bodyLightTextColor),
+  );
+
+  static ProgressIndicatorThemeData progressIndicatorTheme = const ProgressIndicatorThemeData(
+    linearTrackColor: defaultMenuTextColor,
+    color: hoverMenuIconColor,
   );
 }

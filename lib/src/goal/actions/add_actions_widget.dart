@@ -1,87 +1,93 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/goal/actions/action_model.dart';
 import 'package:mastermind_together/src/goal/actions/actions_controller.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/widgets/text_form_field.dart';
 
 class AddActionsWidget extends StatelessWidget {
-  final TextEditingController actionController = TextEditingController();
-  final ActionController _actionController = Get.find<ActionController>();
-
+  final TextEditingController textEditingController = TextEditingController();
+  final ActionController actionController;
   final String goalId;
 
-  AddActionsWidget({Key? key, required this.goalId}) : super(key: key);
+  AddActionsWidget({Key? key, required this.goalId, required this.actionController}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    _actionController.fetchActionsForGoal();
+    actionController.fetchActionsForGoal();
 
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: actionController,
-                      decoration: const InputDecoration(
-                        hintText: 'New Action',
-                      ),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    controller: textEditingController,
+                    decoration: const InputDecoration(
+                      hintText: 'New Action',
                     ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: () {
-                      _actionController.createAction(goalId, actionController.text, 'pending');
-                      actionController.clear();
-                    },
-                  ),
-                ],
-              ),
-            ),
-            xSpace,
-            Expanded(
-              child: Obx(() {
-                return ListView.builder(
-                  itemCount: _actionController.actions.length,
-                  itemBuilder: (context, index) {
-                    final action = _actionController.actions[index];
-                    return ListTile(
-                      title: Text(action.description),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.edit), //TODO change icon
-                            onPressed: () async {
-                              final newDescription = await showDialog<String>(
-                                context: context,
-                                builder: (context) => _editActionDialog(action.description, context),
-                              );
-                              if (newDescription != null) {
-                                _actionController.updateActionDescription(action.id, newDescription);
-                              }
-                            },
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete), //TODO change icon
-                            onPressed: () {
-                              _actionController.deleteAction(action.id);
-                            },
-                          ),
-                        ],
-                      ),
-                    );
+                ),
+                IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: () {
+                    actionController.createAction(goalId, textEditingController.text, 'pending');
+                    textEditingController.clear();
                   },
-                );
-              }),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          xSpace,
+          Container(
+            height: 400, // you can adjust this height as needed
+            child: Obx(() {
+              return ReorderableListView.builder(
+                itemCount: actionController.actions.length,
+                itemBuilder: (context, index) {
+                  final action = actionController.actions[index];
+                  return ListTile(
+                    key: ValueKey(action.id),
+                    title: Text(action.description),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.edit),
+                          onPressed: () async {
+                            final newDescription = await showDialog<String>(
+                              context: context,
+                              builder: (context) => _editActionDialog(action.description, context),
+                            );
+                            if (newDescription != null) {
+                              actionController.updateActionDescription(action.id, newDescription);
+                            }
+                          },
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () {
+                            actionController.deleteAction(action.id);
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                onReorder: (oldIndex, newIndex) {
+                  if (oldIndex < newIndex) {
+                    newIndex -= 1;
+                  }
+                  final ActionModel item = actionController.actions.removeAt(oldIndex);
+                  actionController.actions.insert(newIndex, item);
+                },
+              );
+            }),
+          ),
+        ],
       ),
     );
   }

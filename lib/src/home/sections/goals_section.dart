@@ -11,11 +11,11 @@ class GoalsSection extends GetView<GoalController> {
 
   @override
   Widget build(BuildContext context) {
-    double viewportFraction = MediaQuery.of(context).size.width > 600 ? 0.5 : 0.7;
+    double viewportFraction = MediaQuery.of(context).size.width > 600 ? 0.6 : 0.8; // Adjust this to make cards wider
     final PageController pageController = PageController(viewportFraction: viewportFraction);
 
     return SizedBox(
-      height: 310,
+      height: 325,
       child: Column(
         children: [
           const Align(
@@ -35,13 +35,14 @@ class GoalsSection extends GetView<GoalController> {
                 itemBuilder: (_, index) {
                   final goal = controller.goals[index];
                   return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: fontSize),
+                    padding: const EdgeInsets.symmetric(horizontal: fontSize / 2),
                     child: GoalCard(goal: goal, index: index),
                   );
                 },
               ),
             ),
           ),
+          xSpace,
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

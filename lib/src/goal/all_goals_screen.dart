@@ -33,7 +33,7 @@ class AllGoalsScreen extends GetView<GoalController> {
       children: [
         const Text("All Goals", style: headingText),
         wHalfSpace,
-        AddButton(onPressed: () => AddGoalModal.show(context)),
+        AddButton(onPressed: () => AddGoalModal.show(context, controller)),
       ],
     );
   }

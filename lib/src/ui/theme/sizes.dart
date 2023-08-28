@@ -3,9 +3,13 @@ import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 
 const double fontSize = 16;
 const double groupCardWidth = 223.20;
+const double goalCardHeight = 250;
+const double goalCardWidth = 400;
 const double groupCardHeight = 336;
 const double drawerMaxWidth = 260.0;
 const oneColContentWidth = 376.0;
+
+const int characterMaxLength = 280;
 
 SizedBox halfSpace = const SizedBox(height: fontSize / 2);
 SizedBox xSpace = const SizedBox(height: fontSize * 1);

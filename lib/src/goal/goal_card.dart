@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/goal/actions/actions_controller.dart';
+import 'package:mastermind_together/src/goal/actions/actions_modal.dart';
+import 'package:mastermind_together/src/goal/actions/add_action_modal_widget.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
 import 'package:mastermind_together/src/routes.dart';
-import 'package:mastermind_together/src/ui/theme/color_scheme.dart';
+import 'package:mastermind_together/src/ui/theme/app_icons.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
+import 'package:mastermind_together/src/ui/widgets/custom_tooltip.dart';
+import 'package:mastermind_together/src/ui/widgets/label_categ_widget.dart';
 
 class GoalCard extends StatelessWidget {
   final GoalModel goal;
@@ -22,160 +26,98 @@ class GoalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double cardWidth = MediaQuery.of(context).size.width;
-    if (cardWidth > 600) {
-      cardWidth = 600;
-    } else {
-      cardWidth *= 0.8;
-    }
-
     return InkWell(
       onTap: () => Get.toNamed(Routes.goalRoute(goal.id)),
-      borderRadius: borderRadius,
-      child: SizedBox(
-        width: cardWidth,
-        child: Card(
-          elevation: 4,
-          shape: RoundedRectangleBorder(
-            borderRadius: borderRadius,
+      customBorder: customBorder,
+      child: Card(
+        elevation: 1,
+        shape: customBorder,
+        child: Container(
+          padding: const EdgeInsets.only(
+            top: 1.5 * fontSize,
+            left: fontSize,
+            right: fontSize,
+            bottom: fontSize,
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(fontSize),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildHeader(),
-                _buildCategory(),
-                _buildProgress(),
-                _buildActions(context),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Flexible(
-          child: Text(
-            goal.goal,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-        IconButton(
-          icon: const Icon(Icons.share, color: linkColor),
-          onPressed: () {
-            //TODO share on pressed
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCategory() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        halfSpace,
-        Text(goal.category.toUpperCase(), style: labelText),
-        xSpace,
-      ],
-    );
-  }
-
-  Widget _buildProgress() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text('Progress:', style: labelText),
-            Text('Due: ${goal.dueDate ?? ''}', style: labelText),
-          ],
-        ),
-        xSpace,
-        const LinearProgressIndicator(value: 0.5, color: Colors.blue), // Example value
-        xSpace,
-      ],
-    );
-  }
-
-  Widget _buildActions(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        IconButton(
-          icon: const Icon(Icons.pending_outlined, color: Colors.orange), //TODO replace with active color?
-          onPressed: () {
-            //TODO open actions view
-          },
-        ),
-        Obx(() {
-          if (_actionController.actions.isNotEmpty) {
-            final firstAction = _actionController.actions.first;
-            return Flexible(
-              child: Text(
-                'Priority: ${firstAction.description}',
-                style: body,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+          width: goalCardWidth,
+          height: goalCardHeight,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        LabelCategoryWidget(label: goal.category),
+                        IconButton(
+                          icon: AppIcons.getIcon('share', IconState.hoverState),
+                          onPressed: () {
+                            //TODO share goal!
+                          },
+                        ),
+                      ],
+                    ),
+                    halfSpace,
+                    CustomTooltip(
+                      message: goal.goal,
+                      child: Text(goal.goal, maxLines: 2, style: bodySemiBold, overflow: TextOverflow.ellipsis),
+                    ),
+                    xSpace,
+                    // Action Name and IconButton
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Obx(() {
+                          // int allActions = _actionController.actions.length;
+                          // int completedActions = _actionController.actions.length;
+                          if (_actionController.actions.isNotEmpty) {
+                            final firstAction = _actionController.actions.first;
+                            return Flexible(
+                              child: CustomTooltip(
+                                message: firstAction.description,
+                                child: Text(
+                                  'Priority: ${firstAction.description}',
+                                  style: body,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            );
+                          }
+                          return TextButton(
+                            onPressed: () {
+                              AddActionModalWidget.show(context, _actionController, goal.id);
+                            },
+                            child: Text('Add Action', style: linkTextStyle.copyWith(color: hoverMenuIconColor)),
+                          );
+                        }),
+                        wHalfSpace,
+                        IconButton(
+                          icon: AppIcons.getIcon('actions', IconState.hoverState),
+                          onPressed: () {
+                            ActionsModal.show(context, goal.id, _actionController);
+                          },
+                        ),
+                      ],
+                    ),
+                    const Spacer(),
+                    const Text('10% Completed'), //TODO
+                    halfSpace,
+                    const LinearProgressIndicator(
+                      value: 10 / 100,
+                    ),
+                  ],
+                ),
               ),
-            );
-          }
-          return TextButton(
-            onPressed: () {
-              showDialog(context: context, builder: (context) => _buildAddActionDialog(context));
-            },
-            child: const Text('Add Action', style: TextStyle(color: linkColor)),
-          );
-        }),
-        IconButton(
-          icon: const Icon(Icons.text_snippet_outlined, color: linkColor),
-          onPressed: () {
-            //TODO open actions view
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildAddActionDialog(BuildContext context) {
-    final TextEditingController descriptionController = TextEditingController();
-    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-    return AlertDialog(
-      //TODO refactor and customize AlertDialog
-      title: const Text('Add Action'),
-      content: Form(
-        key: formKey,
-        child: TextFormField(
-          controller: descriptionController,
-          decoration: const InputDecoration(labelText: 'Description'),
-          validator: (value) => value?.isEmpty == true ? 'Description is required' : null,
+            ],
+          ),
         ),
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Get.back(),
-          child: const Text('Cancel'),
-        ),
-        TextButton(
-          onPressed: () {
-            if (formKey.currentState?.validate() == true) {
-              _actionController.createAction(goal.id, descriptionController.text, 'pending');
-              Get.back();
-            }
-          },
-          child: const Text('Add'),
-        ),
-      ],
     );
   }
 }

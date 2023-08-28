@@ -2,68 +2,52 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:mastermind_together/src/goal/widgets/category_dropdown_widget.dart';
-import 'package:mastermind_together/src/goal/widgets/goal_action_button.dart';
 import 'package:mastermind_together/src/goal/widgets/goal_input_field.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
+import 'package:mastermind_together/src/ui/widgets/custom_modal.dart';
+import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 
-class AddGoalModal extends GetView<GoalController> {
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final TextEditingController goalController = TextEditingController();
+class AddGoalModal {
+  static void show(BuildContext context, GoalController goalController) {
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+    final TextEditingController textEditingController = TextEditingController();
 
-  AddGoalModal({Key? key}) : super(key: key);
-
-  static void show(BuildContext context) {
-    showDialog(
+    CustomModal.show(
       context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: borderRadius,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(1.5 * fontSize),
-            child: AddGoalModal(),
-          ),
-        );
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 450),
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(1.5 * fontSize),
-            child: Form(
-              key: formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text('Add a Goal', style: bodySemiBold),
-                  xHalfSpace,
-                  CategoryDropdown(
-                    selectedCategory: controller.selectedCategory,
-                    onCategoryChanged: (String newValue) => controller.selectedCategory!.value = newValue,
-                  ),
-                  xHalfSpace,
-                  GoalInput(controller: goalController),
-                  xHalfSpace,
-                  GoalButton(
-                    controller: controller,
-                    goalController: goalController,
-                    formKey: formKey,
-                    label: 'Save Goal',
-                  ),
-                ],
+      title: 'Add a Goal',
+      children: [
+        Form(
+          key: formKey,
+          child: Column(
+            children: [
+              xHalfSpace,
+              CategoryDropdown(
+                selectedCategory: goalController.selectedCategory,
+                onCategoryChanged: (String newValue) => goalController.selectedCategory!.value = newValue,
               ),
-            ),
+              xHalfSpace,
+              GoalInput(controller: textEditingController),
+              xHalfSpace,
+            ],
           ),
         ),
-      ),
+      ],
+      actions: [
+        CustomButton(
+          onPressed: () {
+            if (formKey.currentState!.validate()) {
+              goalController.saveGoal(textEditingController.text);
+              Get.back();
+              showSuccessSnackBar(message: "Successfully added goal: \n ${textEditingController.text} ");
+            }
+          },
+          label: 'Save Goal',
+          labelTextStyle: buttonTextStyle,
+          backgroundColor: buttonBackgroundColor,
+        ),
+      ],
     );
   }
 }

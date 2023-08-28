@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/widgets/text_form_field.dart';
 import 'package:mastermind_together/src/util/form_validators.dart';
 
@@ -11,7 +12,7 @@ class GoalInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomTextFormField(
       controller: controller,
-      maxLength: 280,
+      maxLength: characterMaxLength,
       label: "Goal",
       hintText: 'E.g. Go for a 6 km run 3x per week after work',
       maxLines: 3,

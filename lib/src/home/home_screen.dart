@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart'; // Import GoalController
 import 'package:mastermind_together/src/goal/widgets/category_dropdown_widget.dart';
-import 'package:mastermind_together/src/goal/widgets/goal_action_button.dart';
 import 'package:mastermind_together/src/goal/widgets/goal_input_field.dart';
 import 'package:mastermind_together/src/home/home_controller.dart';
 import 'package:mastermind_together/src/home/sections/goals_section.dart';
@@ -11,6 +10,7 @@ import 'package:mastermind_together/src/home/sections/my_groups_section.dart';
 import 'package:mastermind_together/src/ui/theme/scaffold/scrollable_custom_scaffold.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
 
 import '../ui/widgets/custom_progress_indicator.dart';
 
@@ -52,12 +52,16 @@ class HomeScreen extends GetView<HomeController> {
                       xHalfSpace,
                       GoalInput(controller: goalInputController),
                       xxSpace,
-                      GoalButton(
-                        controller: goalController,
-                        goalController: goalInputController,
-                        formKey: formKey,
+                      CustomButton(
+                        onPressed: () {
+                          if (formKey.currentState!.validate()) {
+                            goalController.saveGoal(goalInputController.text);
+                          }
+                        },
                         label: "Let's Go!",
-                      )
+                        labelTextStyle: buttonTextStyle,
+                        backgroundColor: buttonBackgroundColor,
+                      ),
                     ],
                   ),
                 ),

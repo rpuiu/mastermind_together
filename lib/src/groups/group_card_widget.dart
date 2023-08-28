@@ -6,6 +6,8 @@ import 'package:mastermind_together/src/groups/join_group_button.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
+import 'package:mastermind_together/src/ui/widgets/custom_tooltip.dart';
+import 'package:mastermind_together/src/ui/widgets/label_categ_widget.dart';
 import 'package:mastermind_together/src/ui/widgets/profile_badge.dart';
 import 'package:mastermind_together/src/util/date_time_util.dart';
 
@@ -68,20 +70,12 @@ class GroupCard extends GetView<GroupController> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         xSpace,
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-          decoration: const BoxDecoration(color: categoryBgColor),
-          child: Text(group.category, style: labelText),
-        ),
+        LabelCategoryWidget(label: group.category),
         halfSpace,
-        Tooltip(
+        CustomTooltip(
           message: group.name,
-          child: Text(
-            group.name,
-            style: bodySemiBold,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
+          child: Text(group.name, style: bodySemiBold, overflow: TextOverflow.ellipsis),
+        )
       ],
     );
   }
