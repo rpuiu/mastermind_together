@@ -5,6 +5,7 @@ import 'package:mastermind_together/src/goal/add_goal_modal.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
 import 'package:mastermind_together/src/routes.dart';
+import 'package:mastermind_together/src/ui/theme/app_icons.dart';
 import 'package:mastermind_together/src/ui/theme/scaffold/custom_scaffold.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
@@ -59,7 +60,7 @@ class AllGoalsScreen extends GetView<GoalController> {
       key: ValueKey(goal.id),
       leading: ReorderableDragStartListener(
         index: controller.goals.indexOf(goal),
-        child: const Icon(Icons.drag_handle),
+        child:  AppIcons.getIcon('swap', IconState.defaultState),
       ),
       onTap: () => Get.toNamed(Routes.goalRoute(goal.id)),
       title: Text(goal.goal, style: bodySemiBold),

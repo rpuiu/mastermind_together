@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/goal/goal_card.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
-import 'package:mastermind_together/src/ui/custom_page_indicator.dart';
+import 'package:mastermind_together/src/ui/widgets/custom_page_indicator.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 

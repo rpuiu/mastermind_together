@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/categories/category_controller.dart';
-import 'package:mastermind_together/src/ui/widgets/drawer/tenant_drawer.dart';
+import 'package:mastermind_together/src/ui/theme/app_icons.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
+import 'package:mastermind_together/src/ui/widgets/drawer/tenant_drawer.dart';
 
 class CategoriesScreen extends GetView<CategoryController> {
   final TextEditingController _newCategoryController = TextEditingController();
@@ -36,7 +37,7 @@ class CategoriesScreen extends GetView<CategoryController> {
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.add),
+                      icon: AppIcons.getIcon('add', IconState.defaultState),
                       onPressed: () {
                         controller.addCategory(_newCategoryController.text);
                         _newCategoryController.clear();
@@ -58,7 +59,7 @@ class CategoriesScreen extends GetView<CategoryController> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                              icon: const Icon(Icons.edit), //TODO add edit icon
+                              icon: AppIcons.getIcon('edit', IconState.defaultState),
                               onPressed: () async {
                                 final newName = await showDialog<String>(
                                   context: context,
@@ -70,7 +71,7 @@ class CategoriesScreen extends GetView<CategoryController> {
                               },
                             ),
                             IconButton(
-                              icon: const Icon(Icons.delete), //TODO add delete icon
+                              icon: AppIcons.getIcon('delete', IconState.defaultState),
                               onPressed: () {
                                 controller.deleteCategory(category.id);
                               },

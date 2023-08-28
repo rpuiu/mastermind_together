@@ -40,7 +40,7 @@ class TenantRegisterScreen extends GetView<TenantController> {
                   children: [
                     const Logo(),
                     xxSpace,
-                    const Text('Register Tenant', style: h3),
+                    const Text('Register Tenant', style: headingText),
                     xxSpace,
                     CustomTextFormField(
                       controller: tenantNameController,

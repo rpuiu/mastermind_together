@@ -29,10 +29,18 @@ class ActionController extends GetxController {
 
   Future<void> createAction(String goalId, String description, String status) async {
     try {
-      ActionModel createdAction = await _actionService.createAction(goalId, description, status);
+      int newRank = actions.length;
+      ActionModel createdAction = await _actionService.createAction(goalId, description, status, newRank);
       actions.add(createdAction);
     } catch (e) {
       showErrorSnackBar(message: "Unable to create action.");
+    }
+  }
+
+  Future<void> updateRanksAfterReorder() async {
+    for (int i = 0; i < actions.length; i++) {
+      actions[i] = actions[i].copyWith(rank: i);
+      await _actionService.updateActionRank(actions[i].id, i);
     }
   }
 
@@ -67,6 +75,15 @@ class ActionController extends GetxController {
       fetchActionsForGoal();
     } catch (e) {
       showErrorSnackBar(message: 'Error updating category: $e');
+    }
+  }
+
+  void updateListWithActionDescription(String id, String description) {
+    var tempActions = List<ActionModel>.from(actions);
+    var index = tempActions.indexWhere((action) => action.id == id);
+    if (index != -1) {
+      tempActions[index] = tempActions[index].copyWith(description: description);
+      actions.assignAll(tempActions);
     }
   }
 }

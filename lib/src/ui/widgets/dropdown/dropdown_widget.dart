@@ -69,7 +69,7 @@ class CustomDropDown extends StatelessWidget {
           isExpanded: true,
           icon: AppIcons.getIcon('arrow-down', IconState.hoverState),
           dropdownColor: formTextFieldFillColor,
-          style: body,
+          style: bodyRegular,
         ),
       ],
     );

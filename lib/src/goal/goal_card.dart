@@ -82,7 +82,7 @@ class GoalCard extends StatelessWidget {
                                 message: firstAction.description,
                                 child: Text(
                                   'Priority: ${firstAction.description}',
-                                  style: body,
+                                  style: bodyRegular,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -98,7 +98,7 @@ class GoalCard extends StatelessWidget {
                         }),
                         wHalfSpace,
                         IconButton(
-                          icon: AppIcons.getIcon('actions', IconState.hoverState),
+                          icon: AppIcons.getIcon('note-2', IconState.hoverState),
                           onPressed: () {
                             ActionsModal.show(context, goal.id, _actionController);
                           },

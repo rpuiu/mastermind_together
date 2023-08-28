@@ -26,7 +26,7 @@ class TermsAndConditionsWidget extends GetView<AuthController> {
           Expanded(
             child: RichText(
               text: TextSpan(
-                style: body,
+                style: bodyRegular,
                 children: <TextSpan>[
                   const TextSpan(text: 'By checking this box, you agree to our ', style: bodyRegular),
                   TextSpan(

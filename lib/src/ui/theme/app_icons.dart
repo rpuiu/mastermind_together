@@ -55,9 +55,17 @@ class AppIcons {
 
   static Widget info([IconState state = IconState.defaultState]) => _icon('assets/icons/info.svg', state);
 
-  static Widget actions([IconState state = IconState.defaultState]) => _icon('assets/icons/actions.svg', state);
-
   static Widget share([IconState state = IconState.defaultState]) => _icon('assets/icons/share.svg', state);
+
+  static Widget send([IconState state = IconState.defaultState]) => _icon('assets/icons/send.svg', state);
+
+  static Widget edit([IconState state = IconState.defaultState]) => _icon('assets/icons/edit.svg', state);
+
+  static Widget delete([IconState state = IconState.defaultState]) => _icon('assets/icons/delete.svg', state);
+
+  static Widget swap([IconState state = IconState.defaultState]) => _icon('assets/icons/swap.svg', state);
+
+  static Widget done([IconState state = IconState.defaultState]) => _icon('assets/icons/done.svg', state);
 
   static Widget getIcon(String iconName, IconState state) {
     switch (iconName) {
@@ -93,10 +101,20 @@ class AppIcons {
         return close(state);
       case 'info':
         return info(state);
-      case 'actions':
-        return actions(state);
       case 'share':
         return share(state);
+      case 'note-2':
+        return note2(state);
+      case 'send':
+        return send(state);
+      case 'edit':
+        return edit(state);
+      case 'delete':
+        return delete(state);
+      case 'swap':
+        return swap(state);
+      case 'done':
+        return done(state);
       default:
         return home(state);
     }

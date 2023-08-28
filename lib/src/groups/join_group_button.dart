@@ -15,7 +15,7 @@ class JoinGroupButton extends GetView<GroupController> {
   Widget build(BuildContext context) {
     return Obx(() {
       if (controller.isUserMemberOfGroup(groupId)) {
-        return const CustomButton(
+        return CustomButton(
           label: 'Joined',
           labelTextStyle: bodyMediumInactive,
           backgroundColor: buttonInactiveBackgroundColor,

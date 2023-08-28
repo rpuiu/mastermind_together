@@ -11,6 +11,7 @@ class ActionService extends GetxService {
   static const String descriptionField = 'description';
   static const String statusField = 'status';
   static const String idField = 'id';
+  static const String rankField = 'rank';
 
   Future<T> _runQuery<T>(Future<T> Function() query) async {
     try {
@@ -23,17 +24,18 @@ class ActionService extends GetxService {
 
   Future<List<ActionModel>> readActionsForGoal(String goalId) async {
     return _runQuery(() async {
-      final List<dynamic> data = await _client.from(actionsTable).select().eq(goalIdField, goalId);
+      final List<dynamic> data = await _client.from(actionsTable).select().eq(goalIdField, goalId).order('rank', ascending: true);
       return data.map((e) => ActionModel.fromJson(e)).toList();
     });
   }
 
-  Future<ActionModel> createAction(String goalId, String description, String status) async {
+  Future<ActionModel> createAction(String goalId, String description, String status, int rank) async {
     return _runQuery(() async {
       final List<Map<String, dynamic>> actionResponse = await _client.from(actionsTable).insert({
         goalIdField: goalId,
         descriptionField: description,
         statusField: status,
+        rankField: rank,
       }).select();
       if (actionResponse.isNotEmpty) {
         return ActionModel.fromJson(actionResponse[0]);
@@ -58,6 +60,12 @@ class ActionService extends GetxService {
   Future<void> deleteAction(String actionId) async {
     return _runQuery(() async {
       await _client.from(actionsTable).delete().eq(idField, actionId);
+    });
+  }
+
+  Future<void> updateActionRank(String actionId, int newRank) async {
+    return _runQuery(() async {
+      await _client.from(actionsTable).update({rankField: newRank}).eq(idField, actionId);
     });
   }
 }

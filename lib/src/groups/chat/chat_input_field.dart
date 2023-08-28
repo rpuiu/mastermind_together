@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mastermind_together/src/ui/theme/app_icons.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 
@@ -35,17 +36,11 @@ class ChatInputField extends StatelessWidget {
           errorBorder: InputBorder.none,
           disabledBorder: InputBorder.none,
           contentPadding: const EdgeInsets.all(fontSize),
-          suffixIcon: Container(
-            decoration: BoxDecoration(
-              color: Colors.green.withOpacity(0.5),
-              shape: BoxShape.circle,
-            ),
-            child: IconButton(
-              hoverColor: Colors.transparent,
-              padding: EdgeInsets.zero,
-              icon: const Icon(Icons.send, color: bodyButtonActiveTextColor),
-              onPressed: onSendPressed,
-            ),
+          suffixIcon: IconButton(
+            hoverColor: Colors.transparent,
+            padding: EdgeInsets.zero,
+            icon: AppIcons.getIcon('send', IconState.hoverState),
+            onPressed: onSendPressed,
           ),
         ),
       ),

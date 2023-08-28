@@ -5,17 +5,20 @@ import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 class AppTheme {
   AppTheme._();
 
-  static ThemeData lightTheme =
-      ThemeData(tabBarTheme: tabBarTheme, scrollbarTheme: scrollBarTheme, timePickerTheme: timePickerThemeData, progressIndicatorTheme: progressIndicatorTheme
-          // colorScheme: lightThemeColors,
-          // useMaterial3: true,
-          // textTheme: textTheme,
-          // buttonTheme: ButtonThemeData(
-          //   buttonColor: lightThemeColors.primary,
-          //   textTheme: ButtonTextTheme.primary,
-          // ),
-          // canvasColor: lightThemeColors.surface,
-          );
+  static ThemeData lightTheme = ThemeData(
+    tabBarTheme: tabBarTheme,
+    scrollbarTheme: scrollBarTheme,
+    timePickerTheme: timePickerThemeData,
+    progressIndicatorTheme: progressIndicatorTheme,
+    // colorScheme: lightThemeColors,
+    // useMaterial3: true,
+    // textTheme: textTheme,
+    // buttonTheme: ButtonThemeData(
+    //   buttonColor: lightThemeColors.primary,
+    //   textTheme: ButtonTextTheme.primary,
+    // ),
+    // canvasColor: lightThemeColors.surface,
+  );
 
   static TabBarTheme tabBarTheme = const TabBarTheme(
     unselectedLabelColor: bodyButtonInactiveTextColor, // Unselected tab color
@@ -27,18 +30,18 @@ class AppTheme {
     ),
   );
 
-  static TextTheme textTheme = const TextTheme(
-    displayLarge: h1,
-    displayMedium: h2,
-    bodyLarge: bodyMedium,
-    bodyMedium: body,
-    bodySmall: labelSmall,
-    labelLarge: btnText,
-    labelMedium: placeholderBodyMedium,
-    labelSmall: labelText,
-    headlineMedium: h3,
-    titleMedium: bodyMedium,
-  );
+  // static TextTheme textTheme = const TextTheme(
+  //   displayLarge: h1,
+  //   displayMedium: h2,
+  //   bodyLarge: bodyMedium,
+  //   bodyMedium: body,
+  //   bodySmall: labelSmall,
+  //   labelLarge: btnText,
+  //   labelMedium: placeholderBodyMedium,
+  //   labelSmall: labelText,
+  //   headlineMedium: h3,
+  //   titleMedium: bodyMedium,
+  // );
 
   static TimePickerThemeData timePickerThemeData = TimePickerThemeData(
     // backgroundColor: drawerBgColor,

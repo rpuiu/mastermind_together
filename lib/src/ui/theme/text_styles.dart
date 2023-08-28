@@ -74,7 +74,7 @@ const TextStyle buttonTextStyle = TextStyle(
   fontWeight: FontWeight.w400,
   height: 1,
   letterSpacing: 0.20,
-); //UPDATED
+);
 
 TextStyle inactiveButtonTextStyle = buttonTextStyle.copyWith(color: defaultMenuTextColor);
 
@@ -85,7 +85,7 @@ const formLabelTextStyle = TextStyle(
   fontWeight: FontWeight.w400,
   height: 1.4,
   letterSpacing: 0.16,
-); //UPDATED
+);
 
 TextStyle formHintTextStyle = formLabelTextStyle.copyWith(color: textFieldHintColor); //UPDATED
 
@@ -95,7 +95,7 @@ const TextStyle menuBtnTextRegular = TextStyle(
   fontFamily: fontFamily,
   fontWeight: FontWeight.w400,
   height: 1.40,
-); //UPDATED
+);
 
 const TextStyle headingText = TextStyle(
   color: headingTextColor,
@@ -103,7 +103,7 @@ const TextStyle headingText = TextStyle(
   fontFamily: fontFamily,
   fontWeight: FontWeight.w600,
   height: 1,
-); //UPDATED
+);
 
 const TextStyle labelText = TextStyle(
   color: labelTextColor,
@@ -111,9 +111,13 @@ const TextStyle labelText = TextStyle(
   fontFamily: fontFamily,
   fontWeight: FontWeight.w400,
   height: 1.40,
-); //Updated
+);
 
-TextStyle mobileLabelTextStyle = labelText.copyWith(height: 1, letterSpacing: 0.14, color: textFieldLabelColor);
+TextStyle mobileLabelTextStyle = labelText.copyWith(
+  height: 1,
+  letterSpacing: 0.14,
+  color: textFieldLabelColor,
+);
 
 const TextStyle bodySemiBold = TextStyle(
   color: bodyTextColor,
@@ -121,7 +125,7 @@ const TextStyle bodySemiBold = TextStyle(
   fontFamily: fontFamily,
   fontWeight: FontWeight.w600,
   height: 1.40,
-); //Updated
+);
 
 const TextStyle bodyRegular = TextStyle(
   color: bodyLightTextColor,
@@ -129,90 +133,13 @@ const TextStyle bodyRegular = TextStyle(
   fontFamily: fontFamily,
   fontWeight: FontWeight.w400,
   height: 1.40,
-); //Updated
-
-const TextStyle bodyMediumInactive = TextStyle(
-  color: bodyButtonInactiveTextColor,
-  fontSize: 16,
-  fontFamily: fontFamily,
-  fontWeight: FontWeight.w500,
-  height: 1.50,
-); //Updated
-
-const TextStyle h1 = TextStyle(
-  color: textColor,
-  fontSize: 64,
-  fontFamily: fontFamily,
-  fontWeight: FontWeight.w700,
 );
 
-const TextStyle h2 = TextStyle(
-  color: textColor,
-  fontSize: 42,
-  fontFamily: fontFamily,
-  fontWeight: FontWeight.w400,
-);
-
-const TextStyle h3 = TextStyle(
-  color: textColor,
-  fontSize: 26,
-  fontFamily: fontFamily,
-  fontWeight: FontWeight.w700,
-);
-const TextStyle body = TextStyle(
-  color: textColor,
-  fontSize: 16,
-  fontFamily: fontFamily,
-  fontWeight: FontWeight.w400,
-);
-
-const TextStyle bodyMediumLink = TextStyle(
-  color: textColor,
-  fontSize: 16,
-  fontFamily: fontFamily,
-  fontWeight: FontWeight.w500,
-  decoration: TextDecoration.underline,
-);
-
-const TextStyle linkStyle = TextStyle(
-  color: linkColor,
-  fontSize: 16,
-  fontFamily: fontFamily,
-  fontWeight: FontWeight.w700,
-  decoration: TextDecoration.underline,
-);
+TextStyle bodyMediumInactive = bodyMedium.copyWith(color: bodyButtonInactiveTextColor, height: 1.50);
 
 const TextStyle bodyMedium = TextStyle(
-  color: textColor,
+  color: bodyTextColor,
   fontSize: 16,
   fontFamily: fontFamily,
   fontWeight: FontWeight.w500,
-);
-
-const TextStyle placeholderBodyMedium = TextStyle(
-  color: textPlaceholderColor,
-  fontSize: 16,
-  fontFamily: fontFamily,
-  fontWeight: FontWeight.w400,
-);
-
-const TextStyle cardTitle = TextStyle(
-  color: textColor,
-  fontSize: 26,
-  fontFamily: fontFamily,
-  fontWeight: FontWeight.w600,
-);
-
-const TextStyle labelSmall = TextStyle(
-  color: textColor,
-  fontSize: 10,
-  fontFamily: fontFamily,
-  fontWeight: FontWeight.w400,
-);
-
-const TextStyle btnText = TextStyle(
-  color: whiteColor,
-  fontSize: 16,
-  fontFamily: fontFamily,
-  fontWeight: FontWeight.w700,
 );

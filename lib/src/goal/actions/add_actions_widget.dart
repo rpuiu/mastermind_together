@@ -2,13 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/goal/actions/action_model.dart';
 import 'package:mastermind_together/src/goal/actions/actions_controller.dart';
+import 'package:mastermind_together/src/goal/actions/actions_editing_controller.dart';
+import 'package:mastermind_together/src/ui/theme/app_icons.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
-import 'package:mastermind_together/src/ui/widgets/text_form_field.dart';
+import 'package:mastermind_together/src/ui/theme/text_styles.dart';
+import 'package:mastermind_together/src/util/form_validators.dart';
 
 class AddActionsWidget extends StatelessWidget {
+  final ActionEditController editController = Get.find<ActionEditController>();
+
   final TextEditingController textEditingController = TextEditingController();
   final ActionController actionController;
   final String goalId;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   AddActionsWidget({Key? key, required this.goalId, required this.actionController}) : super(key: key);
 
@@ -19,98 +25,158 @@ class AddActionsWidget extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    controller: textEditingController,
-                    decoration: const InputDecoration(
-                      hintText: 'New Action',
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () {
-                    actionController.createAction(goalId, textEditingController.text, 'pending');
-                    textEditingController.clear();
-                  },
-                ),
-              ],
-            ),
-          ),
-          xSpace,
-          Container(
-            height: 400, // you can adjust this height as needed
-            child: Obx(() {
-              return ReorderableListView.builder(
-                itemCount: actionController.actions.length,
-                itemBuilder: (context, index) {
-                  final action = actionController.actions[index];
-                  return ListTile(
-                    key: ValueKey(action.id),
-                    title: Text(action.description),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.edit),
-                          onPressed: () async {
-                            final newDescription = await showDialog<String>(
-                              context: context,
-                              builder: (context) => _editActionDialog(action.description, context),
-                            );
-                            if (newDescription != null) {
-                              actionController.updateActionDescription(action.id, newDescription);
-                            }
-                          },
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            actionController.deleteAction(action.id);
-                          },
-                        ),
-                      ],
-                    ),
-                  );
-                },
-                onReorder: (oldIndex, newIndex) {
-                  if (oldIndex < newIndex) {
-                    newIndex -= 1;
-                  }
-                  final ActionModel item = actionController.actions.removeAt(oldIndex);
-                  actionController.actions.insert(newIndex, item);
-                },
-              );
-            }),
-          ),
+          _buildActionInputField(),
+          xxxSpace,
+          _buildReorderableActionList(),
         ],
       ),
     );
   }
 
-  Widget _editActionDialog(String currentName, BuildContext context) {
-    final TextEditingController editController = TextEditingController(text: currentName);
-    return AlertDialog(
-      title: const Text('Edit Description'),
-      content: CustomTextFormField(
-        controller: editController,
-        hintText: 'E.g. Do 100 push-ups',
-        label: 'New Action',
+  Widget _buildActionInputField() {
+    return Padding(
+      padding: const EdgeInsets.all(fontSize / 2),
+      child: Form(
+        key: _formKey,
+        child: Row(
+          children: [
+            Expanded(child: _buildTextField()),
+            _buildAddActionButton(),
+          ],
+        ),
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
-        ),
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(editController.text),
-          child: const Text('Save'),
-        ),
-      ],
     );
+  }
+
+  Widget _buildTextField() {
+    return TextFormField(
+      controller: textEditingController,
+      decoration: InputDecoration(
+        hintText: 'New Action',
+        hintStyle: formHintTextStyle,
+        focusedBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: hoverMenuIconColor, width: 2.0),
+        ),
+      ),
+      validator: (value) => FormValidators.validateEmpty(value, "Please add a new action"),
+    );
+  }
+
+  Widget _buildAddActionButton() {
+    return IconButton(
+      icon: AppIcons.getIcon('add', IconState.hoverState),
+      onPressed: () {
+        if (_formKey.currentState!.validate()) {
+          actionController.createAction(goalId, textEditingController.text, 'pending');
+          textEditingController.clear();
+        }
+      },
+    );
+  }
+
+  Widget _buildReorderableActionList() {
+    return SizedBox(
+      height: 400,
+      child: Obx(() {
+        return ReorderableListView.builder(
+          buildDefaultDragHandles: false,
+          itemCount: actionController.actions.length,
+          itemBuilder: (context, index) => _buildActionListItem(context, index),
+          onReorder: (oldIndex, newIndex) {
+            if (oldIndex < newIndex) newIndex -= 1;
+            final ActionModel item = actionController.actions.removeAt(oldIndex);
+            actionController.actions.insert(newIndex, item);
+            actionController.updateRanksAfterReorder();
+          },
+        );
+      }),
+    );
+  }
+
+  Widget _buildActionListItem(BuildContext context, int index) {
+    final action = actionController.actions[index];
+    // Create a controller or reuse if already created
+    final editController = TextEditingController(text: action.description);
+
+    return KeyedSubtree(
+      key: ValueKey(action.id),
+      child: Card(
+        elevation: 2,
+        child: ListTile(
+          onTap: () => this.editController.toggleEditing(action.id),
+          title: Obx(() {
+            if (this.editController.isEditing(action.id)) {
+              return TextField(
+                maxLines: 3,
+                minLines: 1,
+                controller: editController,
+                onEditingComplete: () {
+                  actionController.updateActionDescription(action.id, editController.text);
+                  this.editController.toggleEditing(action.id);
+                },
+              );
+            } else {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                child: Text(
+                  action.description,
+                  style: index == 0 ? bodyMedium : null,
+                ),
+              );
+            }
+          }),
+          tileColor: index == 0 ? doneColor.withOpacity(0.2) : null,
+          leading: ReorderableDragStartListener(
+            index: actionController.actions.indexOf(action),
+            child: AppIcons.getIcon('swap', IconState.defaultState),
+          ),
+          trailing: _buildActionItemTrailing(context, action, editController),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionItemTrailing(BuildContext context, ActionModel action, TextEditingController editController) {
+    return Obx(() {
+      if (this.editController.isEditing(action.id)) {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: AppIcons.getIcon('done', IconState.done),
+              onPressed: () {
+                actionController.updateListWithActionDescription(action.id, editController.text);
+                actionController.updateActionDescription(action.id, editController.text);
+                this.editController.toggleEditing(action.id);
+              },
+            ),
+            IconButton(
+              icon: AppIcons.getIcon('close', IconState.fail),
+              onPressed: () {
+                this.editController.toggleEditing(action.id);
+              },
+            ),
+          ],
+        );
+      } else {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: AppIcons.getIcon('edit', IconState.defaultState),
+              onPressed: () {
+                this.editController.toggleEditing(action.id);
+              },
+            ),
+            IconButton(
+              icon: AppIcons.getIcon('delete', IconState.defaultState),
+              onPressed: () {
+                actionController.deleteAction(action.id);
+              },
+            ),
+          ],
+        );
+      }
+    });
   }
 }
