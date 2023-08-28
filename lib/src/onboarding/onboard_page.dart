@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
+import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 
 class OnboardPage extends StatelessWidget {
   final Color color;
@@ -7,37 +8,49 @@ class OnboardPage extends StatelessWidget {
   final String title;
   final String subtitle;
 
-  const OnboardPage({Key? key, required this.color, required this.urlImage, required this.title, required this.subtitle}) : super(key: key);
+  const OnboardPage({
+    Key? key,
+    required this.color,
+    required this.urlImage,
+    required this.title,
+    required this.subtitle,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Container(
       color: color,
+      padding: EdgeInsets.symmetric(vertical: screenHeight * 0.1),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Image.asset(
-            urlImage,
-            fit: BoxFit.cover,
-            width: double.infinity,
-          ),
-          xxxxSpace,
-          Text(
-            title,
-            style: TextStyle(
-              color: Colors.teal.shade700,
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
+          Expanded(
+            child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                return Center(
+                  child: Image.asset(
+                    urlImage,
+                    width: constraints.maxWidth,
+                    fit: BoxFit.contain,
+                  ),
+                );
+              },
             ),
           ),
-          xHalfSpace,
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-            child: Text(
-              subtitle,
-              style: TextStyle(color: Colors.black45),
+          SizedBox(
+            width: screenWidth / 1.5,
+            child: Column(
+              children: [
+                xxxSpace,
+                Text(title, style: welcomeTextStyle, textAlign: TextAlign.left),
+                xSpace,
+                Text(subtitle, style: subtitleTextStyle, textAlign: TextAlign.left),
+              ],
             ),
-          )
+          ),
         ],
       ),
     );

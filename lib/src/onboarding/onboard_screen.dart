@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:mastermind_together/src/onboarding/onboard_controller.dart';
 import 'package:mastermind_together/src/onboarding/onboard_page.dart';
 import 'package:mastermind_together/src/ui/custom_page_indicator.dart';
+import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 
 class OnBoardScreen extends StatelessWidget {
   OnBoardScreen({super.key});
@@ -19,17 +20,30 @@ class OnBoardScreen extends StatelessWidget {
           child: PageView(
             controller: pageController,
             onPageChanged: (index) => controller.onPageChanged(index),
-            children: [
-              //TODO implement Onboarding UI
-              OnboardPage(color: Colors.teal.shade100, urlImage: '', title: "Welcome", subtitle: "Welcome to our app!"),
-              OnboardPage(color: Colors.teal.shade300, urlImage: '', title: "Welcome", subtitle: "Welcome to our app!"),
-              OnboardPage(color: Colors.teal.shade900, urlImage: '', title: "Welcome", subtitle: "Welcome to our app!"),
+            children: const [
+              OnboardPage(
+                  color: Color(0XFFF8F8F2),
+                  urlImage: 'assets/images/onboarding/onboard-1.png',
+                  title: "Set Your Goal!",
+                  subtitle:
+                      "Start by defining what you want to achieve. Whether it's business, fitness, or personal growth, set a clear goal to get the most out of our platform."),
+              OnboardPage(
+                  color: Color(0XFFEDEDE5),
+                  urlImage: 'assets/images/onboarding/onboard-2.png',
+                  title: "Let Us Know When You're Available",
+                  subtitle:
+                      "Set your availability so we can find the perfect group that fits into your schedule. Whether you're an early bird or a night owl, we've got you covered."),
+              OnboardPage(
+                  color: Color(0XFFDBDAC9),
+                  urlImage: 'assets/images/onboarding/onboard-3.png',
+                  title: "Join or Create Your Group",
+                  subtitle: "Find groups that align with your goals and availability. Can't find the perfect fit? Create your own group and invite others!"),
             ],
           ),
         ),
         bottomSheet: controller.isLastPage
             ? Container(
-                color: Colors.black12,
+                color: drawerBgColor,
                 padding: const EdgeInsets.symmetric(horizontal: 80),
                 height: 80,
                 child: Row(
@@ -40,17 +54,17 @@ class OnBoardScreen extends StatelessWidget {
                         controller.restartOnboarding();
                         pageController.jumpToPage(0);
                       },
-                      child: const Text('BACK'),
+                      child: const Text('BACK', style: buttonTextStyle),
                     ),
                     TextButton(
                       onPressed: () => controller.getStarted(),
-                      child: const Text('GET STARTED'),
+                      child: Text('GET STARTED', style: buttonTextStyle.copyWith(color: hoverMenuIconColor)),
                     ),
                   ],
                 ),
               )
             : Container(
-                color: Colors.black12,
+                color: drawerBgColor,
                 padding: const EdgeInsets.symmetric(horizontal: 80),
                 height: 80,
                 child: Row(
@@ -58,17 +72,17 @@ class OnBoardScreen extends StatelessWidget {
                   children: [
                     TextButton(
                       onPressed: () => pageController.jumpToPage(2),
-                      child: const Text('SKIP'),
+                      child: const Text('SKIP', style: buttonTextStyle),
                     ),
                     Center(
-                      child: CustomPageIndicator(pageController: pageController, itemCount: 3),
+                      child: CustomPageIndicator(pageController: pageController, itemCount: 3, isDarkBackground: true),
                     ),
                     TextButton(
                       onPressed: () => pageController.nextPage(
                         duration: const Duration(milliseconds: 500),
                         curve: Curves.easeInOut,
                       ),
-                      child: const Text('NEXT'),
+                      child: const Text('NEXT', style: buttonTextStyle),
                     )
                   ],
                 ),

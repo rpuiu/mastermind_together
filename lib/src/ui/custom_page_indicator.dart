@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 
 class CustomPageIndicator extends StatelessWidget {
   final PageController pageController;
   final int itemCount;
+  final bool isDarkBackground;
 
-  CustomPageIndicator({
+  const CustomPageIndicator({
+    super.key,
     required this.pageController,
     required this.itemCount,
+    this.isDarkBackground = false,
   });
 
   @override
@@ -15,10 +19,16 @@ class CustomPageIndicator extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(
         itemCount,
-        (index) => AnimatedBuilder(
+            (index) => AnimatedBuilder(
           animation: pageController,
           builder: (context, _) {
             double selectedPage = pageController.page ?? 0;
+            Color circleColor;
+            if (selectedPage.round() == index) {
+              circleColor = hoverMenuIconColor;
+            } else {
+              circleColor = isDarkBackground ? whiteColor : drawerBgColor;
+            }
             return GestureDetector(
               onTap: () => pageController.animateToPage(
                 index,
@@ -31,7 +41,7 @@ class CustomPageIndicator extends StatelessWidget {
                 height: 12,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: selectedPage.round() == index ? Theme.of(context).colorScheme.primary : Colors.black26,
+                  color: circleColor,
                 ),
               ),
             );
