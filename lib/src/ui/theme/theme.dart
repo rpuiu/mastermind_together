@@ -56,7 +56,7 @@ class AppTheme {
   );
 
   static ProgressIndicatorThemeData progressIndicatorTheme = const ProgressIndicatorThemeData(
-    linearTrackColor: defaultMenuTextColor,
+    linearTrackColor: textFieldBorderColor,
     color: hoverMenuIconColor,
   );
 }

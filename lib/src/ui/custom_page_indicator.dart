@@ -27,7 +27,7 @@ class CustomPageIndicator extends StatelessWidget {
             if (selectedPage.round() == index) {
               circleColor = hoverMenuIconColor;
             } else {
-              circleColor = isDarkBackground ? whiteColor : drawerBgColor;
+              circleColor = isDarkBackground ? whiteColor : textFieldBorderColor;
             }
             return GestureDetector(
               onTap: () => pageController.animateToPage(
