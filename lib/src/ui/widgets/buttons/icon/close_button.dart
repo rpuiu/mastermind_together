@@ -3,10 +3,10 @@ import 'package:mastermind_together/src/ui/theme/app_icons.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 
-class AddButton extends StatelessWidget {
+class CloseBtn extends StatelessWidget {
   final VoidCallback? onPressed;
 
-  const AddButton({
+  const CloseBtn({
     Key? key,
     required this.onPressed,
   }) : super(key: key);
@@ -15,7 +15,7 @@ class AddButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: onPressed,
-      icon: AppIcons.getIcon('add', IconState.hoverState),
+      icon: AppIcons.getIcon('close', IconState.fail),
       color: buttonBackgroundColor,
       padding: const EdgeInsets.all(fontSize / 2),
       splashRadius: fontSize * 1.5,

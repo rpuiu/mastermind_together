@@ -6,7 +6,7 @@ import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/scaffold/custom_scaffold.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
-import 'package:mastermind_together/src/ui/widgets/buttons/add_button.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/icon/add_button.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/filter_chip.dart';
 import 'package:mastermind_together/src/ui/widgets/custom_progress_indicator.dart';
 
@@ -24,7 +24,7 @@ class AllGroupsScreen extends GetView<GroupController> {
             children: [
               const Text("All Groups", style: headingText),
               wHalfSpace,
-              AddButton(
+              AddBtn(
                 onPressed: () {
                   Get.toNamed(Routes.createGroup);
                 },

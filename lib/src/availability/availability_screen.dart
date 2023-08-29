@@ -8,6 +8,7 @@ import 'package:mastermind_together/src/ui/theme/scaffold/scrollable_custom_scaf
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/icon/close_button.dart';
 import 'package:mastermind_together/src/ui/widgets/custom_progress_indicator.dart';
 import 'package:mastermind_together/src/ui/widgets/dropdown/dropdown_widget.dart';
 import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
@@ -101,12 +102,7 @@ class SetAvailabilityScreen extends GetView<AvailabilityController> {
               // leading: controller.isSet(day) ? AppIcons.getIcon('check', IconState.done) : null,
               title: Text(day.dayName.toUpperCase(), style: bodySemiBold),
               subtitle: controller.isSet(day) ? Text('From ${day.fromTime!.format(context)} to ${day.toTime!.format(context)}') : null,
-              trailing: controller.isSet(day)
-                  ? IconButton(
-                      icon: AppIcons.getIcon('close', IconState.fail),
-                      onPressed: () => controller.resetAvailability(day),
-                    )
-                  : null,
+              trailing: controller.isSet(day) ? CloseBtn(onPressed: () => controller.resetAvailability(day)) : null,
               onTap: () => _handleDayTap(context, day),
             ),
           );
@@ -194,7 +190,8 @@ class SetAvailabilityScreen extends GetView<AvailabilityController> {
 
     if (fromTime == null) return;
 
-    final toTime = await showTimePicker( //TODO extract the context in a local variable like in the JoinGroupButton
+    final toTime = await showTimePicker(
+      //TODO extract the context in a local variable like in the JoinGroupButton
       context: context,
       initialTime: day.toTime ?? TimeOfDay.now(),
       helpText: 'TO:',

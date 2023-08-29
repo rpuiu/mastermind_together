@@ -8,6 +8,7 @@ class GoalModel {
   final bool autoSelectGroup;
   final DateTime createdAt;
   final DateTime updatedAt;
+  int rank;
 
   GoalModel({
     required this.id,
@@ -19,6 +20,7 @@ class GoalModel {
     required this.autoSelectGroup,
     required this.createdAt,
     required this.updatedAt,
+    required this.rank,
   });
 
   Map<String, dynamic> toJson() {
@@ -32,6 +34,7 @@ class GoalModel {
       'auto_select_group': autoSelectGroup,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
+      'rank': rank,
     };
   }
 
@@ -46,6 +49,7 @@ class GoalModel {
       autoSelectGroup: json['auto_select_group'],
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
+      rank: json['rank'],
     );
   }
 }

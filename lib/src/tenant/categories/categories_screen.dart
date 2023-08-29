@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:mastermind_together/src/categories/category_controller.dart';
 import 'package:mastermind_together/src/ui/theme/app_icons.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/icon/delete_button.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/icon/edit_button.dart';
 import 'package:mastermind_together/src/ui/widgets/drawer/tenant_drawer.dart';
 
 class CategoriesScreen extends GetView<CategoryController> {
@@ -58,8 +60,7 @@ class CategoriesScreen extends GetView<CategoryController> {
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            IconButton(
-                              icon: AppIcons.getIcon('edit', IconState.defaultState),
+                            EditBtn(
                               onPressed: () async {
                                 final newName = await showDialog<String>(
                                   context: context,
@@ -70,12 +71,7 @@ class CategoriesScreen extends GetView<CategoryController> {
                                 }
                               },
                             ),
-                            IconButton(
-                              icon: AppIcons.getIcon('delete', IconState.defaultState),
-                              onPressed: () {
-                                controller.deleteCategory(category.id);
-                              },
-                            ),
+                            DeleteBtn(onPressed: () => controller.deleteCategory(category.id)),
                           ],
                         ),
                       );

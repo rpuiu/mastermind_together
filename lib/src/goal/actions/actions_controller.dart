@@ -14,11 +14,6 @@ class ActionController extends GetxController {
     fetchActionsForGoal();
   }
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
-
   void fetchActionsForGoal() async {
     try {
       actions.value = await _actionService.readActionsForGoal(goalId);
@@ -34,29 +29,6 @@ class ActionController extends GetxController {
       actions.add(createdAction);
     } catch (e) {
       showErrorSnackBar(message: "Unable to create action.");
-    }
-  }
-
-  Future<void> updateRanksAfterReorder() async {
-    for (int i = 0; i < actions.length; i++) {
-      actions[i] = actions[i].copyWith(rank: i);
-      await _actionService.updateActionRank(actions[i].id, i);
-    }
-  }
-
-  Future<void> updateActionStatus(String actionId, String newStatus) async {
-    try {
-      await _actionService.updateActionStatus(actionId, newStatus);
-      int index = actions.indexWhere((action) => action.id == actionId);
-      if (index != -1) {
-        ActionStatus statusEnum = ActionStatus.values.firstWhere(
-          (e) => e.toString().split('.').last == newStatus,
-          orElse: () => ActionStatus.pending,
-        );
-        actions[index] = actions[index].copyWith(status: statusEnum);
-      }
-    } catch (e) {
-      showErrorSnackBar(message: "Unable to update action status.");
     }
   }
 
@@ -84,6 +56,20 @@ class ActionController extends GetxController {
     if (index != -1) {
       tempActions[index] = tempActions[index].copyWith(description: description);
       actions.assignAll(tempActions);
+    }
+  }
+
+  void reorderActions(int oldIndex, int newIndex) {
+    if (oldIndex < newIndex) newIndex -= 1;
+    final ActionModel item = actions.removeAt(oldIndex);
+    actions.insert(newIndex, item);
+    _updateRanksAfterReorder();
+  }
+
+  Future<void> _updateRanksAfterReorder() async {
+    for (int i = 0; i < actions.length; i++) {
+      actions[i] = actions[i].copyWith(rank: i);
+      await _actionService.updateActionRank(actions[i].id, i);
     }
   }
 }

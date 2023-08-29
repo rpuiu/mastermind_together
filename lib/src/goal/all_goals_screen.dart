@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/goal/actions/actions_controller.dart';
+import 'package:mastermind_together/src/goal/actions/add_action_modal_widget.dart';
 import 'package:mastermind_together/src/goal/add_goal_modal.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
 import 'package:mastermind_together/src/routes.dart';
-import 'package:mastermind_together/src/ui/theme/app_icons.dart';
 import 'package:mastermind_together/src/ui/theme/scaffold/custom_scaffold.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
-import 'package:mastermind_together/src/ui/widgets/buttons/add_button.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/icon/add_button.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/icon/reorder_button.dart';
 
 class AllGoalsScreen extends GetView<GoalController> {
   const AllGoalsScreen({super.key});
@@ -34,7 +35,7 @@ class AllGoalsScreen extends GetView<GoalController> {
       children: [
         const Text("All Goals", style: headingText),
         wHalfSpace,
-        AddButton(onPressed: () => AddGoalModal.show(context, controller)),
+        AddBtn(onPressed: () => AddGoalModal.show(context, controller)),
       ],
     );
   }
@@ -45,47 +46,56 @@ class AllGoalsScreen extends GetView<GoalController> {
         return ReorderableListView.builder(
           buildDefaultDragHandles: false,
           itemCount: controller.goals.length,
-          itemBuilder: (context, index) {
-            return _buildGoalTile(context, controller.goals[index]);
-          },
-          onReorder: _handleReorder,
+          itemBuilder: (context, index) => _buildGoalTile(context, controller.goals[index], index),
+          onReorder: (oldIndex, newIndex) => controller.reorderGoals(oldIndex, newIndex),
         );
       }),
     );
   }
 
-  ListTile _buildGoalTile(BuildContext context, GoalModel goal) {
+  Widget _buildGoalTile(BuildContext context, GoalModel goal, int index) {
     final actionController = controller.actionControllers[goal.id];
-    return ListTile(
+
+    return KeyedSubtree(
       key: ValueKey(goal.id),
-      leading: ReorderableDragStartListener(
-        index: controller.goals.indexOf(goal),
-        child:  AppIcons.getIcon('swap', IconState.defaultState),
+      child: Card(
+        elevation: 2,
+        child: ListTile(
+          key: ValueKey(goal.id),
+          tileColor: index == 0 ? doneColor.withOpacity(0.2) : null,
+          leading: ReorderBtn(index: controller.goals.indexOf(goal)),
+          onTap: () => Get.toNamed(Routes.goalRoute(goal.id)),
+          title: Text(goal.goal, style: bodySemiBold),
+          subtitle: _buildActionExpansionTile(context, actionController!, goal.id),
+          // Empty onLongPress callback is required for ReorderableListView
+          onLongPress: () {},
+        ),
       ),
-      onTap: () => Get.toNamed(Routes.goalRoute(goal.id)),
-      title: Text(goal.goal, style: bodySemiBold),
-      subtitle: Obx(() => _buildActionExpansionTile(actionController!)),
-      // Empty onLongPress callback is required for ReorderableListView
-      onLongPress: () {},
     );
   }
 
-  ExpansionTile _buildActionExpansionTile(ActionController actionController) {
-    return ExpansionTile(
-      title: const Text("Actions", style: labelText),
-      children: _buildActionList(actionController),
+  Widget _buildActionExpansionTile(BuildContext context, ActionController actionController, String goalId) {
+    return Obx(
+      () {
+        if (actionController.actions.isNotEmpty) {
+          return ExpansionTile(
+              title: const Text("Actions", style: labelText),
+              children: actionController.actions
+                  .map((action) => ListTile(
+                        title: Text(action.description, style: bodyRegular),
+                      ))
+                  .toList());
+        }
+        return Padding(
+          padding: const EdgeInsets.only(top: fontSize),
+          child: TextButton(
+            onPressed: () {
+              AddActionModalWidget.show(context, actionController, goalId);
+            },
+            child: Text('Add Action', style: linkTextStyle.copyWith(color: hoverMenuIconColor)),
+          ),
+        );
+      },
     );
-  }
-
-  List<Widget> _buildActionList(ActionController actionController) {
-    return actionController.actions.map((action) => ListTile(title: Text(action.description, style: bodyRegular))).toList();
-  }
-
-  void _handleReorder(int oldIndex, int newIndex) {
-    if (oldIndex < newIndex) {
-      newIndex -= 1;
-    }
-    final GoalModel item = controller.goals.removeAt(oldIndex);
-    controller.goals.insert(newIndex, item);
   }
 }

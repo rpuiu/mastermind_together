@@ -8,11 +8,11 @@ class GoalService extends GetxService {
   late RealtimeChannel insertGoalSubscription;
 
   Future<List<GoalModel>> readUserGoals(String userId) async {
-    final List<dynamic> data = await _client.from('goals').select().eq('user_id', userId);
+    final List<dynamic> data = await _client.from('goals').select().eq('user_id', userId).order('rank', ascending: true);
     return data.map((e) => GoalModel.fromJson(e)).toList();
   }
 
-  Future<GoalModel> createGoal(String userId, String goal, String category, bool autoSelectGroup, String tenantId) async {
+  Future<GoalModel> createGoal(String userId, String goal, String category, bool autoSelectGroup, String tenantId, int rank) async {
     try {
       List<Map<String, dynamic>> goalResponse = await _client.from('goals').insert({
         'user_id': userId,
@@ -20,6 +20,7 @@ class GoalService extends GetxService {
         'category': category,
         'auto_select_group': autoSelectGroup,
         'tenant_id': tenantId,
+        'rank': rank,
       }).select();
       if (goalResponse.isNotEmpty) {
         return GoalModel.fromJson(goalResponse[0]);
@@ -55,6 +56,20 @@ class GoalService extends GetxService {
       await _client.removeChannel(insertGoalSubscription);
     } catch (e, s) {
       Log().e("Error while removing goal changes subscription:", e, s);
+      rethrow;
+    }
+  }
+
+  Future<void> updateGoalRank(String goalId, int newRank) async {
+    await _client.from('goals').update({'rank': newRank}).eq('id', goalId);
+  }
+
+  Future<GoalModel?> getGoalDetails(String goalId) async {
+    try {
+      final Map<String, dynamic> response = await _client.from('goals').select().eq('id', goalId).single();
+      return GoalModel.fromJson(response);
+    } catch (e, s) {
+      Log().e("Error while fetching goal details for $goalId:", e, s);
       rethrow;
     }
   }

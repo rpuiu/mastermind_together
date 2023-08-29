@@ -23,6 +23,7 @@ class GoalController extends GetxController {
   final RxList<GoalModel> goals = <GoalModel>[].obs;
   final RxList<bool> expandedGoals = <bool>[].obs;
   final Map<String, ActionController> actionControllers = <String, ActionController>{}.obs;
+  final Rx<GoalModel?> goalDetails = Rx<GoalModel?>(null);
 
   @override
   void onInit() {
@@ -52,7 +53,15 @@ class GoalController extends GetxController {
     try {
       final UserModel? user = _authService.getUser();
       if (user != null) {
-        GoalModel createdGoal = await _goalService.createGoal(user.id, goal, selectedCategory!.value, autoSelectGroup.value, user.tenantId);
+        int newRank = goals.length;
+        GoalModel createdGoal = await _goalService.createGoal(
+          user.id,
+          goal,
+          selectedCategory!.value,
+          autoSelectGroup.value,
+          user.tenantId,
+          newRank,
+        );
         _analytics.track('GOAL_CREATED', properties: {'user': user.toJson(), 'goal': createdGoal.toJson()});
 
         goals.add(createdGoal);
@@ -83,5 +92,25 @@ class GoalController extends GetxController {
       actionController.dispose();
     }
     _goalService.unsubscribeFromGoalChanges();
+  }
+
+  reorderGoals(int oldIndex, int newIndex) {
+    if (oldIndex < newIndex) {
+      newIndex -= 1;
+    }
+    final GoalModel item = goals.removeAt(oldIndex);
+    goals.insert(newIndex, item);
+    _updateRanksAfterReorder();
+  }
+
+  Future<void> _updateRanksAfterReorder() async {
+    for (int i = 0; i < goals.length; i++) {
+      goals[i].rank = i;
+      await _goalService.updateGoalRank(goals[i].id, i);
+    }
+  }
+
+  Future<void> fetchGoalDetails(String goalId) async {
+    goalDetails.value = await _goalService.getGoalDetails(goalId);
   }
 }

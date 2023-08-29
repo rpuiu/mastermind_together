@@ -11,6 +11,8 @@ CREATE TABLE goals (
     updated_at timestamptz DEFAULT now()
 );
 
+ALTER TABLE goals ADD COLUMN rank INTEGER DEFAULT -1;
+
 alter publication supabase_realtime add table public.goals;
 
 CREATE TABLE actions (
@@ -21,6 +23,7 @@ CREATE TABLE actions (
     created_at timestamptz DEFAULT now(),
     updated_at timestamptz DEFAULT now()
 );
+
 ALTER TABLE actions ADD COLUMN rank INTEGER DEFAULT -1;
 
 alter publication supabase_realtime add table public.actions;

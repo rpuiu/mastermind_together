@@ -64,10 +64,10 @@ class LeftLoginForm extends StatelessWidget {
 class LoginForm extends GetView<AuthController> {
   LoginForm({Key? key}) : super(key: key);
 
-  // final TextEditingController emailController = TextEditingController();
-  // final TextEditingController passwordController = TextEditingController();
-  final TextEditingController emailController = TextEditingController(text: 'rp@rp.com');
-  final TextEditingController passwordController = TextEditingController(text: 'Abcd1234'); //TODO REMOVE
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  // final TextEditingController emailController = TextEditingController(text: 'rp@rp.com');
+  // final TextEditingController passwordController = TextEditingController(text: 'Abcd1234'); //TODO REMOVE
 
   @override
   Widget build(BuildContext context) {

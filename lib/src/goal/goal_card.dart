@@ -68,7 +68,6 @@ class GoalCard extends StatelessWidget {
                       child: Text(goal.goal, maxLines: 2, style: bodySemiBold, overflow: TextOverflow.ellipsis),
                     ),
                     xSpace,
-                    // Action Name and IconButton
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
