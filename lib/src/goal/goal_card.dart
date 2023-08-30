@@ -92,7 +92,7 @@ class GoalCard extends StatelessWidget {
                             onPressed: () {
                               AddActionModalWidget.show(context, _actionController, goal.id);
                             },
-                            child: Text('Add Action', style: linkTextStyle.copyWith(color: hoverMenuIconColor)),
+                            child: Text('Add Action'),
                           );
                         }),
                         wHalfSpace,

@@ -8,7 +8,6 @@ import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/icon/add_button.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/filter_chip.dart';
-import 'package:mastermind_together/src/ui/widgets/custom_progress_indicator.dart';
 
 class AllGroupsScreen extends GetView<GroupController> {
   const AllGroupsScreen({super.key});
@@ -43,7 +42,7 @@ class AllGroupsScreen extends GetView<GroupController> {
   Widget _buildCardGrid(BuildContext context) {
     return Obx(() {
       if (controller.isLoading.value) {
-        return const Center(child: CustomProgressIndicator());
+        return const Center(child: CircularProgressIndicator());
       }
 
       double screenWidth = MediaQuery.of(context).size.width;

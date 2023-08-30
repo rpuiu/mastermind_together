@@ -9,7 +9,6 @@ import 'package:mastermind_together/src/groups/join_group_button.dart';
 import 'package:mastermind_together/src/ui/theme/scaffold/custom_scaffold.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
-import 'package:mastermind_together/src/ui/widgets/custom_progress_indicator.dart';
 
 class GroupScreen extends GetView<GroupController> {
   final String groupId = Get.parameters['groupId']!;
@@ -23,7 +22,7 @@ class GroupScreen extends GetView<GroupController> {
         future: controller.fetchGroup(groupId),
         builder: (context, groupSnapshot) {
           if (groupSnapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CustomProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (groupSnapshot.hasError) {
             return Center(child: Text('Error: ${groupSnapshot.error}'));
           } else {
@@ -36,7 +35,7 @@ class GroupScreen extends GetView<GroupController> {
                 future: controller.fetchGroupMembers(groupId),
                 builder: (context, membersSnapshot) {
                   if (membersSnapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CustomProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else if (membersSnapshot.hasError) {
                     return Center(child: Text('Error: ${membersSnapshot.error}'));
                   } else {

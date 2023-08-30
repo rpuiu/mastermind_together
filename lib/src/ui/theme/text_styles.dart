@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mastermind_together/src/ui/theme/color_scheme.dart';
 
 const String fontFamily = 'Inter';
-const Color textColor = darkerPrimaryColor;
-const Color textPlaceholderColor = placeholderColor;
 
-// new
 const Color whiteColor = Colors.white; //TODO Updated move to color_scheme
 const Color labelTextColor = Color(0xFF1E1F38); //TODO Updated move to color_scheme
 const Color bodyTextColor = Color(0xFF0C0F15); //TODO Updated move to color_scheme

@@ -6,11 +6,12 @@ class AppTheme {
   AppTheme._();
 
   static ThemeData lightTheme = ThemeData(
+    scaffoldBackgroundColor: backgroundColor,
     tabBarTheme: tabBarTheme,
     scrollbarTheme: scrollBarTheme,
     timePickerTheme: timePickerThemeData,
     progressIndicatorTheme: progressIndicatorTheme,
-    // colorScheme: lightThemeColors,
+    textButtonTheme: textButtonThemeData,
     // useMaterial3: true,
     // textTheme: textTheme,
     // buttonTheme: ButtonThemeData(
@@ -61,5 +62,12 @@ class AppTheme {
   static ProgressIndicatorThemeData progressIndicatorTheme = const ProgressIndicatorThemeData(
     linearTrackColor: textFieldBorderColor,
     color: hoverMenuIconColor,
+  );
+
+  static TextButtonThemeData textButtonThemeData = TextButtonThemeData(
+    style: TextButton.styleFrom(
+      foregroundColor: hoverMenuIconColor,
+      textStyle: bodyMedium
+    ),
   );
 }

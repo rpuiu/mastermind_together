@@ -67,6 +67,12 @@ class AppIcons {
 
   static Widget done([IconState state = IconState.defaultState]) => _icon('assets/icons/done.svg', state);
 
+  static Widget infoSnack([IconState state = IconState.defaultState]) => _icon('assets/icons/info-snack.svg', state);
+
+  static Widget error([IconState state = IconState.fail]) => _icon('assets/icons/error.svg', state);
+
+  static Widget success([IconState state = IconState.done]) => _icon('assets/icons/success.svg', state);
+
   static Widget getIcon(String iconName, IconState state) {
     switch (iconName) {
       case 'home':
@@ -115,6 +121,12 @@ class AppIcons {
         return swap(state);
       case 'done':
         return done(state);
+      case 'info-snack':
+        return infoSnack(state);
+      case 'error':
+        return error(state);
+      case 'success':
+        return success(state);
       default:
         return home(state);
     }

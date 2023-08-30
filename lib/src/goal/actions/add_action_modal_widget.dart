@@ -31,10 +31,7 @@ class AddActionModalWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            TextButton(
-              onPressed: () => Get.back(),
-              child: Text('Cancel', style: linkTextStyle),
-            ),
+            TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
             TextButton(
               onPressed: () {
                 if (formKey.currentState?.validate() == true) {
@@ -42,7 +39,7 @@ class AddActionModalWidget {
                   Get.back();
                 }
               },
-              child: Text('Add', style: linkTextStyle.copyWith(fontWeight: FontWeight.w700)),
+              child: Text('Add', style: bodyMedium.copyWith(fontWeight: FontWeight.w700, color: hoverMenuIconColor)),
             ),
           ],
         )

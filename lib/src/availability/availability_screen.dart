@@ -9,7 +9,6 @@ import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/icon/close_button.dart';
-import 'package:mastermind_together/src/ui/widgets/custom_progress_indicator.dart';
 import 'package:mastermind_together/src/ui/widgets/dropdown/dropdown_widget.dart';
 import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 
@@ -153,7 +152,7 @@ class SetAvailabilityScreen extends GetView<AvailabilityController> {
 
   Center _buildLoadingState() {
     return const Center(
-      child: CustomProgressIndicator(),
+      child: CircularProgressIndicator(),
     );
   }
 
