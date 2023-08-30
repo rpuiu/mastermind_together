@@ -1,14 +1,16 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/groups/chat/chat_widget.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
-import 'package:mastermind_together/src/groups/join_group_button.dart';
+import 'package:mastermind_together/src/groups/shared_group_screen.dart';
+import 'package:mastermind_together/src/groups/widgets/group_info_widget.dart';
 import 'package:mastermind_together/src/ui/theme/scaffold/custom_scaffold.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
+
+import 'widgets/member_list_widget.dart';
 
 class GroupScreen extends GetView<GroupController> {
   final String groupId = Get.parameters['groupId']!;
@@ -26,10 +28,10 @@ class GroupScreen extends GetView<GroupController> {
           } else if (groupSnapshot.hasError) {
             return Center(child: Text('Error: ${groupSnapshot.error}'));
           } else {
-            final group = groupSnapshot.data!;
+            final group = controller.group.value;
             final bool isMember = controller.isUserMemberOfGroup(groupId);
             if (!isMember) {
-              return _buildSharedGroupView(group);
+              return SharedGroupScreen(group: group);
             } else {
               return FutureBuilder<List<UserModel>>(
                 future: controller.fetchGroupMembers(groupId),
@@ -43,12 +45,12 @@ class GroupScreen extends GetView<GroupController> {
                     return LayoutBuilder(
                       builder: (BuildContext context, BoxConstraints constraints) {
                         if (constraints.maxWidth < 600) {
-                          return _buildMobileView(group, members);
+                          return _buildMobileView(context, group, members);
                         } else {
                           return Column(
                             children: [
                               xxSpace,
-                              _buildGroupInfo(group),
+                              const GroupInfoCard(),
                               xxxSpace,
                               Expanded(
                                 child: Row(
@@ -73,28 +75,12 @@ class GroupScreen extends GetView<GroupController> {
     );
   }
 
-  Widget _buildSharedGroupView(GroupModel group) {
-    return Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: oneColContentWidth),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildGroupInfo(group),
-            xSpace,
-            JoinGroupButton(groupId: group.id),
-          ],
-        ),
-      ),
-    );
-  }
-
-  DefaultTabController _buildMobileView(GroupModel group, List<UserModel> members) {
+  DefaultTabController _buildMobileView(BuildContext context, GroupModel group, List<UserModel> members) {
     return DefaultTabController(
       length: 2,
       child: Column(
         children: [
-          _buildGroupInfo(group),
+          const GroupInfoCard(),
           xxSpace,
           const TabBar(
             tabs: [
@@ -105,30 +91,13 @@ class GroupScreen extends GetView<GroupController> {
           Expanded(
             child: TabBarView(
               children: [
-                _membersList(members),
+                MemberList(members: members, adminId: group.admin),
                 ChatWidget(groupId: groupId),
               ],
             ),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _membersList(List<UserModel> members) {
-    return ListView(
-      children: members
-          .map((member) => ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Row(
-                  children: [
-                    const Icon(Icons.person, size: 24.0),
-                    const SizedBox(width: 2),
-                    Text(member.username, style: labelText),
-                  ],
-                ),
-              ))
-          .toList(),
     );
   }
 
@@ -150,60 +119,11 @@ class GroupScreen extends GetView<GroupController> {
               shape: customBorder,
               child: Padding(
                 padding: const EdgeInsets.all(fontSize),
-                child: _membersList(members),
+                child: MemberList(members: members, adminId: group.admin),
               ),
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildGroupInfo(GroupModel group) {
-    return Card(
-      elevation: 1.0,
-      shape: customBorder,
-      child: Padding(
-        padding: const EdgeInsets.all(fontSize),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(group.name, style: headingText),
-            halfSpace,
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-                decoration: const BoxDecoration(color: categoryBgColor),
-                child: Text(group.category, style: labelText),
-              ),
-            ),
-            xSpace,
-            Text(
-              '${group.meetingDay}: ${group.meetingTimeLocal.hour}:${group.meetingTimeLocal.minute}',
-              style: bodyRegular,
-            ),
-            xSpace,
-            RichText(
-              text: TextSpan(
-                children: [
-                  const TextSpan(text: 'Meeting URL: ', style: bodyRegular),
-                  TextSpan(
-                    text: group.meetingUrl,
-                    style: bodyRegular.copyWith(
-                      color: Colors.blue,
-                      decoration: TextDecoration.underline,
-                    ),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        controller.launchMeetingUrl(group);
-                      },
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

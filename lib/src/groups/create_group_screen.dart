@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/goal/widgets/category_dropdown_widget.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
-import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/subscription/limit_alert_widget.dart';
 import 'package:mastermind_together/src/subscription/subscription_controller.dart';
 import 'package:mastermind_together/src/ui/theme/scaffold/scrollable_custom_scaffold.dart';
@@ -169,7 +168,6 @@ class CreateGroupScreen extends GetView<GroupController> {
             }
             _formKey.currentState!.save();
             controller.createGroup();
-            Get.toNamed(Routes.allGroups);
           });
         }
       },

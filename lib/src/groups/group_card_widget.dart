@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
@@ -8,8 +9,9 @@ import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/custom_tooltip.dart';
 import 'package:mastermind_together/src/ui/widgets/label_categ_widget.dart';
-import 'package:mastermind_together/src/ui/widgets/profile_badge.dart';
 import 'package:mastermind_together/src/util/date_time_util.dart';
+
+import 'widgets/profile_badges.dart';
 
 class GroupCard extends GetView<GroupController> {
   final GroupModel group;
@@ -18,45 +20,56 @@ class GroupCard extends GetView<GroupController> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => Get.toNamed(Routes.groupRoute(group.id)),
-      customBorder: customBorder,
-      child: Card(
-        shape: customBorder,
-        elevation: 1,
-        child: Container(
-          width: groupCardWidth,
-          padding: const EdgeInsets.only(
-            top: 1.5 * fontSize,
-            left: fontSize,
-            right: fontSize,
-            bottom: fontSize,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    radius: 43,
-                    child: Image.asset("assets/images/img.png"),
-                  ),
-                ],
-              ),
-              buildTitleSection(),
-              xSpace,
-              Text(
-                '${group.meetingDay}: ${formatTimeOfDay(group.meetingTimeLocal)}',
-                style: bodyRegular,
-              ),
-              xSpace,
-              buildParticipantsSection(),
-              xSpace,
-              JoinGroupButton(groupId: group.id),
-            ],
+    return Padding(
+      padding: const EdgeInsets.all(fontSize / 2),
+      child: InkWell(
+        onTap: () => Get.toNamed(Routes.groupRoute(group.id)),
+        customBorder: customBorder,
+        child: Card(
+          shape: customBorder,
+          elevation: 1,
+          child: Container(
+            width: groupCardWidth,
+            padding: const EdgeInsets.only(
+              top: 1.5 * fontSize,
+              left: fontSize,
+              right: fontSize,
+              bottom: fontSize,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: hoverMenuTextColor,
+                      radius: 43,
+                      child: SizedBox(
+                        width: 43,
+                        height: 43,
+                        child: SvgPicture.asset(
+                          'assets/icons/profile-2user.svg',
+                          colorFilter: const ColorFilter.mode(headingTextColor, BlendMode.srcIn),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                buildTitleSection(),
+                xSpace,
+                Text(
+                  '${group.meetingDay}: ${formatTimeOfDay(group.meetingTimeLocal)}',
+                  style: bodyRegular,
+                ),
+                xSpace,
+                buildParticipantsSection(),
+                xSpace,
+                JoinGroupButton(groupId: group.id),
+              ],
+            ),
           ),
         ),
       ),
@@ -88,29 +101,11 @@ class GroupCard extends GetView<GroupController> {
       children: [
         Text('${group.currentMembers}/${group.maxMembers}', style: bodyRegular),
         wHalfSpace,
-        const SizedBox(
+        SizedBox(
           width: 120,
           height: 30,
-          child: ProfileBadges(),
+          child: ProfileBadges(numberOfMembers: group.currentMembers),
         ),
-      ],
-    );
-  }
-}
-
-class ProfileBadges extends StatelessWidget {
-  const ProfileBadges({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const Stack(
-      alignment: Alignment.center,
-      children: [
-        ProfileBadge(leftOffset: 80, imagePath: "assets/images/img.png"),
-        ProfileBadge(leftOffset: 60, imagePath: "assets/images/img.png"),
-        ProfileBadge(leftOffset: 40, imagePath: "assets/images/img.png"),
-        ProfileBadge(leftOffset: 20, imagePath: "assets/images/img.png"),
-        ProfileBadge(leftOffset: 0, imagePath: "assets/images/img.png"),
       ],
     );
   }

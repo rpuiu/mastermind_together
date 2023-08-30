@@ -5,6 +5,7 @@ import 'package:mastermind_together/src/availability/availability_controller.dar
 import 'package:mastermind_together/src/categories/category_controller.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
+import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/services/log/logger_service.dart';
 import 'package:mastermind_together/src/services/mixpanel/analytics_service.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';
@@ -73,13 +74,16 @@ class GroupController extends GetxController {
 
       GroupModel groupResponse = await _groupService.createGroup(groupCopy, user);
 
+      await joinGroup(groupResponse.id);
+
       _analytics.track('GROUP_CREATED', properties: {
         'user': user.toJson(),
         'group': groupResponse.toJson(),
       });
 
       selectedCategory!.value = '';
-      showSuccessSnackBar(message: 'The group has been created!');
+
+      Get.toNamed(Routes.groupRoute(groupResponse.id));
     } catch (e, s) {
       Log().e("Error while creating group:", e, s);
       showErrorSnackBar(message: 'Error creating group, please try again');
@@ -142,6 +146,7 @@ class GroupController extends GetxController {
   Future<GroupModel> fetchGroup(String groupId) async {
     try {
       final groupResponse = await _groupService.readGroup(groupId);
+      group.value = groupResponse;
       return groupResponse;
     } catch (e) {
       showErrorSnackBar(message: 'Group not found');
@@ -255,6 +260,9 @@ class GroupController extends GetxController {
         case 'UPDATE':
           Log().d("Debug: UPDATE event received for group: ${changedGroup.id}");
           _handleUpdateEvents(changedGroup);
+          if (group.value.id == changedGroup.id) {
+            group.value = changedGroup;
+          }
           break;
         case 'DELETE':
           Log().d("Debug: DELETE event received for group: ${changedGroup.id}");
@@ -303,7 +311,6 @@ class GroupController extends GetxController {
     try {
       await launchURL(group.meetingUrl);
     } catch (e) {
-      print("Exception: $e");
       showErrorSnackBar(message: "Unable to launch ${group.meetingUrl}. Please contact the group admin.");
     }
   }
@@ -311,5 +318,106 @@ class GroupController extends GetxController {
   Future<bool> canJoin() async {
     bool canJoin = await _subscriptionController.canUserJoinGroup();
     return canJoin;
+  }
+
+  bool isUserAdmin(String groupId) {
+    final UserModel? currentUser = _authService.getUser();
+    if (currentUser == null) return false;
+
+    final GroupModel? targetGroup = groups.firstWhereOrNull((group) => group.id == groupId);
+    if (targetGroup == null) return false;
+
+    return targetGroup.admin == currentUser.id;
+  }
+
+  Future<void> updateGroupName(String groupId, String newName) async {
+    try {
+      await _groupService.updateGroupName(groupId, newName);
+
+      int index = groups.indexWhere((group) => group.id == groupId);
+      if (index != -1) {
+        groups[index].name = newName;
+        groups.refresh();
+      }
+      showSuccessSnackBar(message: 'Group name updated successfully.');
+    } catch (e, s) {
+      Log().e("Error while updating group name:", e, s);
+      showErrorSnackBar(message: 'Error updating group name, please try again.');
+    }
+  }
+
+  Future<void> updateGroupLocation(String groupId, String newLocation) async {
+    try {
+      await _groupService.updateGroupLocation(groupId, newLocation);
+
+      // Update local state
+      int index = groups.indexWhere((group) => group.id == groupId);
+      if (index != -1) {
+        groups[index].location = newLocation;
+        groups.refresh();
+      }
+
+      showSuccessSnackBar(message: 'Group location updated successfully.');
+    } catch (e, s) {
+      Log().e("Error while updating group location:", e, s);
+      showErrorSnackBar(message: 'Error updating group location, please try again.');
+    }
+  }
+
+  Future<void> updateMeetingUrl(String groupId, String newMeetingUrl) async {
+    try {
+      await _groupService.updateMeetingUrl(groupId, newMeetingUrl);
+
+      // Update local state
+      int index = groups.indexWhere((group) => group.id == groupId);
+      if (index != -1) {
+        groups[index].meetingUrl = newMeetingUrl;
+        groups.refresh();
+      }
+
+      showSuccessSnackBar(message: 'Meeting URL updated successfully.');
+    } catch (e, s) {
+      Log().e("Error while updating meeting URL:", e, s);
+      showErrorSnackBar(message: 'Error updating meeting URL, please try again.');
+    }
+  }
+
+  updateGroupDescription(String groupId, String newDescription) async {
+    try {
+      await _groupService.updateGroupDescription(groupId, newDescription);
+
+      int index = groups.indexWhere((group) => group.id == groupId);
+      if (index != -1) {
+        groups[index].name = newDescription;
+        groups.refresh();
+      }
+      showSuccessSnackBar(message: 'Group description updated successfully.');
+    } catch (e, s) {
+      Log().e("Error while updating group description:", e, s);
+      showErrorSnackBar(message: 'Error updating group description, please try again.');
+    }
+  }
+
+  Future<void> updateMeetingDetails(String groupId, String newDay, TimeOfDay newTime) async {
+    try {
+      // Convert the local time to UTC
+      TimeOfDay newTimeUTC = _tzService.convertLocalTimeToUTC(newTime);
+
+      await _groupService.updateMeetingDetails(groupId, newDay, newTimeUTC);
+
+      // Update local state
+      int index = groups.indexWhere((group) => group.id == groupId);
+      if (index != -1) {
+        groups[index].meetingDay = newDay;
+        groups[index].meetingTimeLocal = newTime; // Store local time
+        groups[index].meetingTimeUTC = newTimeUTC; // Store UTC time
+        groups.refresh();
+      }
+
+      showSuccessSnackBar(message: 'Meeting details updated successfully.');
+    } catch (e, s) {
+      Log().e("Error while updating meeting details:", e, s);
+      showErrorSnackBar(message: 'Error updating meeting details, please try again.');
+    }
   }
 }

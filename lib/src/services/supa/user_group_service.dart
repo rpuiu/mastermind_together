@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
@@ -209,5 +210,24 @@ class UserGroupService {
 
       return res.count ?? 0;
     });
+  }
+
+  Future<void> updateGroupName(String groupId, String newName) async => _updateGroupField(groupId, {'name': newName});
+
+  Future<void> updateGroupLocation(String groupId, String newLocation) async => _updateGroupField(groupId, {'location': newLocation});
+
+  Future<void> updateMeetingUrl(String groupId, String newMeetingUrl) async => _updateGroupField(groupId, {'meeting_url': newMeetingUrl});
+
+  Future<void> updateGroupDescription(String groupId, String newDescription) async => _updateGroupField(groupId, {'description': newDescription});
+
+  Future<void> updateMeetingDetails(String groupId, String newDay, TimeOfDay newTimeUTC) async {
+    await _updateGroupField(groupId, {
+      'meeting_day': newDay,
+      'meeting_time': '${newTimeUTC.hour}:${newTimeUTC.minute}',
+    });
+  }
+
+  Future<void> _updateGroupField(String groupId, Map<String, dynamic> updateData) async {
+    await _client.from(groupsTable).update(updateData).eq(idField, groupId);
   }
 }

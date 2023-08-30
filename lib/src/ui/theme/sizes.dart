@@ -5,7 +5,7 @@ const double fontSize = 16;
 const double groupCardWidth = 223.20;
 const double goalCardHeight = 250;
 const double goalCardWidth = 400;
-const double groupCardHeight = 336;
+const double groupCardHeight = 360;
 const double drawerMaxWidth = 260.0;
 const oneColContentWidth = 376.0;
 

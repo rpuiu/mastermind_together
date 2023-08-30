@@ -6,8 +6,8 @@ import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/scaffold/custom_scaffold.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
-import 'package:mastermind_together/src/ui/widgets/buttons/icon/add_button.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/filter_chip.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/icon/add_button.dart';
 
 class AllGroupsScreen extends GetView<GroupController> {
   const AllGroupsScreen({super.key});
@@ -73,12 +73,6 @@ class AllGroupsScreen extends GetView<GroupController> {
         ),
       );
     });
-  }
-
-  double computeGridHeight() {
-    double spacing = 20.0;
-    int maxRows = 2;
-    return (maxRows * groupCardHeight) + ((maxRows - 1) * spacing);
   }
 
   Obx _buildFilterChips() {
