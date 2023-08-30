@@ -22,11 +22,14 @@ class CreateGroupScreen extends GetView<GroupController> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    bool isMobile = screenWidth < 600;
+
     return ScrollableCustomScaffold(
       body: Form(
         key: _formKey,
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.5),
+          constraints: BoxConstraints(maxWidth: isMobile ? screenWidth : screenWidth * 0.5),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -52,6 +55,10 @@ class CreateGroupScreen extends GetView<GroupController> {
               _buildUrlField(),
               xxSpace,
               _buildMaxMembersField(),
+              xxSpace,
+              _buildDescriptionField(),
+              xxSpace,
+              _buildLocationField(),
               xxxSpace,
               _buildSubmitButton(context),
             ],
@@ -129,6 +136,24 @@ class CreateGroupScreen extends GetView<GroupController> {
       validator: (value) => FormValidators.validateMaxMembers(value),
       keyboardType: TextInputType.number,
       onChanged: (value) => controller.group.value.maxMembers = int.parse(value),
+    );
+  }
+
+  _buildDescriptionField() {
+    return CustomTextFormField(
+      controller: TextEditingController(),
+      label: 'Group Description',
+      hintText: 'E.g. The primary aim of this group',
+      onChanged: (value) => controller.group.value.description = value,
+    );
+  }
+
+  _buildLocationField() {
+    return CustomTextFormField(
+      controller: TextEditingController(),
+      label: 'Group Location',
+      hintText: 'E.g. The name of the group location if applicable',
+      onChanged: (value) => controller.group.value.location = value,
     );
   }
 

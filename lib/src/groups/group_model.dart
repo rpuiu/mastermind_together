@@ -15,6 +15,7 @@ class GroupModel {
   String? createdBy;
   String? admin;
   String? description;
+  String? location;
 
   GroupModel({
     required this.id,
@@ -29,6 +30,7 @@ class GroupModel {
     required this.createdBy,
     required this.admin,
     required this.description,
+    this.location,
   });
 
   GroupModel.empty({
@@ -44,6 +46,7 @@ class GroupModel {
     this.createdBy = '',
     this.admin = '',
     this.description = '',
+    this.location = '',
   });
 
   factory GroupModel.fromJson(Map<String, dynamic> json) {
@@ -63,6 +66,7 @@ class GroupModel {
       createdBy: json['created_by'] ?? '',
       admin: json['admin'] ?? '',
       description: json['description'] ?? '',
+      location: json['location'] ?? '',
     );
   }
 
@@ -78,6 +82,7 @@ class GroupModel {
       'created_by': createdBy,
       'admin': admin,
       'description': description,
+      'location': location,
     };
   }
 }
