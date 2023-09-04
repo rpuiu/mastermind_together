@@ -22,8 +22,8 @@ class CustomDrawer extends StatelessWidget {
         CustomDrawerButton(text: 'Goals', iconName: 'award', onTap: () => Get.toNamed(Routes.goals)),
         xSpace,
         CustomDrawerButton(text: 'Availability', iconName: 'calendar2', onTap: () => Get.toNamed(Routes.availability)),
-        // xSpace,
-        // CustomDrawerButton(text: 'Notifications', iconName: 'notification', onTap: () => Get.toNamed(Routes.home)), //TODO MAIN-T-57
+        xSpace,
+        CustomDrawerButton(text: 'Notifications', iconName: 'notification', onTap: () => Get.toNamed(Routes.notifications)), //TODO MAIN-T-57
         xSpace,
         CustomDrawerButton(text: 'Feedback', iconName: 'message', onTap: () => Get.toNamed(Routes.feedback)),
         xSpace,

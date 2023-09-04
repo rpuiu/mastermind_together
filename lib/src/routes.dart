@@ -13,6 +13,7 @@ import 'package:mastermind_together/src/groups/create_group_screen.dart';
 import 'package:mastermind_together/src/groups/group_membership_middleware.dart';
 import 'package:mastermind_together/src/groups/group_screen.dart';
 import 'package:mastermind_together/src/home/home_screen.dart';
+import 'package:mastermind_together/src/notif/notif_screen.dart';
 import 'package:mastermind_together/src/onboarding/onboard_screen.dart';
 import 'package:mastermind_together/src/profile/user_profile_screen.dart';
 import 'package:mastermind_together/src/tenant/categories/categories_screen.dart';
@@ -40,6 +41,7 @@ class Routes {
   static const String onboarding = '/onboarding';
   static const String goal = '/goal';
   static const String goals = '/goals';
+  static const String notifications = '/notifications';
 
   static List<GetPage> routes = [
     GetPage(name: home, page: () => HomeScreen(), middlewares: [AuthMiddleware()]),
@@ -59,6 +61,7 @@ class Routes {
     GetPage(name: editTerms, page: () => EditTermsScreen()),
     GetPage(name: categories, page: () => CategoriesScreen()),
     GetPage(name: onboarding, page: () => OnBoardScreen()),
+    GetPage(name: notifications, page: () => const NotificationScreen()),
     GetPage(
         name: '$goal/:goalId',
         page: () => GoalScreen(),
