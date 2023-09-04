@@ -1,25 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/notif/email/email_notif_controller.dart';
 import 'package:mastermind_together/src/services/sharedprefs/local_storage.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:mastermind_together/src/util/url_launcher.dart';
 
 class FeedbackController extends GetxController {
   final TextEditingController issueTextFieldController = TextEditingController();
   final LocalStorageService _localStorage = Get.find<LocalStorageService>();
+  final EmailController _emailController = Get.find<EmailController>();
 
-  sendEmail() {
-    String userEmail = _localStorage.getUser()!.email;
-    String toEmail = dotenv.env['FEEDBACK_EMAIL']!;
-    _launchURL(toEmail, 'Feedback from: $userEmail', issueTextFieldController.value.text);
+  @override
+  onClose() {
+    issueTextFieldController.dispose();
   }
 
-  _launchURL(String toMailId, String subject, String body) async {
-    Uri url = Uri(scheme: 'mailto', path: toMailId, queryParameters: {'subject': subject, 'body': body});
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url);
-    } else {
-      throw 'Could not launch $url';
-    }
+  sendEmail() async {
+    String userEmail = _localStorage.getUser()!.email;
+    String subject = 'Feedback from: $userEmail';
+
+    final emailData = {
+      'to': 'mastermindtogether@gmail.com',
+      'from': 'support@mastermindtogether.com',
+      'subject': subject,
+      'body': issueTextFieldController.value.text,
+      // add other fields as needed
+    };
+
+    await _emailController.sendEmail(emailData);
+  }
+
+  requestFeature() {
+    launchURL('https://feature.mastermindtogether.com/');
   }
 }

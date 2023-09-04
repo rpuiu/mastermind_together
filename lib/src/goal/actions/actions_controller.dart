@@ -1,12 +1,16 @@
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/goal/actions/action_model.dart';
 import 'package:mastermind_together/src/services/supa/action_service.dart';
+import 'package:mastermind_together/src/services/supa/auth_service.dart';
+import 'package:mastermind_together/src/services/supa/notif_service.dart';
 import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 
 class ActionController extends GetxController {
   final String goalId;
 
   final ActionService _actionService = Get.find<ActionService>();
+  final NotificationService _notificationService = Get.find<NotificationService>();
+  final AuthService _authService = Get.find<AuthService>();
 
   final RxList<ActionModel> actions = <ActionModel>[].obs;
 
@@ -27,6 +31,10 @@ class ActionController extends GetxController {
       int newRank = actions.length;
       ActionModel createdAction = await _actionService.createAction(goalId, description, status, newRank);
       actions.add(createdAction);
+
+      // Triggering a notification after successfully adding an action.
+      var user = _authService.getUser()!;
+      await _notificationService.createNotification(user.id, user.tenantId, "New action added to your goal", "action_added");
     } catch (e) {
       showErrorSnackBar(message: "Unable to create action.");
     }

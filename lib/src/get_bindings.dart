@@ -9,9 +9,11 @@ import 'package:mastermind_together/src/goal/actions/actions_editing_controller.
 import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:mastermind_together/src/groups/chat/message_controller.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
+import 'package:mastermind_together/src/notif/email/email_notif_controller.dart';
 import 'package:mastermind_together/src/notif/notif_controller.dart';
 import 'package:mastermind_together/src/onboarding/onboard_controller.dart';
 import 'package:mastermind_together/src/profile/user_profile_controller.dart';
+import 'package:mastermind_together/src/services/mailgun/mailgun_service.dart';
 import 'package:mastermind_together/src/services/mixpanel/analytics_service.dart';
 import 'package:mastermind_together/src/services/sharedprefs/local_storage.dart';
 import 'package:mastermind_together/src/services/supa/action_service.dart';
@@ -84,5 +86,7 @@ class GetBindings {
     Get.lazyPut(() => ActionEditController(), fenix: true);
     Get.lazyPut(() => NotificationController(), fenix: true);
     Get.lazyPut(() => NotificationService(), fenix: true);
+    Get.lazyPut(() => MailgunService(), fenix: true);
+    Get.lazyPut(() => EmailController(), fenix: true);
   }
 }
