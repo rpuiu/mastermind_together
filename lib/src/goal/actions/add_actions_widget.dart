@@ -88,7 +88,7 @@ class AddActionsWidget extends StatelessWidget {
         child: ListTile(
           onTap: () => this.editController.toggleEditing(action.id),
           title: Obx(() => _buildEditableTitle(action, editController, index)),
-          tileColor: index == 0 ? doneColor.withOpacity(0.2) : null,
+          tileColor: index == 0 ? activeMenuIconColor.withOpacity(0.6) : null,
           leading: ReorderBtn(index: actionController.actions.indexOf(action)),
           trailing: _buildActionItemTrailing(context, action, editController),
         ),

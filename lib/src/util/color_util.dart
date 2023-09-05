@@ -2,11 +2,17 @@ import 'package:flutter/material.dart';
 
 Color getColorFromUsername(String username) {
   int hash = username.hashCode;
-  int r = (hash & 0xFF0000) >> 16;
-  int g = (hash & 0x00FF00) >> 8;
-  int b = hash & 0x0000FF;
+  int r = ((hash & 0xFF0000) >> 16);
+  int g = ((hash & 0x00FF00) >> 8);
+  int b = (hash & 0x0000FF);
 
-  // This will generate a color from the username's hashcode.
+  // Apply a scaling factor to darken the color
+  double factor = 0.7;
+  r = (r * factor).toInt().clamp(0, 255);
+  g = (g * factor).toInt().clamp(0, 255);
+  b = (b * factor).toInt().clamp(0, 255);
+
+  // This will generate a darker color from the username's hashcode.
   return Color.fromRGBO(r, g, b, 1);
 }
 

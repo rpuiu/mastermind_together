@@ -62,7 +62,7 @@ class AllGoalsScreen extends GetView<GoalController> {
         elevation: 2,
         child: ListTile(
           key: ValueKey(goal.id),
-          tileColor: index == 0 ? doneColor.withOpacity(0.2) : null,
+          tileColor: index == 0 ? activeMenuIconColor.withOpacity(0.6) : null,
           leading: ReorderBtn(index: controller.goals.indexOf(goal)),
           onTap: () => Get.toNamed(Routes.goalRoute(goal.id)),
           title: Text(goal.goal, style: bodySemiBold),

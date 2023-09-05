@@ -12,6 +12,7 @@ class ChatWidget extends GetView<MessageController> {
   final String groupId;
   final AuthService authService = Get.find<AuthService>();
   final TextEditingController textController = TextEditingController();
+  final FocusNode focusNode = FocusNode();
 
   ChatWidget({super.key, required this.groupId});
 
@@ -31,8 +32,8 @@ class ChatWidget extends GetView<MessageController> {
                 if (controller.isFirstLoad) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     controller.scrollController.jumpTo(controller.scrollController.position.maxScrollExtent);
+                    controller.isFirstLoad = false;
                   });
-                  controller.isFirstLoad = false;
                 }
 
                 return ListView.builder(
@@ -52,7 +53,11 @@ class ChatWidget extends GetView<MessageController> {
             child: Row(
               children: [
                 Expanded(
-                  child: ChatInputField(controller: textController, onSendPressed: _handleSendButtonPress),
+                  child: ChatInputField(
+                    controller: textController,
+                    onSendPressed: _handleSendButtonPress,
+                    focusNode: focusNode,
+                  ),
                 ),
               ],
             ),
@@ -72,7 +77,10 @@ class ChatWidget extends GetView<MessageController> {
     if (user != null) {
       controller.sendMessage(groupId, user.id, user.username, trimmedText);
       textController.clear();
-      controller.scrollController.jumpTo(controller.scrollController.position.maxScrollExtent);
+      if (controller.scrollController.hasClients) {
+        // Check if ScrollController is attached to any views
+        controller.scrollController.jumpTo(controller.scrollController.position.maxScrollExtent);
+      }
     } else {
       showErrorSnackBar(message: 'You are not logged in. Please log in to send a message.');
     }

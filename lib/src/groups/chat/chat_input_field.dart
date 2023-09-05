@@ -6,8 +6,9 @@ import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 class ChatInputField extends StatelessWidget {
   final TextEditingController controller;
   final VoidCallback onSendPressed;
+  final FocusNode focusNode;
 
-  const ChatInputField({super.key, required this.controller, required this.onSendPressed});
+  const ChatInputField({super.key, required this.controller, required this.onSendPressed, required this.focusNode});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,12 @@ class ChatInputField extends StatelessWidget {
         ],
       ),
       child: TextField(
+        focusNode: focusNode,
         controller: controller,
+        onSubmitted: (_) {
+          onSendPressed();
+          focusNode.requestFocus(); // Request focus back after submitting
+        },
         decoration: InputDecoration(
           hintText: 'Type a message...',
           border: InputBorder.none,
@@ -40,7 +46,10 @@ class ChatInputField extends StatelessWidget {
             hoverColor: Colors.transparent,
             padding: EdgeInsets.zero,
             icon: AppIcons.getIcon('send', IconState.hoverState),
-            onPressed: onSendPressed,
+            onPressed: () {
+              onSendPressed();
+              focusNode.requestFocus(); // Request focus back after pressing the button
+            },
           ),
         ),
       ),
