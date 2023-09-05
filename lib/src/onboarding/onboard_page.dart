@@ -40,15 +40,19 @@ class OnboardPage extends StatelessWidget {
               },
             ),
           ),
-          SizedBox(
-            width: screenWidth / 1.5,
-            child: Column(
-              children: [
-                xxxSpace,
-                Text(title, style: welcomeTextStyle, textAlign: TextAlign.left),
-                xSpace,
-                Text(subtitle, style: subtitleTextStyle, textAlign: TextAlign.left),
-              ],
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: SizedBox(
+              width: screenWidth / 1.5,
+              child: Column(
+                children: [
+                  xxSpace,
+                  Text(title, style: welcomeTextStyle, textAlign: TextAlign.left),
+                  xSpace,
+                  Text(subtitle, style: subtitleTextStyle, textAlign: TextAlign.left),
+                  xxxSpace
+                ],
+              ),
             ),
           ),
         ],
