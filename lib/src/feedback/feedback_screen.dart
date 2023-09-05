@@ -15,7 +15,7 @@ class FeedbackScreen extends GetView<FeedbackController> {
 
   @override
   Widget build(BuildContext context) {
-    bool isDesktop = MediaQuery.of(context).size.width > 600; // Or another breakpoint you prefer
+    bool isDesktop = MediaQuery.of(context).size.width > 600;
     return ScrollableCustomScaffold(
       body: Obx(() {
         if (emailController.isLoading.value) {
@@ -106,11 +106,16 @@ class FeedbackScreen extends GetView<FeedbackController> {
               ),
               xSpace,
               CustomButton(
-                onPressed: () => controller.sendEmail(),
+                onPressed: () {
+                  controller.sendEmail().then((_) {
+                    _showFeedbackSentDialog(context);
+                    controller.issueTextFieldController.clear();
+                  });
+                },
                 label: 'Contact Us',
                 labelTextStyle: buttonTextStyle,
                 backgroundColor: buttonBackgroundColor,
-              )
+              ),
             ],
           ),
         ),
@@ -147,6 +152,22 @@ class FeedbackScreen extends GetView<FeedbackController> {
             )
           ],
         ),
+      ),
+    );
+  }
+
+  void _showFeedbackSentDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Message Sent!'),
+        content: const Text('Your message has been successfully sent. We will get back to you shortly.'),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text('OK'),
+          ),
+        ],
       ),
     );
   }
