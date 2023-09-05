@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:mastermind_together/src/groups/group_card_widget.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
+import 'package:mastermind_together/src/subscription/limit_alert_widget.dart';
+import 'package:mastermind_together/src/subscription/subscription_controller.dart';
 import 'package:mastermind_together/src/ui/theme/scaffold/custom_scaffold.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
@@ -10,10 +12,14 @@ import 'package:mastermind_together/src/ui/widgets/buttons/filter_chip.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/icon/add_button.dart';
 
 class AllGroupsScreen extends GetView<GroupController> {
-  const AllGroupsScreen({super.key});
+  final SubscriptionController _subscriptionController = Get.find<SubscriptionController>();
+
+  AllGroupsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final localContext = context;
+
     return CustomScaffold(
       body: Column(
         children: <Widget>[
@@ -24,10 +30,8 @@ class AllGroupsScreen extends GetView<GroupController> {
               const Text("All Groups", style: headingText),
               wHalfSpace,
               AddBtn(
-                onPressed: () {
-                  Get.toNamed(Routes.createGroup);
-                },
-              ),
+                onPressed: () => _checkSubscriptionAndNavigate(context),
+              )
             ],
           ),
           xHalfSpace,
@@ -99,5 +103,15 @@ class AllGroupsScreen extends GetView<GroupController> {
         );
       },
     );
+  }
+
+  void _checkSubscriptionAndNavigate(BuildContext context) {
+    _subscriptionController.canUserCreateGroup().then((canCreate) {
+      if (!canCreate) {
+        showLimitReachedAlert(context);
+        return;
+      }
+      Get.toNamed(Routes.createGroup);
+    });
   }
 }
