@@ -12,6 +12,7 @@ class AppTheme {
     timePickerTheme: timePickerThemeData,
     progressIndicatorTheme: progressIndicatorTheme,
     textButtonTheme: textButtonThemeData,
+    dialogTheme: dialogTheme,
     // useMaterial3: true,
     // textTheme: textTheme,
     // buttonTheme: ButtonThemeData(
@@ -65,9 +66,15 @@ class AppTheme {
   );
 
   static TextButtonThemeData textButtonThemeData = TextButtonThemeData(
-    style: TextButton.styleFrom(
-      foregroundColor: hoverMenuIconColor,
-      textStyle: bodyMedium
-    ),
+    style: TextButton.styleFrom(foregroundColor: hoverMenuIconColor, textStyle: bodyMedium),
+  );
+
+  static DialogTheme dialogTheme = DialogTheme(
+    titleTextStyle: headingText,
+    contentTextStyle: bodyRegular,
+    backgroundColor: backgroundColor,
+    elevation: 4.0,
+    shape: customBorder,
+    actionsPadding: const EdgeInsets.only(bottom: 10, right: 10),
   );
 }

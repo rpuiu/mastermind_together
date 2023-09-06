@@ -4,10 +4,14 @@ import 'package:mastermind_together/src/goal/actions/actions_controller.dart';
 import 'package:mastermind_together/src/goal/actions/add_actions_widget.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
+import 'package:mastermind_together/src/routes.dart';
+import 'package:mastermind_together/src/ui/theme/app_icons.dart';
 import 'package:mastermind_together/src/ui/theme/scaffold/scrollable_custom_scaffold.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/icon/delete_button.dart';
 import 'package:mastermind_together/src/ui/widgets/label_categ_widget.dart';
+import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 
 class GoalScreen extends GetView<GoalController> {
   final String goalId = Get.parameters['goalId']!;
@@ -51,7 +55,23 @@ class GoalScreen extends GetView<GoalController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(goal.goal, style: subtitleTextStyle.copyWith(height: 1)), //TODO edit goal
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(goal.goal, style: subtitleTextStyle.copyWith(height: 1)), //TODO edit goal
+            DeleteBtn(
+              onPressed: () async {
+                bool shouldDelete = await _showDeleteConfirmation();
+                if (shouldDelete) {
+                  await controller.deleteGoal(goal.id);
+                  showSuccessSnackBar(message: "Successfully deleted goal");
+                  Get.toNamed(Routes.home);
+                }
+              },
+              iconState: IconState.fail,
+            ),
+          ],
+        ),
         xxSpace,
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -66,5 +86,28 @@ class GoalScreen extends GetView<GoalController> {
         ),
       ],
     );
+  }
+
+  Future<bool> _showDeleteConfirmation() async {
+    return await showDialog(
+          context: Get.context!,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text("Confirm Deletion"),
+              content: const Text("Are you sure you want to delete this goal?"),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: const Text("Cancel"),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: const Text("Delete"),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false; // The ?? false is to handle the case where the dialog is dismissed
   }
 }

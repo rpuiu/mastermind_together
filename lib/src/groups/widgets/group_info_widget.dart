@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/groups/widgets/conditional_edit_button.dart';
+import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/app_icons.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
@@ -148,6 +149,7 @@ class GroupInfoCard extends GetView<GroupController> {
 
   Widget _buildGroupDescription(bool isAdmin) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text('Description: ${controller.group.value.description ?? ''}', style: bodyRegular),
         _conditionalEditButton(
@@ -157,6 +159,22 @@ class GroupInfoCard extends GetView<GroupController> {
           'Enter the new description',
           controller.group.value.description ?? '',
           (newDescription) => controller.updateGroupDescription(controller.group.value.id, newDescription),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: fontSize / 2),
+          child: TextButton(
+            onPressed: () async {
+              bool shouldLeave = await _showLeaveGroupConfirmation();
+              if (shouldLeave) {
+                controller.leaveGroup(controller.group.value.id);
+                Get.toNamed(Routes.home);
+              }
+            },
+            child: Text(
+              "Leave Group",
+              style: linkTextStyle.copyWith(color: errorColor),
+            ),
+          ),
         ),
       ],
     );
@@ -219,5 +237,28 @@ class GroupInfoCard extends GetView<GroupController> {
       controller.group.value.meetingTimeLocal = selectedTime;
       controller.updateMeetingDetails(controller.group.value.id, selectedDay!, selectedTime);
     }
+  }
+
+  Future<bool> _showLeaveGroupConfirmation() async {
+    return await showDialog(
+          context: Get.context!,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text("Confirm Action"),
+              content: const Text("Are you sure you want to leave this group?"),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: const Text("Cancel"),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: const Text("Leave"),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false; // The ?? false is to handle the case where the dialog is dismissed
   }
 }

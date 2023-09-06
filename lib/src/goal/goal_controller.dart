@@ -113,4 +113,13 @@ class GoalController extends GetxController {
   Future<void> fetchGoalDetails(String goalId) async {
     goalDetails.value = await _goalService.getGoalDetails(goalId);
   }
+
+  Future<void> deleteGoal(String goalId) async {
+    try {
+      await _goalService.deleteGoal(goalId);
+      goals.removeWhere((goal) => goal.id == goalId);
+    } catch (e) {
+      showErrorSnackBar(message: "Unable to delete goal");
+    }
+  }
 }

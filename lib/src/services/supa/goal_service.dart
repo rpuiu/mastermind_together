@@ -73,4 +73,14 @@ class GoalService extends GetxService {
       rethrow;
     }
   }
+
+  Future<void> deleteGoal(String goalId) async {
+    try {
+      await _client.from('goals').delete().eq('id', goalId);
+    } catch (e, s) {
+      Log().e("Error while deleting goal with id $goalId:", e, s);
+      rethrow;
+    }
+  }
+
 }

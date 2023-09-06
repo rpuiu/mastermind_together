@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
-import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 
 class LimitReachedAlertDialog extends StatelessWidget {
   final String title;
@@ -19,14 +18,8 @@ class LimitReachedAlertDialog extends StatelessWidget {
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: oneColContentWidth),
       child: AlertDialog(
-        title: Text(
-          title,
-          style: headingText,
-        ),
-        content: Text(
-          message,
-          style: bodyRegular,
-        ),
+        title: Text(title),
+        content: Text(message),
         actions: <Widget>[
           TextButton(
             child: const Text('Close'),

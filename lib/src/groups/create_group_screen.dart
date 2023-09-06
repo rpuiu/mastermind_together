@@ -118,7 +118,8 @@ class CreateGroupScreen extends GetView<GroupController> {
     return CustomTextFormField(
       controller: TextEditingController(),
       label: 'Meeting URL',
-      hintText: 'E.g. https://zoom.us/j/123456789',
+      maxLines: 1,
+      hintText: 'The URL used for the weekly video call',
       validator: (value) => FormValidators.validateUrl(value),
       onChanged: (value) => controller.group.value.meetingUrl = value,
     );
