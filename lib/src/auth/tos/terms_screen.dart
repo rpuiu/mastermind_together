@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:mastermind_together/src/tenant/terms/terms_controller.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
 
 class TermsScreen extends GetView<TermsController> {
   final String documentType;
@@ -13,11 +14,16 @@ class TermsScreen extends GetView<TermsController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(documentType == 'TOS' ? 'Terms of Service' : 'Privacy Policy'),
+        title: Text(
+          documentType == 'TOS' ? 'Terms of Service' : 'Privacy Policy',
+          style: buttonTextStyle,
+        ),
         centerTitle: true,
+        backgroundColor: drawerBgColor,
+        foregroundColor: hoverMenuTextColor,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(fontSize),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -34,11 +40,14 @@ class TermsScreen extends GetView<TermsController> {
                 ),
               ),
               xSpace,
-              ElevatedButton(
-                onPressed: () {
-                  Get.back();
-                },
-                child: const Text('Accept Terms'),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: oneColContentWidth),
+                child: CustomButton(
+                  onPressed: () => Get.back(),
+                  label: 'Back',
+                  backgroundColor: buttonBackgroundColor,
+                  labelTextStyle: buttonTextStyle,
+                ),
               ),
             ],
           ),

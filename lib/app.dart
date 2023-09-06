@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/theme.dart';
+import 'package:mastermind_together/src/ui/widgets/drawer/custom_navigation_observer.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -13,6 +14,7 @@ class MyApp extends StatelessWidget {
       initialRoute: Routes.login,
       getPages: Routes.routes,
       theme: AppTheme.lightTheme,
+      navigatorObservers: [CustomNavigatorObserver()],
     );
   }
 }

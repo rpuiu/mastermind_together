@@ -18,7 +18,6 @@ class BaseDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(DrawerStateController());
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(fontSize / 2, fontSize, fontSize / 2, fontSize),

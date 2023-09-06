@@ -30,6 +30,7 @@ import 'package:mastermind_together/src/services/timezone/timezone_service.dart'
 import 'package:mastermind_together/src/subscription/subscription_controller.dart';
 import 'package:mastermind_together/src/tenant/tenant_controller.dart';
 import 'package:mastermind_together/src/tenant/terms/terms_controller.dart';
+import 'package:mastermind_together/src/ui/widgets/drawer/drawer_state_controller.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -86,5 +87,6 @@ class GetBindings {
     Get.lazyPut(() => NotificationService(), fenix: true);
     Get.lazyPut(() => MailgunService(), fenix: true);
     Get.lazyPut(() => EmailController(), fenix: true);
+    Get.lazyPut(() => DrawerStateController(), fenix: true);
   }
 }

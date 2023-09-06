@@ -6,4 +6,8 @@ class DrawerStateController extends GetxController {
   void setActiveButton(String text) {
     activeButton.value = text;
   }
+
+  void clearActiveButton() {
+    activeButton.value = '';
+  }
 }
