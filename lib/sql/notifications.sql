@@ -11,3 +11,5 @@ CREATE TABLE notifications (
 
 -- Adding the table to the Supabase realtime publication
 ALTER PUBLICATION supabase_realtime ADD TABLE public.notifications;
+
+<!-- TODO RUN IN PRODUCTION -->

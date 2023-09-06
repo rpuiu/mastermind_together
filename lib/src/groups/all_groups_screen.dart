@@ -108,7 +108,8 @@ class AllGroupsScreen extends GetView<GroupController> {
   void _checkSubscriptionAndNavigate(BuildContext context) {
     _subscriptionController.canUserCreateGroup().then((canCreate) {
       if (!canCreate) {
-        showLimitReachedAlert(context);
+        showLimitReachedAlert(
+            context, 'You\'ve reached the maximum number of groups you can create on the free tier. Please contact us to upgrade your subscription.');
         return;
       }
       Get.toNamed(Routes.createGroup);

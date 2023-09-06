@@ -31,7 +31,8 @@ class JoinGroupButton extends GetView<GroupController> {
             final localContext = context;
             controller.canJoin().then((joined) async {
               if (!joined) {
-                showLimitReachedAlert(localContext);
+                showLimitReachedAlert(
+                    localContext, 'You\'ve reached the limit of groups you can join on the free tier. Please contact us to upgrade your subscription.');
                 return;
               }
               await controller.joinGroup(groupId, onJoined: () {

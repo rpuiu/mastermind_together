@@ -24,14 +24,14 @@ showInfoSnackBar({String title = 'Info', required String message}) {
   );
 }
 
-showErrorSnackBar({String title = 'Error', required String message}) {
+showErrorSnackBar({String title = 'Error', required String message, bool hasActionButton = false}) {
   return _getSnackBar(
     title,
     message,
     AppIcons.getIcon('error', IconState.fail),
     hoverMenuTextColor,
     Colors.red.shade600,
-    hasActionButton: true,
+    hasActionButton: hasActionButton,
   );
 }
 

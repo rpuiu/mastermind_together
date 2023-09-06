@@ -45,13 +45,11 @@ class LimitReachedAlertDialog extends StatelessWidget {
   }
 }
 
-void showLimitReachedAlert(BuildContext context) {
+void showLimitReachedAlert(BuildContext context, String message) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      return const LimitReachedAlertDialog(
-        message: 'You have reached your group creation limit. Please contact us to upgrade your subscription.',
-      );
+      return LimitReachedAlertDialog(message: message);
     },
   );
 }

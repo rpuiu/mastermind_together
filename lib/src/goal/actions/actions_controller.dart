@@ -32,9 +32,9 @@ class ActionController extends GetxController {
       ActionModel createdAction = await _actionService.createAction(goalId, description, status, newRank);
       actions.add(createdAction);
 
-      // Triggering a notification after successfully adding an action.
-      var user = _authService.getUser()!;
-      await _notificationService.createNotification(user.id, user.tenantId, "New action added to your goal", "action_added");
+      // TODO Triggering a notification after successfully adding an action.
+      // var user = _authService.getUser()!;
+      // await _notificationService.createNotification(user.id, user.tenantId, "New action added to your goal", "action_added");
     } catch (e) {
       showErrorSnackBar(message: "Unable to create action.");
     }
