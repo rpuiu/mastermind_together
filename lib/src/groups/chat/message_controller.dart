@@ -5,27 +5,32 @@ import 'package:mastermind_together/src/services/supa/message_service.dart';
 import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 
 class MessageController extends GetxController {
-  final String groupId = Get.parameters['groupId']!;
+  final String groupId;
   final MessageService _messageService = Get.find<MessageService>();
 
   final RxList<MessageModel> messages = <MessageModel>[].obs;
 
-  final ScrollController scrollController = ScrollController();
-
   bool isFirstLoad = true;
+
+  MessageController({required this.groupId});
 
   @override
   void onInit() {
     super.onInit();
     try {
       loadMessages(groupId);
-      _messageService.subscribeToNewMessages(groupId, _onNewMessage);
     } catch (e) {
       showErrorSnackBar(message: "Unable to load messages");
     }
   }
 
-  void _onNewMessage(MessageModel newMessage) {
+  void subscribeToNewMessages(ScrollController scrollController) {
+    _messageService.subscribeToNewMessages(groupId, (newMessage) {
+      _onNewMessage(newMessage, scrollController);
+    });
+  }
+
+  void _onNewMessage(MessageModel newMessage, ScrollController scrollController) {
     messages.add(newMessage);
     Future.delayed(const Duration(milliseconds: 50), () {
       scrollController.jumpTo(scrollController.position.maxScrollExtent);

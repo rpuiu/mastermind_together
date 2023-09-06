@@ -73,6 +73,8 @@ class AppIcons {
 
   static Widget success([IconState state = IconState.done]) => _icon('assets/icons/success.svg', state);
 
+  static Widget arrowDownSquare([IconState state = IconState.defaultState]) => _icon('assets/icons/arrow-down-square.svg', state);
+
   static Widget getIcon(String iconName, IconState state) {
     switch (iconName) {
       case 'home':
@@ -127,6 +129,8 @@ class AppIcons {
         return error(state);
       case 'success':
         return success(state);
+      case 'arrowDownSquare':
+        return arrowDownSquare(state);
       default:
         return home(state);
     }

@@ -1,23 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/groups/chat/chat_input_field.dart';
 import 'package:mastermind_together/src/groups/chat/message_bubble_widget.dart';
 import 'package:mastermind_together/src/groups/chat/message_controller.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';
+import 'package:mastermind_together/src/ui/theme/app_icons.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 
-class ChatWidget extends GetView<MessageController> {
+class ChatWidget extends StatelessWidget {
   final String groupId;
   final AuthService authService = Get.find<AuthService>();
   final TextEditingController textController = TextEditingController();
   final FocusNode focusNode = FocusNode();
+  final RxBool showScrollButton = false.obs;
 
-  ChatWidget({super.key, required this.groupId});
+  ChatWidget({super.key, required this.groupId}) {
+    Get.put(MessageController(groupId: groupId), tag: groupId);
+  }
 
   @override
   Widget build(BuildContext context) {
+    final MessageController controller = Get.find(tag: groupId);
+    final ScrollController scrollController = ScrollController();
+    controller.subscribeToNewMessages(scrollController);
+
+// Listen to scroll position changes
+    scrollController.addListener(() {
+      if (scrollController.hasClients) {
+        if (scrollController.position.pixels < scrollController.position.maxScrollExtent - 50) {
+          // Show button if the user is 50 pixels away from the max scroll extent
+          showScrollButton.value = true;
+        } else {
+          showScrollButton.value = false;
+        }
+      }
+    });
+
     return Card(
       color: hoverMenuTextColor,
       shape: customBorder,
@@ -28,16 +49,15 @@ class ChatWidget extends GetView<MessageController> {
               if (controller.messages.isEmpty) {
                 return const Center(child: Text('No messages yet.'));
               } else {
-                // If it's the first load of the chat, scroll to the latest message
                 if (controller.isFirstLoad) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    controller.scrollController.jumpTo(controller.scrollController.position.maxScrollExtent);
+                  SchedulerBinding.instance.addPostFrameCallback((_) {
+                    scrollController.jumpTo(scrollController.position.maxScrollExtent);
                     controller.isFirstLoad = false;
                   });
                 }
 
                 return ListView.builder(
-                  controller: controller.scrollController,
+                  controller: scrollController,
                   itemCount: controller.messages.length,
                   itemBuilder: (context, index) {
                     final message = controller.messages[index];
@@ -48,6 +68,7 @@ class ChatWidget extends GetView<MessageController> {
               }
             }),
           ),
+          Obx(() => showScrollButton.value ? _buildScrollToBottomButton(scrollController) : SizedBox.shrink()),
           Container(
             padding: const EdgeInsets.all(fontSize / 2),
             child: Row(
@@ -55,7 +76,7 @@ class ChatWidget extends GetView<MessageController> {
                 Expanded(
                   child: ChatInputField(
                     controller: textController,
-                    onSendPressed: _handleSendButtonPress,
+                    onSendPressed: () => _handleSendButtonPress(controller, scrollController),
                     focusNode: focusNode,
                   ),
                 ),
@@ -67,19 +88,33 @@ class ChatWidget extends GetView<MessageController> {
     );
   }
 
-  void _handleSendButtonPress() {
+  FloatingActionButton _buildScrollToBottomButton(ScrollController scrollController) {
+    return FloatingActionButton(
+      mini: true,
+      elevation: 0,
+      backgroundColor: hoverMenuTextColor,
+      child: AppIcons.getIcon("arrowDownSquare", IconState.hoverState),
+      onPressed: () {
+        if (scrollController.hasClients) {
+          scrollController.jumpTo(scrollController.position.maxScrollExtent);
+        }
+      },
+    );
+  }
+
+  void _handleSendButtonPress(MessageController controller, ScrollController scrollController) {
     final user = authService.getUser();
     final trimmedText = textController.text.trim();
     if (trimmedText.isEmpty) {
-      // showErrorSnackBar(message: 'Message cannot be empty.');
       return;
     }
     if (user != null) {
       controller.sendMessage(groupId, user.id, user.username, trimmedText);
       textController.clear();
-      if (controller.scrollController.hasClients) {
-        // Check if ScrollController is attached to any views
-        controller.scrollController.jumpTo(controller.scrollController.position.maxScrollExtent);
+      if (scrollController.hasClients) {
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          scrollController.jumpTo(scrollController.position.maxScrollExtent);
+        });
       }
     } else {
       showErrorSnackBar(message: 'You are not logged in. Please log in to send a message.');
