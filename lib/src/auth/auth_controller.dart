@@ -34,7 +34,7 @@ class AuthController extends GetxController {
       _analytics.setUserProperties(user.id, "\$name", user.username);
 
       showSuccessSnackBar(message: 'Congratulations, your account has been successfully created');
-      Get.offAllNamed(Routes.login);
+      login(email, password);
     } on AuthException catch (e) {
       showErrorSnackBar(message: "Registration failed: ${e.message}");
     } catch (e) {
