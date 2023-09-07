@@ -13,6 +13,7 @@ class UsersExtendedService extends GetxService {
   static const String _userNameField = 'username';
   static const String _tenantIdField = 'tenant_id';
   static const String _subscriptionIdField = 'subscription_id';
+  static const String _avatarUrlField = 'avatar_url';
 
   Future<T> _runQuery<T>(Future<T> Function() query) async {
     try {
@@ -76,6 +77,7 @@ class UsersExtendedService extends GetxService {
             _emailField: newUser.email,
             _userNameField: newUser.username,
             _timezoneField: newUser.timezone,
+            _avatarUrlField: newUser.avatarUrl,
           })
           .eq(_userIdField, newUser.id)
           .select();

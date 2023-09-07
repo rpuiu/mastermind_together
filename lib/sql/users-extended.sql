@@ -13,3 +13,5 @@ CREATE TABLE public.users_extended
     CONSTRAINT users_extended_tenant_id_fkey FOREIGN KEY (tenant_id)
         REFERENCES public.tenants (tenant_id)
 );
+
+ALTER TABLE public.users_extended ADD COLUMN avatar_url TEXT;

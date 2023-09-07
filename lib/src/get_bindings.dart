@@ -22,6 +22,7 @@ import 'package:mastermind_together/src/services/supa/goal_service.dart';
 import 'package:mastermind_together/src/services/supa/message_service.dart';
 import 'package:mastermind_together/src/services/supa/notif_service.dart';
 import 'package:mastermind_together/src/services/supa/settings_service.dart';
+import 'package:mastermind_together/src/services/supa/storage_service.dart';
 import 'package:mastermind_together/src/services/supa/subscription_service.dart';
 import 'package:mastermind_together/src/services/supa/tenant_service.dart';
 import 'package:mastermind_together/src/services/supa/user_group_service.dart';
@@ -73,7 +74,7 @@ class GetBindings {
     Get.lazyPut(() => TenantController(), fenix: true);
     Get.lazyPut(() => Logger(), fenix: true);
     Get.lazyPut(() => AnalyticsService(), fenix: true);
-    Get.lazyPut(() => UserController(), fenix: true);
+    Get.lazyPut(() => UserProfileController(), fenix: true);
     Get.lazyPut(() => FeedbackController(), fenix: true);
     Get.lazyPut(() => SettingsService(), fenix: true);
     Get.lazyPut(() => TermsController(), fenix: true);
@@ -88,5 +89,6 @@ class GetBindings {
     Get.lazyPut(() => MailgunService(), fenix: true);
     Get.lazyPut(() => EmailController(), fenix: true);
     Get.lazyPut(() => DrawerStateController(), fenix: true);
+    Get.lazyPut(() => StorageService(), fenix: true);
   }
 }

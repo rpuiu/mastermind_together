@@ -15,7 +15,7 @@ class EditBtn extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: onPressed,
-      icon: AppIcons.getIcon('edit', IconState.defaultState),
+      icon: AppIcons.getIcon('edit', IconState.hoverState),
       color: buttonBackgroundColor,
       padding: const EdgeInsets.all(fontSize / 2),
       splashRadius: fontSize * 1.5,

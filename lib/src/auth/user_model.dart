@@ -5,6 +5,7 @@ class UserModel {
   final String username;
   final String tenantId;
   final String subscriptionId;
+  final String? avatarUrl;
 
   UserModel({
     required this.id,
@@ -13,6 +14,7 @@ class UserModel {
     required this.username,
     required this.tenantId,
     required this.subscriptionId,
+    this.avatarUrl,
   });
 
   UserModel copyWith({
@@ -22,6 +24,7 @@ class UserModel {
     String? username,
     String? tenantId,
     String? subscriptionId,
+    String? avatarUrl,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -30,6 +33,7 @@ class UserModel {
       username: username ?? this.username,
       tenantId: tenantId ?? this.tenantId,
       subscriptionId: subscriptionId ?? this.subscriptionId,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
     );
   }
 
@@ -41,6 +45,7 @@ class UserModel {
       'username': username,
       'tenant_id': tenantId,
       'subscription_id': subscriptionId,
+      'avatar_url': avatarUrl,
     };
   }
 
@@ -52,6 +57,7 @@ class UserModel {
       username: json['username'],
       tenantId: json['tenant_id'],
       subscriptionId: json['subscription_id'],
+      avatarUrl: json['avatar_url'],
     );
   }
 }
