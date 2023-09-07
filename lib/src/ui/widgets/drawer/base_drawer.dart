@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/drawer/custom_drawer_button.dart';
-import 'package:mastermind_together/src/ui/widgets/drawer/drawer_state_controller.dart';
+import 'package:mastermind_together/src/ui/widgets/drawer/user_info_widget.dart';
 
 class BaseDrawer extends StatelessWidget {
   final List<Widget> children;
@@ -18,7 +19,6 @@ class BaseDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Padding(
       padding: const EdgeInsets.fromLTRB(fontSize / 2, fontSize, fontSize / 2, fontSize),
       child: ConstrainedBox(
@@ -42,7 +42,18 @@ class BaseDrawer extends StatelessWidget {
                 children: [
                   DrawerHeader(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    child: SvgPicture.asset(width: 212, height: 18, 'assets/images/logo/logo-small-white.svg'),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        xxSpace,
+                        SvgPicture.asset(width: 212, height: 18, 'assets/images/logo/logo-small-white.svg'),
+                        xSpace,
+                        InkWell(
+                          onTap: () => Get.toNamed(Routes.userProfile),
+                          child: const UserInfoWidget(),
+                        ),
+                      ],
+                    ),
                   ),
                   Expanded(
                     child: ListView(

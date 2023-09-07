@@ -15,6 +15,7 @@ class CustomDrawer extends StatelessWidget {
     return BaseDrawer(
       onLogout: authController.logout,
       children: [
+        xSpace,
         CustomDrawerButton(text: 'Home', iconName: 'home', onTap: () => Get.toNamed(Routes.home)),
         xSpace,
         CustomDrawerButton(text: 'Groups', iconName: 'profile2user', onTap: () => Get.toNamed(Routes.allGroups)),
@@ -26,8 +27,8 @@ class CustomDrawer extends StatelessWidget {
         CustomDrawerButton(text: 'Notifications', iconName: 'notification', onTap: () => Get.toNamed(Routes.notifications)),
         xSpace,
         CustomDrawerButton(text: 'Contact Us', iconName: 'message', onTap: () => Get.toNamed(Routes.feedback)),
-        xSpace,
-        CustomDrawerButton(text: 'Settings', iconName: 'settings2', onTap: () => Get.toNamed(Routes.userProfile)),
+        // xSpace,
+        // CustomDrawerButton(text: 'Settings', iconName: 'settings2', onTap: () => Get.toNamed(Routes.userProfile)),
       ],
     );
   }

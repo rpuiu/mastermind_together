@@ -38,7 +38,12 @@ class UserProfileScreen extends GetView<UserProfileController> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        const ProfilePictureWidget(allowEditing: true),
+        ProfilePictureWidget(
+          allowEditing: true,
+          size: 100,
+          imageUrl: controller.signedAvatarUrl.value,
+          onEdit: () => controller.pickImage(),
+        ),
         xSpace,
         Text(user.username, style: headingText),
         xSpace,

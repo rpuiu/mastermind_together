@@ -1,55 +1,56 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
-import 'package:mastermind_together/src/profile/user_profile_controller.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/icon/edit_button.dart';
 
-class ProfilePictureWidget extends GetView<UserProfileController> {
+class ProfilePictureWidget extends StatelessWidget {
   final bool allowEditing;
+  final double size;
+  final String? imageUrl;
+  final VoidCallback? onEdit;
 
-  const ProfilePictureWidget({Key? key, this.allowEditing = false}) : super(key: key);
+  const ProfilePictureWidget({
+    Key? key,
+    this.allowEditing = false,
+    this.size = 50.0,
+    this.imageUrl,
+    this.onEdit,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      if (controller.isLoading.value) {
-        return const CircularProgressIndicator();
-      }
+    String avatarPath = imageUrl ?? '';
 
-      var avatarPath = controller.signedAvatarUrl.value;
-
-      return Stack(
-        alignment: Alignment.bottomRight,
-        children: [
-          CircleAvatar(
-            radius: 50,
-            backgroundColor: hoverMenuTextColor,
-            child: avatarPath.isNotEmpty
-                ? ClipOval(
-                    child: CachedNetworkImage(
-                      imageUrl: avatarPath,
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) => const CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => buildProfileIcon(),
-                    ),
-                  )
-                : buildProfileIcon(),
-          ),
-          if (allowEditing)
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: EditBtn(
-                onPressed: () => controller.pickImage(),
-              ),
+    return Stack(
+      alignment: Alignment.bottomRight,
+      children: [
+        CircleAvatar(
+          radius: size / 2,
+          backgroundColor: hoverMenuTextColor,
+          child: avatarPath.isNotEmpty
+              ? ClipOval(
+                  child: CachedNetworkImage(
+                    imageUrl: avatarPath,
+                    width: size,
+                    height: size,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => buildProfileIcon(),
+                  ),
+                )
+              : buildProfileIcon(),
+        ),
+        if (allowEditing && onEdit != null)
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: EditBtn(
+              onPressed: onEdit!,
             ),
-        ],
-      );
-    });
+          ),
+      ],
+    );
   }
 
   Widget buildProfileIcon() {
@@ -59,8 +60,8 @@ class ProfilePictureWidget extends GetView<UserProfileController> {
         headingTextColor,
         BlendMode.srcIn,
       ),
-      width: 50,
-      height: 50,
+      width: size,
+      height: size,
     );
   }
 }

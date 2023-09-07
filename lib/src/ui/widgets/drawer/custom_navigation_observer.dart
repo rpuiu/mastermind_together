@@ -18,7 +18,7 @@ class CustomNavigatorObserver extends NavigatorObserver {
     final routeName = route.settings.name;
     if (routeName != null) {
       final drawerStateController = Get.find<DrawerStateController>();
-      if (routeName.contains(Routes.group) || routeName.contains(Routes.goal)) {
+      if (routeName.contains(Routes.group) || routeName.contains(Routes.goal) || routeName.contains(Routes.userProfile)) {
         drawerStateController.clearActiveButton();
       }
     }
