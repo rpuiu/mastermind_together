@@ -11,6 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
+      defaultTransition: Transition.noTransition,
       initialRoute: Routes.login,
       getPages: Routes.routes,
       theme: AppTheme.lightTheme,
