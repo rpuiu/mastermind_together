@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/groups/group_controller.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
 import 'package:mastermind_together/src/groups/join_group_button.dart';
+import 'package:mastermind_together/src/groups/widgets/profile_badges.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
@@ -11,9 +11,7 @@ import 'package:mastermind_together/src/ui/widgets/custom_tooltip.dart';
 import 'package:mastermind_together/src/ui/widgets/label_categ_widget.dart';
 import 'package:mastermind_together/src/util/date_time_util.dart';
 
-import 'widgets/profile_badges.dart';
-
-class GroupCard extends GetView<GroupController> {
+class GroupCard extends StatelessWidget {
   final GroupModel group;
 
   const GroupCard(this.group, {Key? key}) : super(key: key);

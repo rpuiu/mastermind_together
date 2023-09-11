@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
-import 'package:mastermind_together/src/groups/group_controller.dart';
+import 'package:mastermind_together/src/groups/all_groups_controller.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
 import 'package:mastermind_together/src/home/sections/group_cards_row.dart';
 import 'package:mastermind_together/src/routes.dart';
@@ -9,7 +9,7 @@ import 'package:mastermind_together/src/ui/theme/app_icons.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 
-class MatchingGroupsSection extends GetView<GroupController> {
+class MatchingGroupsSection extends GetView<AllGroupsController> {
   final GoalController goalController = Get.find<GoalController>();
 
   MatchingGroupsSection({Key? key}) : super(key: key);

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/goal/widgets/category_dropdown_widget.dart';
-import 'package:mastermind_together/src/groups/group_controller.dart';
+import 'package:mastermind_together/src/groups/group_operations_controller.dart';
 import 'package:mastermind_together/src/ui/theme/scaffold/scrollable_custom_scaffold.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
@@ -11,7 +11,7 @@ import 'package:mastermind_together/src/ui/widgets/text_form_field.dart';
 import 'package:mastermind_together/src/util/date_time_util.dart';
 import 'package:mastermind_together/src/util/form_validators.dart';
 
-class CreateGroupScreen extends GetView<GroupController> {
+class CreateGroupScreen extends GetView<GroupOperationsController> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   CreateGroupScreen({Key? key}) : super(key: key);
@@ -37,7 +37,7 @@ class CreateGroupScreen extends GetView<GroupController> {
               CategoryDropdown(
                 selectedCategory: controller.selectedCategory,
                 onCategoryChanged: (String newValue) {
-                  controller.group.value.category = newValue;
+                  controller.groupToCreate.value.category = newValue;
                   controller.selectedCategory!.value = newValue;
                 },
               ),
@@ -72,7 +72,7 @@ class CreateGroupScreen extends GetView<GroupController> {
         selectedValue: controller.selectedDay?.value,
         onChanged: (value) {
           if (value != null) {
-            controller.group.value.meetingDay = value;
+            controller.groupToCreate.value.meetingDay = value;
             controller.selectedDay!.value = value;
           }
         },
@@ -88,7 +88,7 @@ class CreateGroupScreen extends GetView<GroupController> {
       label: 'Name',
       hintText: 'E.g. Fitness Enthusiasts',
       validator: (value) => FormValidators.validateEmpty(value, 'Please enter a name'),
-      onChanged: (value) => controller.group.value.name = value,
+      onChanged: (value) => controller.groupToCreate.value.name = value,
     );
   }
 
@@ -105,7 +105,7 @@ class CreateGroupScreen extends GetView<GroupController> {
             initialTime: TimeOfDay.now(),
           );
           if (timeOfDay != null) {
-            controller.group.value.meetingTimeUTC = timeOfDay;
+            controller.groupToCreate.value.meetingTimeUTC = timeOfDay;
             controller.meetingTimeController.value.text = formatTimeOfDay(timeOfDay);
           }
         },
@@ -121,7 +121,7 @@ class CreateGroupScreen extends GetView<GroupController> {
       maxLines: 1,
       hintText: 'The URL used for the weekly video call',
       validator: (value) => FormValidators.validateUrl(value),
-      onChanged: (value) => controller.group.value.meetingUrl = value,
+      onChanged: (value) => controller.groupToCreate.value.meetingUrl = value,
     );
   }
 
@@ -132,7 +132,7 @@ class CreateGroupScreen extends GetView<GroupController> {
       hintText: 'E.g. 10',
       validator: (value) => FormValidators.validateMaxMembers(value),
       keyboardType: TextInputType.number,
-      onChanged: (value) => controller.group.value.maxMembers = int.parse(value),
+      onChanged: (value) => controller.groupToCreate.value.maxMembers = int.parse(value),
     );
   }
 
@@ -141,7 +141,7 @@ class CreateGroupScreen extends GetView<GroupController> {
       controller: TextEditingController(),
       label: 'Group Description',
       hintText: 'E.g. The primary aim of this group',
-      onChanged: (value) => controller.group.value.description = value,
+      onChanged: (value) => controller.groupToCreate.value.description = value,
     );
   }
 
@@ -150,7 +150,7 @@ class CreateGroupScreen extends GetView<GroupController> {
       controller: TextEditingController(),
       label: 'Group Location',
       hintText: 'E.g. The name of the group location if applicable',
-      onChanged: (value) => controller.group.value.location = value,
+      onChanged: (value) => controller.groupToCreate.value.location = value,
     );
   }
 

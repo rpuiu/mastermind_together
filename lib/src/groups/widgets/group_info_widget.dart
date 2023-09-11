@@ -1,7 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/groups/group_controller.dart';
+import 'package:mastermind_together/src/groups/group_model.dart';
+import 'package:mastermind_together/src/groups/group_operations_controller.dart';
+import 'package:mastermind_together/src/groups/group_screen_controller.dart';
+import 'package:mastermind_together/src/groups/members_controller.dart';
 import 'package:mastermind_together/src/groups/widgets/conditional_edit_button.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/app_icons.dart';
@@ -10,58 +13,61 @@ import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/dropdown/dropdown_widget.dart';
 import 'package:mastermind_together/src/util/date_time_util.dart';
 
-class GroupInfoCard extends GetView<GroupController> {
-  const GroupInfoCard({Key? key}) : super(key: key);
+class GroupInfoCard extends StatelessWidget {
+  final GroupScreenController controller;
+  final GroupModel group;
+
+  final MembersController _membersController = Get.find<MembersController>();
+  final GroupOperationsController _groupOperationsController = Get.find<GroupOperationsController>();
+
+  GroupInfoCard({required this.group, Key? key, required this.controller}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final bool isAdmin = controller.isUserAdmin(controller.group.value.id);
-
-    return Obx(
-      () {
-        return Card(
-          elevation: 1.0,
-          shape: customBorder,
-          child: Padding(
-            padding: const EdgeInsets.all(fontSize),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildGroupNameAndCategory(isAdmin),
-                xSpace,
-                _buildMeetingDetails(isAdmin),
-                xSpace,
-                _buildMeetingUrl(isAdmin),
-                xSpace,
-                _buildGroupDescription(isAdmin),
-              ],
-            ),
-          ),
-        );
-      },
+    final bool isAdmin = _membersController.isUserAdmin(group);
+    return Card(
+      elevation: 1.0,
+      shape: customBorder,
+      child: Padding(
+        padding: const EdgeInsets.all(fontSize),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildGroupNameAndCategory(isAdmin),
+            xSpace,
+            _buildMeetingDetails(isAdmin),
+            xSpace,
+            _buildMeetingUrl(isAdmin),
+            xSpace,
+            _buildGroupDescription(isAdmin),
+          ],
+        ),
+      ),
     );
   }
 
   Widget _buildGroupNameAndCategory(bool isAdmin) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          children: [
-            Text(controller.group.value.name, style: headingText),
-            _conditionalEditButton(
-              isAdmin,
-              'Edit Group Name',
-              'Group Name',
-              'Enter the name of the group',
-              controller.group.value.name,
-              (newName) => controller.updateGroupName(controller.group.value.id, newName),
-            ),
-          ],
-        ),
-        _buildCategory(),
-      ],
-    );
+    return Obx(() {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Text(controller.group.value.name, style: headingText),
+              _conditionalEditButton(
+                isAdmin,
+                'Edit Group Name',
+                'Group Name',
+                'Enter the name of the group',
+                controller.group.value.name,
+                (newName) => controller.updateGroupName(controller.group.value.id, newName),
+              ),
+            ],
+          ),
+          _buildCategory(),
+        ],
+      );
+    });
   }
 
   Widget _buildCategory() {
@@ -166,7 +172,7 @@ class GroupInfoCard extends GetView<GroupController> {
             onPressed: () async {
               bool shouldLeave = await _showLeaveGroupConfirmation();
               if (shouldLeave) {
-                controller.leaveGroup(controller.group.value.id);
+                _groupOperationsController.leaveGroup(group.id);
                 Get.toNamed(Routes.home);
               }
             },

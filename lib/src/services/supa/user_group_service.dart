@@ -3,10 +3,12 @@ import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
 import 'package:mastermind_together/src/services/log/logger_service.dart';
+import 'package:mastermind_together/src/services/timezone/timezone_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UserGroupService {
   final SupabaseClient _client = Get.find<SupabaseClient>();
+  final TimezoneService _tzService = Get.find<TimezoneService>();
 
   late RealtimeChannel groupSubscription;
 
@@ -212,22 +214,32 @@ class UserGroupService {
     });
   }
 
-  Future<void> updateGroupName(String groupId, String newName) async => _updateGroupField(groupId, {'name': newName});
+  Future<GroupModel> updateGroupName(String groupId, String newName) async => _updateGroupField(groupId, {'name': newName});
 
-  Future<void> updateGroupLocation(String groupId, String newLocation) async => _updateGroupField(groupId, {'location': newLocation});
+  Future<GroupModel> updateGroupLocation(String groupId, String newLocation) async => _updateGroupField(groupId, {'location': newLocation});
 
-  Future<void> updateMeetingUrl(String groupId, String newMeetingUrl) async => _updateGroupField(groupId, {'meeting_url': newMeetingUrl});
+  Future<GroupModel> updateMeetingUrl(String groupId, String newMeetingUrl) async => _updateGroupField(groupId, {'meeting_url': newMeetingUrl});
 
-  Future<void> updateGroupDescription(String groupId, String newDescription) async => _updateGroupField(groupId, {'description': newDescription});
+  Future<GroupModel> updateGroupDescription(String groupId, String newDescription) async => _updateGroupField(groupId, {'description': newDescription});
 
-  Future<void> updateMeetingDetails(String groupId, String newDay, TimeOfDay newTimeUTC) async {
-    await _updateGroupField(groupId, {
+  Future<GroupModel> updateMeetingDetails(String groupId, String newDay, TimeOfDay newTime) async {
+    TimeOfDay newTimeUTC = _tzService.convertLocalTimeToUTC(newTime);
+
+    GroupModel updatedGroup = await _updateGroupField(groupId, {
       'meeting_day': newDay,
       'meeting_time': '${newTimeUTC.hour}:${newTimeUTC.minute}',
     });
+
+    GroupModel updatedGroupLocalTime = updatedGroup;
+    updatedGroupLocalTime.meetingTimeLocal = newTime;
+
+    return updatedGroupLocalTime;
   }
 
-  Future<void> _updateGroupField(String groupId, Map<String, dynamic> updateData) async {
-    await _client.from(groupsTable).update(updateData).eq(idField, groupId);
+  Future<GroupModel> _updateGroupField(String groupId, Map<String, dynamic> updateData) async {
+    return _runQuery(() async {
+      final groupResponse = await _client.from(groupsTable).update(updateData).eq(idField, groupId).select();
+      return GroupModel.fromJson(groupResponse[0]);
+    });
   }
 }

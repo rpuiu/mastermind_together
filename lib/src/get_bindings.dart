@@ -7,7 +7,9 @@ import 'package:mastermind_together/src/categories/category_controller.dart';
 import 'package:mastermind_together/src/feedback/feedback_controller.dart';
 import 'package:mastermind_together/src/goal/actions/actions_editing_controller.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
-import 'package:mastermind_together/src/groups/group_controller.dart';
+import 'package:mastermind_together/src/groups/all_groups_controller.dart';
+import 'package:mastermind_together/src/groups/group_operations_controller.dart';
+import 'package:mastermind_together/src/groups/members_controller.dart';
 import 'package:mastermind_together/src/notif/email/email_notif_controller.dart';
 import 'package:mastermind_together/src/notif/notif_controller.dart';
 import 'package:mastermind_together/src/onboarding/onboard_controller.dart';
@@ -63,7 +65,7 @@ class GetBindings {
     Get.lazyPut(() => TimezoneService(), fenix: true);
     Get.lazyPut(() => GoalService(), fenix: true);
     Get.lazyPut(() => UsersExtendedService(), fenix: true);
-    Get.lazyPut(() => GroupController(), fenix: true);
+    Get.lazyPut(() => AllGroupsController(), fenix: true);
     Get.lazyPut(() => UserGroupService(), fenix: true);
     Get.lazyPut(() => CategoryService(), fenix: true);
     Get.lazyPut(() => MessageService(), fenix: true);
@@ -90,5 +92,7 @@ class GetBindings {
     Get.lazyPut(() => EmailController(), fenix: true);
     Get.lazyPut(() => DrawerStateController(), fenix: true);
     Get.lazyPut(() => StorageService(), fenix: true);
+    Get.lazyPut(() => MembersController(), fenix: true);
+    Get.lazyPut(() => GroupOperationsController(), fenix: true);
   }
 }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/groups/group_controller.dart';
+import 'package:mastermind_together/src/groups/all_groups_controller.dart';
 import 'package:mastermind_together/src/home/sections/group_cards_row.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/app_icons.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 
-class MyGroupsSection extends GetView<GroupController> {
+class MyGroupsSection extends GetView<AllGroupsController> {
   const MyGroupsSection({Key? key}) : super(key: key);
 
   @override
