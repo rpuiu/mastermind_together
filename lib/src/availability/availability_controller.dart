@@ -40,7 +40,7 @@ class AvailabilityController extends GetxController {
     availabilityChanged.value = false;
   }
 
-  Future<bool> saveAvailability() async {
+  Future<bool> saveAvailability(DayModel dayToSave) async {
     isLoading.value = true;
 
     UserModel? currentUser = _authService.getUser();
@@ -50,9 +50,7 @@ class AvailabilityController extends GetxController {
         if (selectedTimezone.value != initialTimezone.value) {
           await _updateTimezone(currentUser.id);
         }
-        for (var day in days) {
-          await _saveDayAvailability(currentUser.id, day);
-        }
+        await _saveDayAvailability(currentUser.id, dayToSave);
         await _fetchAvailability();
         success = true;
         availabilityChanged.value = true;
@@ -209,6 +207,7 @@ class AvailabilityController extends GetxController {
   void resetAvailability(DayModel day) {
     day.fromTime = null;
     day.toTime = null;
+    saveAvailability(day);
     days.refresh();
   }
 

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:mastermind_together/src/goal/actions/action_model.dart';
 import 'package:mastermind_together/src/goal/actions/actions_controller.dart';
 import 'package:mastermind_together/src/goal/actions/actions_editing_controller.dart';
+import 'package:mastermind_together/src/ui/theme/app_icons.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/icon/add_button.dart';
@@ -126,7 +127,10 @@ class AddActionsWidget extends StatelessWidget {
                 this.editController.toggleEditing(action.id);
               },
             ),
-            CloseBtn(onPressed: () => this.editController.toggleEditing(action.id)),
+            CloseBtn(
+              onPressed: () => this.editController.toggleEditing(action.id),
+              iconState: IconState.fail,
+            ),
           ],
         );
       } else {

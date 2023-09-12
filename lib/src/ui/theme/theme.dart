@@ -47,7 +47,7 @@ class AppTheme {
 
   static TimePickerThemeData timePickerThemeData = TimePickerThemeData(
     // backgroundColor: drawerBgColor,
-    helpTextStyle: headingText,
+    helpTextStyle: welcomeTextStyle.copyWith(color: hoverMenuIconColor),
     dialHandColor: hoverMenuIconColor,
     hourMinuteTextColor: labelTextColor,
     dayPeriodTextColor: labelTextColor,

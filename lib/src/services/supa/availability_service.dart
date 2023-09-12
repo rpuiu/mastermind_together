@@ -36,7 +36,7 @@ class AvailabilityService extends GetxService {
     try {
       await _client.from('availability').update(dayModel.toJson()..['user_id'] = userId).eq('user_id', userId).eq('day', dayModel.dayName);
     } catch (e, s) {
-      Log().e("Error while updating availabilty for $userId: ", e, s);
+      Log().e("Error while updating availability for $userId: ", e, s);
       rethrow;
     }
   }

@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/availability/availability_controller.dart';
 import 'package:mastermind_together/src/availability/day_model.dart';
-import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/app_icons.dart';
 import 'package:mastermind_together/src/ui/theme/scaffold/scrollable_custom_scaffold.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
-import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/icon/close_button.dart';
 import 'package:mastermind_together/src/ui/widgets/dropdown/dropdown_widget.dart';
 import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
@@ -51,8 +49,6 @@ class SetAvailabilityScreen extends GetView<AvailabilityController> {
                 ),
                 halfSpace,
                 _buildDaysList(context),
-                xSpace,
-                _buildSaveButton(),
               ],
             ),
           ),
@@ -85,68 +81,26 @@ class SetAvailabilityScreen extends GetView<AvailabilityController> {
   }
 
   Widget _buildDaysList(BuildContext context) {
-    const calculatedHeight = daysListHeightFactor * daysListHeightMultiplier * fontSize;
-
-    return SizedBox(
-      height: calculatedHeight,
-      width: MediaQuery.of(context).size.width * 0.7,
-      child: ListView.builder(
-        itemCount: controller.days.length,
-        itemBuilder: (context, index) {
-          final day = controller.days[index];
-          return Card(
-            color: controller.isSet(day) ? activeMenuIconColor : null,
-            child: ListTile(
-              dense: true,
-              // leading: controller.isSet(day) ? AppIcons.getIcon('check', IconState.done) : null,
-              title: Text(day.dayName.toUpperCase(), style: bodySemiBold),
-              subtitle: controller.isSet(day) ? Text('From ${day.fromTime!.format(context)} to ${day.toTime!.format(context)}') : null,
-              trailing: controller.isSet(day) ? CloseBtn(onPressed: () => controller.resetAvailability(day)) : null,
-              onTap: () => _handleDayTap(context, day),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  CustomButton _buildSaveButton() {
-    return CustomButton(
-      onPressed: _handleSaveButtonPress,
-      label: 'Save',
-      labelTextStyle: buttonTextStyle,
-      backgroundColor: buttonBackgroundColor,
-    );
-  }
-
-  Future<void> _handleSaveButtonPress() async {
-    bool success = await controller.saveAvailability();
-    if (success) {
-      _showSuccessDialog();
-    } else {
-      Get.snackbar("Error", "There was an error saving your availability. Please try again.");
-    }
-  }
-
-  void _showSuccessDialog() {
-    Get.dialog(
-      AlertDialog(
-        title: const Text("Success"),
-        content: const Text('Your availability has been updated'),
-        actions: <Widget>[
-          TextButton(
-            child: const Text('Back'),
-            onPressed: () => Get.back(),
+    return Column(
+      children: List.generate(controller.days.length, (index) {
+        final day = controller.days[index];
+        return Card(
+          elevation: 0,
+          color: controller.isSet(day) ? doneColor.withOpacity(0.25) : null,
+          child: ListTile(
+            dense: true,
+            title: Text(day.dayName.toUpperCase(), style: bodySemiBold),
+            subtitle: controller.isSet(day) ? Text('From ${day.fromTime!.format(context)} to ${day.toTime!.format(context)}') : null,
+            trailing: controller.isSet(day)
+                ? CloseBtn(
+                    onPressed: () => controller.resetAvailability(day),
+                    iconState: IconState.defaultState,
+                  )
+                : null,
+            onTap: () => _handleDayTap(context, day),
           ),
-          TextButton(
-            child: const Text('Home'),
-            onPressed: () {
-              Get.back();
-              Get.offAllNamed(Routes.home);
-            },
-          ),
-        ],
-      ),
+        );
+      }).toList(),
     );
   }
 
@@ -181,21 +135,21 @@ class SetAvailabilityScreen extends GetView<AvailabilityController> {
   }
 
   Future<void> _handleDayTap(BuildContext context, DayModel day) async {
-    final fromTime = await showTimePicker(
-      context: context,
-      initialTime: day.fromTime ?? TimeOfDay.now(),
-      helpText: 'FROM:',
-    );
+    BuildContext ctx = context;
 
+    Future<TimeOfDay?> pickTime(TimeOfDay? initialTime, String helpText) {
+      return showTimePicker(
+        context: ctx,
+        initialTime: initialTime ?? const TimeOfDay(hour: 8, minute: 0),
+        helpText: helpText,
+        initialEntryMode: TimePickerEntryMode.dialOnly,
+      );
+    }
+
+    final fromTime = await pickTime(day.fromTime, 'From:');
     if (fromTime == null) return;
 
-    final toTime = await showTimePicker(
-      //TODO extract the context in a local variable like in the JoinGroupButton
-      context: context,
-      initialTime: day.toTime ?? TimeOfDay.now(),
-      helpText: 'TO:',
-    );
-
+    final toTime = await pickTime(day.toTime, 'To:');
     if (toTime == null) return;
 
     final fromDuration = Duration(hours: fromTime.hour, minutes: fromTime.minute);
@@ -208,6 +162,15 @@ class SetAvailabilityScreen extends GetView<AvailabilityController> {
 
     day.fromTime = fromTime;
     day.toTime = toTime;
+
+    if (day.fromTime != null && day.toTime != null) {
+      bool success = await controller.saveAvailability(day);
+      if (success) {
+        showSuccessSnackBar(message: "Availability updated for ${day.dayName}");
+      } else {
+        showErrorSnackBar(message: "There was an error saving your availability for ${day.dayName}. Please try again or refresh the page.");
+      }
+    }
 
     controller.days.refresh();
   }
