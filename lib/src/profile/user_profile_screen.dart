@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/user_model.dart';
@@ -6,6 +7,7 @@ import 'package:mastermind_together/src/profile/user_profile_controller.dart';
 import 'package:mastermind_together/src/ui/theme/scaffold/custom_scaffold.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/icon/edit_button.dart';
 import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 import 'package:mastermind_together/src/ui/widgets/text_form_field.dart';
 import 'package:mastermind_together/src/util/form_validators.dart';
@@ -19,151 +21,213 @@ class UserProfileScreen extends GetView<UserProfileController> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(fontSize),
-          child: Obx(() {
-            if (controller.isLoading.value) {
-              return const CircularProgressIndicator();
-            }
-            return userProfile(context);
-          }),
-        ),
-      ),
+      applyPadding: false,
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        return userProfile(context);
+      }),
     );
   }
 
   Widget userProfile(BuildContext context) {
     UserModel user = controller.user.value!;
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        ProfilePictureWidget(
-          allowEditing: true,
-          size: 100,
-          imageUrl: controller.signedAvatarUrl.value,
-          onEdit: () => controller.pickImage(),
-        ),
-        xSpace,
-        Text(user.username, style: headingText),
-        xSpace,
-        Text(user.email, style: labelText),
-        xxSpace,
-        changeUsername(context, user),
-        xSpace,
-        changePassword(context),
-        xxSpace,
-      ],
+    return Center(
+      child: Column(
+        children: [
+          _buildBanner(),
+          Transform.translate(
+            offset: const Offset(0, -50),
+            child: _buildProfilePicture(),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(user.username, style: headingText),
+              EditBtn(onPressed: () => _changeUserName(context, user)),
+            ],
+          ),
+          halfSpace,
+          Text(user.email, style: bodyMedium),
+          xSpace,
+          changePassword(context),
+        ],
+      ),
     );
   }
 
-  ElevatedButton changePassword(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        showDialog(
-          context: context,
-          builder: (_) => AlertDialog(
-            title: const Text('Change Password'),
-            content: SingleChildScrollView(
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min, // set to min to prevent overflow
-                  children: [
-                    CustomTextFormField(
-                      controller: controller.oldPasswordController,
-                      label: 'Old Password',
-                      hintText: 'Enter your old password',
-                      obscureText: true,
-                      validator: FormValidators.validatePassword,
-                    ),
-                    xSpace, // Add space
-                    CustomTextFormField(
-                      controller: controller.newPasswordController,
-                      label: 'New Password',
-                      hintText: 'Enter your new password',
-                      obscureText: true,
-                      validator: FormValidators.validatePassword,
-                    ),
-                    xSpace,
-                    CustomTextFormField(
-                      controller: controller.confirmPasswordController,
-                      label: 'Confirm Password',
-                      hintText: 'Confirm your new password',
-                      obscureText: true,
-                      validator: (value) {
-                        return FormValidators.validateConfirmPassword(value, controller.confirmPasswordController.text);
-                      },
-                    ),
-                  ],
+  SizedBox _buildBanner() {
+    return SizedBox(
+      height: 200,
+      child: Stack(
+        children: [
+          CachedNetworkImage(
+            imageUrl: controller.signedAvatarUrl.value,
+            placeholder: (context, url) => SizedBox(
+              width: double.infinity,
+              height: 200,
+              child: Image.asset(
+                'assets/images/profile/profile-banner.png',
+                fit: BoxFit.cover,
+                alignment: const Alignment(1, -0.55),
+              ),
+            ),
+            errorWidget: (context, url, error) => SizedBox(
+              width: double.infinity,
+              height: 200,
+              child: Image.asset(
+                'assets/images/profile/profile-banner.png',
+                fit: BoxFit.cover,
+                alignment: const Alignment(1, -0.55),
+              ),
+            ),
+            imageBuilder: (context, imageProvider) => Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: imageProvider,
+                  fit: BoxFit.cover,
+                  alignment: const Alignment(1, -0.55),
                 ),
               ),
             ),
-            actions: [
-              TextButton(
-                child: const Text('Cancel'),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-              TextButton(
-                child: const Text('Change Password'),
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    controller.changePassword().then((_) {
-                      controller.clearForm();
-                      Navigator.of(context).pop();
-                    }).catchError((e) {
-                      showErrorSnackBar(message: 'Failed to change password: $e');
-                    });
-                  }
-                },
-              ),
-            ],
           ),
-        );
-      },
-      child: const Text("Change Password"),
+          Container(
+            height: 200,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [labelTextColor.withOpacity(0.6), hoverMenuIconColor.withOpacity(0.6)],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  ElevatedButton changeUsername(BuildContext context, UserModel user) {
-    return ElevatedButton(
-      onPressed: () {
-        showDialog(
-          context: context,
-          builder: (_) => AlertDialog(
-            title: const Text('New Username'),
-            content: Form(
-              key: _usernameFormKey,
-              child: CustomTextFormField(
-                controller: controller.usernameController,
-                label: 'Username',
-                hintText: 'Enter your username',
-                onChanged: (value) {
-                  user = user.copyWith(username: value);
-                  controller.user.value = user;
-                },
-                validator: FormValidators.validateUsername,
+  Widget _buildProfilePicture() {
+    return CircleAvatar(
+      radius: 53,
+      backgroundColor: whiteColor,
+      child: ProfilePictureWidget(
+        allowEditing: true,
+        size: 100,
+        imageUrl: controller.signedAvatarUrl.value,
+        onEdit: () => controller.pickImage(),
+      ),
+    );
+  }
+
+  MouseRegion changePassword(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              title: const Text('Change Password'),
+              content: SingleChildScrollView(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CustomTextFormField(
+                        controller: controller.oldPasswordController,
+                        label: 'Old Password',
+                        hintText: 'Enter your old password',
+                        obscureText: true,
+                        validator: FormValidators.validatePassword,
+                      ),
+                      CustomTextFormField(
+                        controller: controller.newPasswordController,
+                        label: 'New Password',
+                        hintText: 'Enter your new password',
+                        obscureText: true,
+                        validator: FormValidators.validatePassword,
+                      ),
+                      CustomTextFormField(
+                        controller: controller.confirmPasswordController,
+                        label: 'Confirm Password',
+                        hintText: 'Confirm your new password',
+                        obscureText: true,
+                        validator: (value) {
+                          return FormValidators.validateConfirmPassword(value, controller.confirmPasswordController.text);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ),
+              actions: [
+                TextButton(
+                  child: const Text('Cancel'),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+                TextButton(
+                  child: const Text('Change Password'),
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      controller.changePassword().then((_) {
+                        controller.clearForm();
+                        Navigator.of(context).pop();
+                      }).catchError((e) {
+                        showErrorSnackBar(message: 'Failed to change password: $e');
+                      });
+                    }
+                  },
+                ),
+              ],
             ),
-            actions: [
-              TextButton(
-                child: const Text('Cancel'),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-              TextButton(
-                child: const Text('Save'),
-                onPressed: () {
-                  if (_usernameFormKey.currentState!.validate()) {
-                    controller.updateUser(user);
-                    Navigator.of(context).pop();
-                  }
-                },
-              ),
-            ],
+          );
+        },
+        child: Text("Change Password", style: linkTextStyle),
+      ),
+    );
+  }
+
+  void _changeUserName(BuildContext context, UserModel user) {
+    TextEditingController tempUsernameController = TextEditingController(text: user.username);
+
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('New Username'),
+        content: ConstrainedBox(
+          constraints: const BoxConstraints(maxHeight: 100),
+          child: Form(
+            key: _usernameFormKey,
+            child: CustomTextFormField(
+              controller: tempUsernameController,
+              label: 'Username',
+              hintText: 'Enter your username',
+              validator: FormValidators.validateUsername,
+            ),
           ),
-        );
-      },
-      child: const Text("Change Username"),
+        ),
+        actions: [
+          TextButton(
+            child: const Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: const Text('Save'),
+            onPressed: () {
+              if (_usernameFormKey.currentState!.validate()) {
+                user = user.copyWith(username: tempUsernameController.text);
+                controller.updateUser(user);
+                controller.user.value = user;
+                Navigator.of(context).pop();
+              }
+            },
+          ),
+        ],
+      ),
     );
   }
 }

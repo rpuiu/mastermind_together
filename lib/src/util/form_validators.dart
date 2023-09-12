@@ -6,9 +6,6 @@ class FormValidators {
     if (value.length < 3) {
       return 'Username should be at least 3 characters long';
     }
-    if (value.contains(RegExp(r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]'))) {
-      return 'Username should not contain special characters or numbers';
-    }
     return null;
   }
 

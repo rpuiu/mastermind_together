@@ -43,8 +43,8 @@ class ProfilePictureWidget extends StatelessWidget {
         ),
         if (allowEditing && onEdit != null)
           Positioned(
-            bottom: 0,
-            right: 0,
+            bottom: -10,
+            right: -10,
             child: EditBtn(
               onPressed: onEdit!,
             ),
@@ -60,8 +60,8 @@ class ProfilePictureWidget extends StatelessWidget {
         headingTextColor,
         BlendMode.srcIn,
       ),
-      width: size,
-      height: size,
+      width: size / 2,
+      height: size / 2,
     );
   }
 }

@@ -5,18 +5,20 @@ import 'package:mastermind_together/src/ui/theme/scaffold/responsive_padding_wra
 class CustomScaffold extends StatelessWidget {
   final Widget body;
   final double desktopBreakpoint;
+  final bool applyPadding;
 
   const CustomScaffold({
     Key? key,
     required this.body,
     this.desktopBreakpoint = 800,
+    this.applyPadding = true,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BaseScaffold(
       desktopBreakpoint: desktopBreakpoint,
-      body: ResponsivePaddingWrapper(child: body),
+      body: applyPadding ? ResponsivePaddingWrapper(child: body) : body,
     );
   }
 }
