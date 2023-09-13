@@ -65,7 +65,7 @@ class GroupCard extends StatelessWidget {
                 xSpace,
                 buildParticipantsSection(),
                 xSpace,
-                JoinGroupButton(groupId: group.id),
+                JoinGroupButton(group: group),
               ],
             ),
           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/groups/group_model.dart';
 import 'package:mastermind_together/src/groups/group_operations_controller.dart';
 import 'package:mastermind_together/src/groups/members_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
@@ -9,11 +10,11 @@ import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
 
 class JoinGroupButton extends GetView<GroupOperationsController> {
-  final String groupId;
+  final GroupModel group;
   final SubscriptionController _subscriptionController = Get.find<SubscriptionController>();
   final MembersController _membersController = Get.find<MembersController>();
 
-  JoinGroupButton({super.key, required this.groupId});
+  JoinGroupButton({super.key, required this.group});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,8 @@ class JoinGroupButton extends GetView<GroupOperationsController> {
       if (controller.isLoading.value) {
         return const Center(child: CircularProgressIndicator());
       }
-      if (_membersController.isUserMemberOfGroup(groupId)) {
+
+      if (_membersController.isUserMemberOfGroup(group.id)) {
         return CustomButton(
           label: 'Joined',
           labelTextStyle: bodyMediumInactive,
@@ -29,6 +31,14 @@ class JoinGroupButton extends GetView<GroupOperationsController> {
           isEnabled: false,
         );
       } else {
+        if (group.currentMembers == group.maxMembers) {
+          return CustomButton(
+            label: "Group Full",
+            backgroundColor: buttonInactiveBackgroundColor,
+            labelTextStyle: bodyMediumInactive,
+            isEnabled: false,
+          );
+        }
         return CustomButton(
           label: 'Join Group',
           labelTextStyle: bodyMediumInactive.copyWith(color: bodyButtonActiveTextColor),
@@ -42,8 +52,8 @@ class JoinGroupButton extends GetView<GroupOperationsController> {
                     localContext, 'You\'ve reached the limit of groups you can join on the free tier. Please contact us to upgrade your subscription.');
                 return;
               }
-              await controller.joinGroup(groupId, onJoined: () {
-                Get.offAllNamed(Routes.groupRoute(groupId));
+              await controller.joinGroup(group.id, onJoined: () {
+                Get.offAllNamed(Routes.groupRoute(group.id));
               });
             });
           },

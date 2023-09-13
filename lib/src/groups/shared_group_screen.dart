@@ -19,7 +19,7 @@ class SharedGroupScreen extends StatelessWidget {
           children: [
             _buildSharedGroupInfo(),
             xSpace,
-            JoinGroupButton(groupId: group.id),
+            JoinGroupButton(group: group),
           ],
         ),
       ),
@@ -49,6 +49,13 @@ class SharedGroupScreen extends StatelessWidget {
             Text(
               '${group.meetingDay}: ${group.meetingTimeLocal.hour}:${group.meetingTimeLocal.minute}',
               style: bodyRegular,
+            ),
+            xSpace,
+            Text(
+              'Description: ${group.description ?? ''}',
+              style: bodyRegular,
+              softWrap: true,
+              overflow: TextOverflow.visible,
             ),
           ],
         ),

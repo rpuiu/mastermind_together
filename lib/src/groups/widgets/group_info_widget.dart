@@ -7,9 +7,10 @@ import 'package:mastermind_together/src/groups/group_screen_controller.dart';
 import 'package:mastermind_together/src/groups/members_controller.dart';
 import 'package:mastermind_together/src/groups/widgets/conditional_edit_button.dart';
 import 'package:mastermind_together/src/routes.dart';
-import 'package:mastermind_together/src/ui/theme/app_icons.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/icon/edit_button.dart';
+import 'package:mastermind_together/src/ui/widgets/custom_tooltip.dart';
 import 'package:mastermind_together/src/ui/widgets/dropdown/dropdown_widget.dart';
 import 'package:mastermind_together/src/util/date_time_util.dart';
 
@@ -91,11 +92,7 @@ class GroupInfoCard extends StatelessWidget {
               '${controller.group.value.meetingDay}: ${formatTimeOfDay(controller.group.value.meetingTimeLocal)}',
               style: bodyRegular,
             ),
-            if (isAdmin)
-              IconButton(
-                icon: AppIcons.getIcon('edit', IconState.defaultState),
-                onPressed: _showDayAndTimePicker,
-              ),
+            if (isAdmin) EditBtn(onPressed: _showDayAndTimePicker),
           ],
         ),
         _buildLocation(isAdmin),
@@ -155,9 +152,18 @@ class GroupInfoCard extends StatelessWidget {
 
   Widget _buildGroupDescription(bool isAdmin) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text('Description: ${controller.group.value.description ?? ''}', style: bodyRegular),
+        Expanded(
+          child: CustomTooltip(
+            message: 'Description: ${controller.group.value.description ?? ''}',
+            child: Text(
+              'Description: ${controller.group.value.description ?? ''}',
+              style: bodyRegular,
+              softWrap: true,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ),
         _conditionalEditButton(
           isAdmin,
           'Edit Group Description',
@@ -166,6 +172,7 @@ class GroupInfoCard extends StatelessWidget {
           controller.group.value.description ?? '',
           (newDescription) => controller.updateGroupDescription(controller.group.value.id, newDescription),
         ),
+        const Spacer(),
         Padding(
           padding: const EdgeInsets.only(top: fontSize / 2),
           child: TextButton(
