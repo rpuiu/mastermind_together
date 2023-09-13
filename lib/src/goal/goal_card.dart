@@ -54,12 +54,11 @@ class GoalCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         LabelCategoryWidget(label: goal.category),
-                        IconButton(
-                          icon: AppIcons.getIcon('share', IconState.hoverState),
-                          onPressed: () {
-                            //TODO share goal!
-                          },
-                        ),
+                        // IconButton( TODO MAIN-T-118 - Share goal
+                        //     icon: AppIcons.getIcon('share', IconState.hoverState),
+                        //     onPressed: () {
+                        //       //share goal!
+                        //     }),
                       ],
                     ),
                     halfSpace,
@@ -105,11 +104,11 @@ class GoalCard extends StatelessWidget {
                       ],
                     ),
                     const Spacer(),
-                    const Text('10% Completed'), //TODO
-                    halfSpace,
-                    const LinearProgressIndicator(
-                      value: 10 / 100,
-                    ),
+                    // const Text('10% Completed'), TODO MAIN-T-119 - Goal progress
+                    // halfSpace,
+                    // const LinearProgressIndicator(
+                    //   value: 10 / 100,
+                    // ),
                   ],
                 ),
               ),

@@ -26,7 +26,26 @@ class GoalScreen extends GetView<GoalController> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           xHalfSpace,
-          const Text("Goal", style: headingText),
+          Row(
+            children: [
+              Row(
+                children: [
+                  const Text("Goal", style: headingText),
+                  DeleteBtn(
+                    onPressed: () async {
+                      bool shouldDelete = await _showDeleteConfirmation();
+                      if (shouldDelete) {
+                        await controller.deleteGoal(goalId);
+                        showSuccessSnackBar(message: "Successfully deleted goal");
+                        Get.toNamed(Routes.home);
+                      }
+                    },
+                    iconState: IconState.fail,
+                  ),
+                ],
+              ),
+            ],
+          ),
           xHalfSpace,
           Obx(() {
             final goal = controller.goalDetails.value;
@@ -58,32 +77,28 @@ class GoalScreen extends GetView<GoalController> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(goal.goal, style: subtitleTextStyle.copyWith(height: 1)), //TODO edit goal
-            DeleteBtn(
-              onPressed: () async {
-                bool shouldDelete = await _showDeleteConfirmation();
-                if (shouldDelete) {
-                  await controller.deleteGoal(goal.id);
-                  showSuccessSnackBar(message: "Successfully deleted goal");
-                  Get.toNamed(Routes.home);
-                }
-              },
-              iconState: IconState.fail,
-            ),
-          ],
-        ),
-        xxSpace,
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
+            Expanded(
+              child: Text(
+                goal.goal,
+                style: subtitleTextStyle.copyWith(height: 1),
+                softWrap: true,
+              ),
+            ), //TODO edit goal
+            wXSpace,
             LabelCategoryWidget(label: goal.category),
-            Text('Status: ${goal.status}', style: bodyMedium), //TODO change status
-            Text(
-              'Due Date: ${goal.dueDate != null ? goal.dueDate!.toLocal() : 'Set Date'}', //TODO set due date
-              style: bodyRegular,
-            ),
           ],
         ),
+        // xxSpace,
+        // Row(        // TODO MAIN-T-120 - change status and due date
+        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //   children: [
+        //     Text('Status: ${goal.status}', style: bodyMedium),
+        //     Text(
+        //       'Due Date: ${goal.dueDate != null ? goal.dueDate!.toLocal() : 'Set Date'}',
+        //       style: bodyRegular,
+        //     ),
+        //   ],
+        // ),
       ],
     );
   }
