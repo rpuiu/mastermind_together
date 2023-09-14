@@ -5,7 +5,7 @@ import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 class CustomTextFormField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
-  final String label;
+  final String? label;
   final bool readOnly;
   final bool obscureText;
   final FormFieldValidator<String>? validator;
@@ -16,6 +16,8 @@ class CustomTextFormField extends StatelessWidget {
   final int? minLines;
   final int? maxLines;
   final ValueChanged<String>? onFieldSubmitted;
+
+  final Widget? icon;
 
   const CustomTextFormField({
     Key? key,
@@ -32,6 +34,7 @@ class CustomTextFormField extends StatelessWidget {
     this.minLines = 1,
     this.maxLines = 1,
     this.onFieldSubmitted,
+    this.icon,
   }) : super(key: key);
 
   @override
@@ -42,10 +45,13 @@ class CustomTextFormField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: isMobile ? mobileLabelTextStyle : formLabelTextStyle,
-        ),
+        if (label != null)
+          Row(
+            children: [
+              Text(label!, style: isMobile ? mobileLabelTextStyle : formLabelTextStyle),
+              if (icon != null) icon!,
+            ],
+          ),
         halfSpace,
         TextFormField(
           autovalidateMode: AutovalidateMode.onUserInteraction,

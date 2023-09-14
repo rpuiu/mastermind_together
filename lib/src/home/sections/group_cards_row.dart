@@ -13,15 +13,26 @@ class GroupCardsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ScrollController scrollController = ScrollController();
+
+    double scrollbarPadding = 8.0;
     return SizedBox(
-      height: groupCardHeight,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: groups.length,
-        itemBuilder: (context, index) {
-          final group = groups[index];
-          return GroupCard(group);
-        },
+      height: groupCardHeight + scrollbarPadding,
+      child: Scrollbar(
+        controller: scrollController,
+        trackVisibility: true,
+        child: Padding(
+          padding: EdgeInsets.only(bottom: scrollbarPadding),
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            controller: scrollController,
+            itemCount: groups.length,
+            itemBuilder: (context, index) {
+              final group = groups[index];
+              return GroupCard(group);
+            },
+          ),
+        ),
       ),
     );
   }

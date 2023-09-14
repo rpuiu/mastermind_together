@@ -78,11 +78,7 @@ class AuthController extends GetxController {
       if (_authService.isTenant()) {
         Get.offAllNamed(Routes.tenantDashboard);
       } else {
-        if (_localStorage.isOnboardingComplete()) {
-          Get.offAllNamed(Routes.home);
-        } else {
-          Get.offAllNamed(Routes.onboarding);
-        }
+        Get.offAllNamed(Routes.splash);
       }
     }
   }

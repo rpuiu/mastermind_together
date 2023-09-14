@@ -30,14 +30,8 @@ class MyGroupsSection extends GetView<AllGroupsController> {
                   ),
                   xSpace,
                   ListTile(
-                    //TODO check if the user has availability set
-                    leading: AppIcons.getIcon('calendar2', IconState.hoverState),
-                    title: const Text('Set your availability to get group suggestions.', style: bodyRegular),
-                    onTap: () => Get.toNamed(Routes.availability),
-                  ),
-                  ListTile(
                     leading: AppIcons.getIcon('profile2user', IconState.hoverState),
-                    title: const Text('Join a group from the same category as your goal.', style: bodyRegular),
+                    title: const Text('Join a group to start your accountability journey.', style: bodyRegular),
                     onTap: () => Get.toNamed(Routes.allGroups),
                   ),
                   ListTile(

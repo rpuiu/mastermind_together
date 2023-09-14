@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/onboarding/onboard_controller.dart';
-import 'package:mastermind_together/src/onboarding/onboard_page.dart';
+import 'package:mastermind_together/src/onboarding/slider/onboard_controller.dart';
+import 'package:mastermind_together/src/onboarding/slider/onboard_page.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/custom_page_indicator.dart';

@@ -21,6 +21,8 @@ class AllGroupsController extends GetxController {
   final MembersController _membersController = Get.find<MembersController>();
 
   final RxList<String> selectedCategories = RxList<String>();
+  final RxBool isMatchingGroupsSelected = false.obs;
+  final RxBool isRelatedGroupsSelected = false.obs;
 
   final RxList<GroupModel> groups = RxList<GroupModel>();
   final RxList<GroupModel> userGroups = RxList<GroupModel>();
@@ -191,5 +193,29 @@ class AllGroupsController extends GetxController {
       }
     });
     await fetchAvailableGroups();
+  }
+
+  void toggleMatchingGroupsSelected() {
+    isMatchingGroupsSelected.value = !isMatchingGroupsSelected.value;
+  }
+
+  void toggleRelatedGroupsSelected() {
+    isRelatedGroupsSelected.value = !isRelatedGroupsSelected.value;
+  }
+
+  void filterMatchingGroups() {
+    if (isMatchingGroupsSelected.value) {
+      filteredGroups.value = matchingGroups;
+    } else {
+      filterGroupsByCategory(selectedCategories);
+    }
+  }
+
+  void filterRelatedGroups() {
+    if (isRelatedGroupsSelected.value) {
+      filteredGroups.value = sameCategoryGroups;
+    } else {
+      filterGroupsByCategory(selectedCategories);
+    }
   }
 }

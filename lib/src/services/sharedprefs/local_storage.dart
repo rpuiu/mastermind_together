@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/user_model.dart';
+import 'package:mastermind_together/src/onboarding/onboarding_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorageService {
   static const String currentUser = 'currentUser';
   static const String onboardingSeen = 'onboardingSeen';
+  static const String onboardingStep = 'onboardingStep';
   static const String originalRouteKey = 'originalRoute';
 
   SharedPreferences prefs = Get.find<SharedPreferences>();
@@ -36,6 +38,17 @@ class LocalStorageService {
 
   bool isOnboardingComplete() {
     return prefs.getBool(onboardingSeen) ?? false;
+  }
+
+  void setOnboardingStep(OnboardingStep step) {
+    final stepStr = step.toString().split('.').last;
+    prefs.setString(onboardingStep, stepStr);
+  }
+
+  OnboardingStep? getOnboardingStep() {
+    final stepStr = prefs.getString(onboardingStep);
+    if (stepStr == null) return null;
+    return OnboardingStep.values.firstWhere((e) => e.toString().split('.').last == stepStr);
   }
 
   void setOriginalRoute(String route) async {

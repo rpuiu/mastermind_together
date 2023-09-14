@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/groups/group_card_widget.dart';
 import 'package:mastermind_together/src/groups/all_groups_controller.dart';
+import 'package:mastermind_together/src/groups/group_card_widget.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/subscription/limit_alert_widget.dart';
 import 'package:mastermind_together/src/subscription/subscription_controller.dart';
@@ -10,6 +10,7 @@ import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/filter_chip.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/icon/add_button.dart';
+import 'package:mastermind_together/src/ui/widgets/custom_tooltip.dart';
 
 class AllGroupsScreen extends GetView<AllGroupsController> {
   final SubscriptionController _subscriptionController = Get.find<SubscriptionController>();
@@ -18,8 +19,6 @@ class AllGroupsScreen extends GetView<AllGroupsController> {
 
   @override
   Widget build(BuildContext context) {
-    final localContext = context;
-
     return CustomScaffold(
       body: Column(
         children: <Widget>[
@@ -27,13 +26,15 @@ class AllGroupsScreen extends GetView<AllGroupsController> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const Text("All Groups", style: headingText),
+              const Text("Groups", style: headingText),
               wHalfSpace,
               AddBtn(
                 onPressed: () => _checkSubscriptionAndNavigate(context),
               )
             ],
           ),
+          xHalfSpace,
+          _buildSpecialFilterChips(),
           xHalfSpace,
           _buildFilterChips(),
           xHalfSpace,
@@ -89,6 +90,8 @@ class AllGroupsScreen extends GetView<AllGroupsController> {
           children: categories.map((String category) {
             return CustomFilterChip(
               category: category,
+              customBackgroundColor: categoryBgColor,
+              customSelectedColor: buttonActiveBackgroundColor,
               isSelected: controller.selectedCategories.contains(category),
               onSelected: (bool selected) {
                 if (selected) {
@@ -102,6 +105,49 @@ class AllGroupsScreen extends GetView<AllGroupsController> {
           }).toList(),
         );
       },
+    );
+  }
+
+  Obx _buildSpecialFilterChips() {
+    return Obx(() {
+      return Wrap(
+        spacing: fontSize / 2,
+        runSpacing: fontSize,
+        children: [
+          CustomTooltip(
+            message: 'Groups that align with your goal and fit your availability.',
+            child: _specialChip(
+              'Matching Groups',
+              isSelected: controller.isMatchingGroupsSelected.value,
+              onSelected: (bool selected) {
+                controller.toggleMatchingGroupsSelected();
+                controller.filterMatchingGroups();
+              },
+            ),
+          ),
+          CustomTooltip(
+            message: 'Groups that align with your goal but meet outside your available times.',
+            child: _specialChip(
+              'Related Groups',
+              isSelected: controller.isRelatedGroupsSelected.value,
+              onSelected: (bool selected) {
+                controller.toggleRelatedGroupsSelected();
+                controller.filterRelatedGroups();
+              },
+            ),
+          ),
+        ],
+      );
+    });
+  }
+
+  Widget _specialChip(String label, {required bool isSelected, required Function(bool) onSelected}) {
+    return CustomFilterChip(
+      onSelected: onSelected,
+      category: label,
+      isSelected: isSelected,
+      customBackgroundColor: hoverMenuIconColor,
+      customSelectedColor: buttonActiveBackgroundColor,
     );
   }
 
