@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/auth/auth_controller.dart';
 import 'package:mastermind_together/src/auth/common_auth_layout.dart';
 import 'package:mastermind_together/src/auth/mobile_aware_layout.dart';
+import 'package:mastermind_together/src/auth/register_controller.dart';
 import 'package:mastermind_together/src/auth/tos/terms_and_conditions_widget.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
@@ -13,6 +12,8 @@ import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/link_text.dart';
 import 'package:mastermind_together/src/ui/widgets/text_form_field.dart';
 import 'package:mastermind_together/src/util/form_validators.dart';
+
+import '../ui/widgets/buttons/custom_loading_button.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
@@ -23,47 +24,7 @@ class RegisterScreen extends StatelessWidget {
   }
 }
 
-class LeftRegisterForm extends GetView<AuthController> {
-  const LeftRegisterForm({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: constraints.maxHeight),
-            child: IntrinsicHeight(
-              child: Padding(
-                padding: const EdgeInsets.all(2 * fontSize),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      xxxSpace,
-                      SvgPicture.asset(width: 308, height: 30, 'assets/images/logo/logo-small-black.svg'),
-                      xxxSpace,
-                      RegisterForm(),
-                      xxxSpace,
-                      Text(
-                        '© 2023 ALL RIGHTS RESERVED MASTERMINDTOGETHER',
-                        textAlign: TextAlign.center,
-                        style: copyrightTextStyle,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
-class RegisterForm extends GetView<AuthController> {
+class RegisterForm extends GetView<RegisterController> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -131,19 +92,27 @@ class RegisterForm extends GetView<AuthController> {
                 xxSpace,
                 termsOfService,
                 xxSpace,
-                Obx(
-                  () => CustomButton(
-                    onPressed: () {
-                      if (formKey.currentState?.validate() ?? false) {
-                        controller.register(usernameController.text, emailController.text, passwordController.text);
-                      }
-                    },
-                    isEnabled: termsOfService.isChecked.value,
-                    label: 'Create Account',
-                    labelTextStyle: termsOfService.isChecked.value ? buttonTextStyle : inactiveButtonTextStyle,
-                    backgroundColor: buttonBackgroundColor,
-                  ),
-                ),
+                Obx(() {
+                  if (controller.isLoading.value) {
+                    return const CustomLoadingButton(
+                      labelTextStyle: buttonTextStyle,
+                      backgroundColor: buttonBackgroundColor,
+                      onPressed: null,
+                    );
+                  } else {
+                    return CustomButton(
+                      onPressed: () {
+                        if (formKey.currentState?.validate() ?? false) {
+                          controller.register(usernameController.text, emailController.text, passwordController.text);
+                        }
+                      },
+                      isEnabled: termsOfService.isChecked.value,
+                      label: 'Create Account',
+                      labelTextStyle: termsOfService.isChecked.value ? buttonTextStyle : inactiveButtonTextStyle,
+                      backgroundColor: buttonBackgroundColor,
+                    );
+                  }
+                }),
                 xxSpace,
                 Wrap(
                   alignment: WrapAlignment.center,

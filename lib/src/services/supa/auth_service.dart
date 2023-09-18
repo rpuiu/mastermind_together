@@ -60,7 +60,7 @@ class AuthService extends GetxService {
       String timezone = await _timezoneService.getCurrentTimezoneWithOffset();
       UserModel userModel = await _userExtendedService.createUserExtended(user.id, username, user.email!, timezone, tenantId, freeTierSubscriptionId);
       currentUser = userModel;
-      _localStorage.saveUser(userModel);
+      await _localStorage.saveUser(userModel);
 
       return userModel;
     } on AuthException catch (e, s) {
@@ -78,7 +78,7 @@ class AuthService extends GetxService {
       final User user = response.user!;
       _setRole(user);
       UserModel userModel = await _userExtendedService.readUserExtended(user.id);
-      _localStorage.saveUser(userModel);
+      await _localStorage.saveUser(userModel);
       currentUser = userModel;
 
       return userModel;
@@ -130,7 +130,7 @@ class AuthService extends GetxService {
         throw Exception("New password entries do not match");
       }
 
-      final AuthResponse response = await _client.auth.signInWithPassword(email: currentUser!.email, password: oldPassword);
+      await _client.auth.signInWithPassword(email: currentUser!.email, password: oldPassword);
       final UserAttributes userAttributes = UserAttributes(password: newPassword);
       await _client.auth.updateUser(userAttributes);
     } on AuthException catch (e) {

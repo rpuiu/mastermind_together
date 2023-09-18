@@ -14,6 +14,7 @@ class UsersExtendedService extends GetxService {
   static const String _tenantIdField = 'tenant_id';
   static const String _subscriptionIdField = 'subscription_id';
   static const String _avatarUrlField = 'avatar_url';
+  static const String _onboardingStatus = 'onboarding_status';
 
   Future<T> _runQuery<T>(Future<T> Function() query) async {
     try {
@@ -34,6 +35,7 @@ class UsersExtendedService extends GetxService {
         _timezoneField: timezone,
         _tenantIdField: tenantId,
         _subscriptionIdField: subscriptionId,
+        _onboardingStatus: OnboardingStatus.none.name,
       }).select();
 
       if (userExtended.isNotEmpty) {
@@ -58,6 +60,22 @@ class UsersExtendedService extends GetxService {
         return UserModel.fromJson(response[0]);
       } else {
         throw Exception('Unable to update timezone due to no changes');
+      }
+    });
+  }
+
+  Future<OnboardingStatus> readOnboardingStatus(String userId) async {
+    return _runQuery(() async {
+      final response = await _client.from(_usersExtendedTable).select(_onboardingStatus).eq(_userIdField, userId).single();
+      return OnboardingStatus.values.byName(response[_onboardingStatus]);
+    });
+  }
+
+  Future<void> updateOnboardingStatus(String userId, OnboardingStatus onboardingStatus) async {
+    return _runQuery(() async {
+      final List<dynamic> response = await _client.from(_usersExtendedTable).update({_onboardingStatus: onboardingStatus.name}).eq(_userIdField, userId).select();
+      if (response[0] == null) {
+        throw Exception('Unable to update onboarding status due to no changes');
       }
     });
   }

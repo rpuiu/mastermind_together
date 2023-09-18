@@ -1,36 +1,35 @@
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/services/sharedprefs/local_storage.dart';
-
-enum OnboardingStep {
-  noGoal,
-  noAvailability,
-  noGroups,
-  done,
-}
+import 'package:mastermind_together/src/auth/user_model.dart';
+import 'package:mastermind_together/src/services/supa/auth_service.dart';
+import 'package:mastermind_together/src/services/supa/users_extended_service.dart';
 
 class OnboardingController extends GetxController {
-  static final OnboardingController _singleton = OnboardingController._internal();
+  final UsersExtendedService _ueService = Get.find<UsersExtendedService>();
+  final AuthService _authService = Get.find<AuthService>();
 
-  final LocalStorageService _localStorage = Get.find<LocalStorageService>();
+  Rx<OnboardingStatus> nextOnboardingStep = OnboardingStatus.none.obs;
 
-  Rx<OnboardingStep> onboardingStep = OnboardingStep.noGoal.obs;
-
-  factory OnboardingController() {
-    return _singleton;
+  Future<OnboardingStatus> getOnboardingStatus() async {
+    final String userId = _authService.getUser()!.id;
+    return await _ueService.readOnboardingStatus(userId);
   }
 
-  OnboardingController._internal();
+  Future<void> updateOnboardingStatus(OnboardingStatus newOnboardingStatus) async {
+    final String userId = _authService.getUser()!.id;
+    return await _ueService.updateOnboardingStatus(userId, newOnboardingStatus);
+  }
 
   @override
-  void onInit() {
-    super.onInit();
-    final savedStep = _localStorage.getOnboardingStep();
-    if (savedStep != null) {
-      onboardingStep.value = savedStep;
+  void onReady() async {
+    OnboardingStatus onboardingStatus = await getOnboardingStatus();
+    if (OnboardingStatus.done != onboardingStatus) {
+      nextOnboardingStep.value = OnboardingStatus.values[onboardingStatus.index + 1];
+    } else {
+      nextOnboardingStep.value = onboardingStatus;
     }
-
-    ever(onboardingStep, (currentStep) {
-      _localStorage.setOnboardingStep(currentStep);
-    });
+    super.onReady();
   }
+
+  @override
+  void dispose() {}
 }

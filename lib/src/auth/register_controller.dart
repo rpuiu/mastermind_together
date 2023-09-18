@@ -10,10 +10,11 @@ import 'package:mastermind_together/src/services/supa/auth_service.dart';
 import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class AuthController extends GetxController {
+class RegisterController extends GetxController {
   final AuthService _authService = Get.find<AuthService>();
   final AnalyticsService _analytics = Get.find<AnalyticsService>();
   final LocalStorageService _localStorage = Get.find<LocalStorageService>();
+  final RxBool isLoading = false.obs;
 
   String getTenantId() {
     String? tenantIdParam = Get.parameters['tenantId'];
@@ -27,6 +28,7 @@ class AuthController extends GetxController {
   }
 
   Future<void> register(String username, String email, String password) async {
+    isLoading.value = true;
     try {
       UserModel user = await _authService.signUp(getTenantId(), username, email, password);
       _analytics.track('USER_REGISTERED', properties: {'user': '${user.toJson()}'});
@@ -34,37 +36,19 @@ class AuthController extends GetxController {
       _analytics.setUserProperties(user.id, "\$name", user.username);
 
       showSuccessSnackBar(message: 'Congratulations, your account has been successfully created');
-      login(email, password);
-    } on AuthException catch (e) {
-      showErrorSnackBar(message: "Registration failed: ${e.message}");
-    } catch (e) {
-      showErrorSnackBar(message: "Registration failed with an unexpected error, please try again or contact us for support");
-    }
-  }
-
-  Future<void> login(String email, String password) async {
-    try {
-      UserModel user = await _authService.signInWithPassword(email, password);
+      //todo add confirmation email message
+      await _authService.signInWithPassword(email, password);
       _analytics.identify(user.id);
       _analytics.track('USER_AUTHENTICATED', properties: {'user': '${user.toJson()}'});
+
+      isLoading.value = false;
       _redirect();
     } on AuthException catch (e) {
-      if (e.message == 'Invalid login credentials') {
-        showErrorSnackBar(message: "Invalid credentials. Please try again");
-      }
+      showErrorSnackBar(message: "Registration failed: ${e.message}");
+      isLoading.value = false;
     } catch (e) {
-      showErrorSnackBar(message: "Error while authenticating [$email]. Please try again or contact us for support.");
-      await _authService.signOut(); // on sign-in failure, sign out the user
-    }
-  }
-
-  Future<void> logout() async {
-    try {
-      await _authService.signOut();
-      _analytics.track('USER_LOGGED_OUT');
-      showSuccessSnackBar(message: 'Logged out successfully');
-    } catch (e) {
-      showErrorSnackBar(message: "Error while logging out. Please try again or contact us for support");
+      showErrorSnackBar(message: "Registration failed with an unexpected error, please try again or contact us for support");
+      isLoading.value = false;
     }
   }
 
@@ -78,7 +62,7 @@ class AuthController extends GetxController {
       if (_authService.isTenant()) {
         Get.offAllNamed(Routes.tenantDashboard);
       } else {
-        Get.offAllNamed(Routes.splash);
+        Get.offAllNamed(Routes.onboarding);
       }
     }
   }

@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/auth/auth_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/widgets/drawer/base_drawer.dart';
 import 'package:mastermind_together/src/ui/widgets/drawer/custom_drawer_button.dart';
+
+import '../../../auth/login_controller.dart';
 
 class TenantDrawer extends StatelessWidget {
   const TenantDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final AuthController authController = Get.find<AuthController>();
+    final LoginController loginController = Get.find<LoginController>();
     return BaseDrawer(
-      onLogout: authController.logout,
+      onLogout: loginController.logout,
       children: [
         CustomDrawerButton(text: 'Home', iconName: 'home', onTap: () => Get.toNamed(Routes.tenantDashboard)),
         xSpace,

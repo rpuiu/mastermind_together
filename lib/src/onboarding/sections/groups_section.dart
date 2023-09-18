@@ -7,6 +7,8 @@ import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
 
+import '../../auth/user_model.dart';
+
 class GroupsSection extends StatelessWidget {
   const GroupsSection({super.key});
 
@@ -33,7 +35,6 @@ class GroupsSection extends StatelessWidget {
             xxSpace,
             CustomButton(
               onPressed: () {
-                controller.onboardingStep.value = OnboardingStep.done;
                 Get.offAndToNamed(Routes.home);
               },
               label: "Continue to Dashboard",

@@ -1,7 +1,8 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:mastermind_together/src/auth/auth_controller.dart';
+import 'package:mastermind_together/src/auth/login_controller.dart';
+import 'package:mastermind_together/src/auth/register_controller.dart';
 import 'package:mastermind_together/src/availability/availability_controller.dart';
 import 'package:mastermind_together/src/categories/category_controller.dart';
 import 'package:mastermind_together/src/feedback/feedback_controller.dart';
@@ -58,7 +59,8 @@ class GetBindings {
 
     Get.lazyPut(() => mixpanel, fenix: true);
     Get.lazyPut(() => supaClient, fenix: true);
-    Get.lazyPut(() => AuthController(), fenix: true);
+    Get.lazyPut(() => LoginController(), fenix: true);
+    Get.lazyPut(() => RegisterController(), fenix: true);
     Get.lazyPut(() => GoalController(), fenix: true);
     Get.lazyPut(() => AvailabilityController(), fenix: true);
     Get.lazyPut(() => AvailabilityService(), fenix: true);

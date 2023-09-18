@@ -15,3 +15,4 @@ CREATE TABLE public.users_extended
 );
 
 ALTER TABLE public.users_extended ADD COLUMN avatar_url TEXT;
+ALTER TABLE public.users_extended ADD COLUMN onboarding_status TEXT;

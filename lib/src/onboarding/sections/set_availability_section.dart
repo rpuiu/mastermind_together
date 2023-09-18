@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/availability/set_availability_widget.dart';
 import 'package:mastermind_together/src/onboarding/onboarding_controller.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
@@ -36,8 +37,9 @@ class SetAvailabilitySection extends StatelessWidget {
             const SetAvailabilityWidget(),
             xxSpace,
             CustomButton(
-              onPressed: () {
-                controller.onboardingStep.value = OnboardingStep.noGroups;
+              onPressed: () async {
+                await controller.updateOnboardingStatus(OnboardingStatus.done);
+                controller.nextOnboardingStep.value = OnboardingStatus.groups;
               },
               label: "Confirm and Find Groups",
               labelTextStyle: buttonTextStyle,

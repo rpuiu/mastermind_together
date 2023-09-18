@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/availability/set_availability_widget.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:mastermind_together/src/goal/widgets/category_dropdown_widget.dart';
@@ -29,14 +30,14 @@ class OnboardingScreen extends GetView<OnboardingController> {
         child: ResponsivePaddingWrapper(
           child: Obx(
             () {
-              switch (controller.onboardingStep.value) {
-                case OnboardingStep.noGoal:
+              switch (controller.nextOnboardingStep.value) {
+                case OnboardingStatus.goals:
                   return SetGoalSection(formKey: formKey, goalInputController: goalInputController);
-                case OnboardingStep.noAvailability:
+                case OnboardingStatus.availability:
                   return const SetAvailabilitySection();
-                case OnboardingStep.noGroups:
+                case OnboardingStatus.groups:
                   return const GroupsSection();
-                case OnboardingStep.done:
+                case OnboardingStatus.done:
                 default:
                   return const SizedBox();
               }

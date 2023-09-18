@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:mastermind_together/src/goal/widgets/category_dropdown_widget.dart';
 import 'package:mastermind_together/src/goal/widgets/goal_input_field.dart';
@@ -55,7 +56,8 @@ class SetGoalSection extends StatelessWidget {
                 onPressed: () async {
                   if (formKey.currentState!.validate()) {
                     await goalController.saveGoal(goalInputController.text);
-                    controller.onboardingStep.value = OnboardingStep.noAvailability;
+                    await controller.updateOnboardingStatus(OnboardingStatus.goals);
+                    controller.nextOnboardingStep.value = OnboardingStatus.availability;
                   }
                 },
                 label: "Set My Goal!",

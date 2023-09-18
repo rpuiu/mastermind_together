@@ -1,14 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/auth/auth_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/checkbox/checkbox.dart';
 
-class TermsAndConditionsWidget extends GetView<AuthController> {
-  final RxBool isChecked = false.obs;
+class TermsAndConditionsWidget extends GetView {
   final String tenantId;
+  final RxBool isChecked = false.obs;
 
   TermsAndConditionsWidget({Key? key, required this.tenantId}) : super(key: key);
 
