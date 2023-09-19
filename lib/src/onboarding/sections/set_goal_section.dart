@@ -8,6 +8,7 @@ import 'package:mastermind_together/src/onboarding/onboarding_controller.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
+import 'package:mastermind_together/src/util/iframe.dart';
 
 class SetGoalSection extends StatelessWidget {
   final GlobalKey<FormState> formKey;
@@ -28,14 +29,13 @@ class SetGoalSection extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(width: 156, height: 162, 'assets/images/home/target.png'),
-              //TODO Iframe(
-              //   src:
-              //       'https://embed.voomly.com/embed/assets/embed.html?videoId=lc3IReQPIVqmAkhLQLh4A_c7HFswWkSj7hoJdVRZLeLPDQwMF&videoRatio=1.777778&type=v&skinColor=%23008EFF',
-              //   width: 560,
-              //   height: 314,
-              // ),
-
+              // Image.asset(width: 156, height: 162, 'assets/images/home/target.png'),
+              const Iframe(
+                src:
+                'https://embed.voomly.com/embed/assets/embed.html?videoId=B4JMObpxH&videoRatio=1.8172588832487309&type=f&skinColor=%23008EFF',
+                width: 560,
+                height: 308,
+              ),
               xxSpace,
               const Text("Step 1/3", style: labelText),
               xSpace,

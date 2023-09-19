@@ -20,7 +20,7 @@ class CategoryDropdown extends StatelessWidget {
               label: "Category",
               hint: 'E.g. Fitness',
               icon: const InfoTooltip(
-                title: 'Why Choose a Category?xx',
+                title: 'Why Choose a Category?',
                 content: 'The category broadly defines the area of your life that your goal impacts. Choose carefully as it influences group suggestions.',
               ),
               selectedValue: selectedCategory?.value,

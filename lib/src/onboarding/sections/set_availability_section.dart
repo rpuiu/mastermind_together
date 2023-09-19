@@ -6,6 +6,7 @@ import 'package:mastermind_together/src/onboarding/onboarding_controller.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
+import 'package:mastermind_together/src/util/iframe.dart';
 
 class SetAvailabilitySection extends StatelessWidget {
   const SetAvailabilitySection({super.key});
@@ -19,12 +20,18 @@ class SetAvailabilitySection extends StatelessWidget {
         constraints: const BoxConstraints(maxWidth: oneColContentWidth),
         child: Column(
           children: [
-            Image.asset(width: 156, height: 162, 'assets/images/onboarding/onboard-2-nobg.png'),
+            // Image.asset(width: 156, height: 162, 'assets/images/onboarding/onboard-2-nobg.png'),
+            const Iframe(
+              src:
+              'https://embed.voomly.com/embed/assets/embed.html?videoId=1ZTW8VyCH&videoRatio=1.5139949109414759&type=f&skinColor=%23008EFF',
+              width: 560,
+              height: 369,
+            ),
             xxSpace,
             const Text("Step 2/3", style: labelText),
             xSpace,
             Text(
-              "Set Your Availability for Accountability Groups",
+              "Set Your Availability for Mastermind Groups",
               style: welcomeTextStyle,
               textAlign: TextAlign.center,
             ),
