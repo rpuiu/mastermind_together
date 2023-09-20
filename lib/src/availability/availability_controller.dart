@@ -28,21 +28,22 @@ class AvailabilityController extends GetxController {
   final RxString selectedTimezone = ''.obs;
   final RxList<String> allTimezones = <String>[].obs;
 
-  final RxBool isLoading = false.obs;
+  final RxBool isLoading = true.obs;
+  RxMap<String, bool> selectedDayStatus = <String, bool>{}.obs;
   final RxBool availabilityChanged = false.obs;
 
   @override
-  Future<void> onInit() async {
-    super.onInit();
+  Future<void> onReady() async {
+    super.onReady();
     _initDays();
     await _fetchTimeZones();
     await _fetchAvailability();
+    isLoading.value = false;
     availabilityChanged.value = false;
+
   }
 
   Future<bool> saveAvailability(DayModel dayToSave) async {
-    isLoading.value = true;
-
     UserModel? currentUser = _authService.getUser();
     bool success = false;
     if (currentUser != null) {
@@ -62,9 +63,6 @@ class AvailabilityController extends GetxController {
         'availability': jsonEncode(days.map((day) => day.toJson()).toList()),
       });
     }
-
-    isLoading.value = false;
-
     return success;
   }
 
@@ -204,12 +202,18 @@ class AvailabilityController extends GetxController {
         (meetingTime.hour == endTimeMinus30.hour && meetingTime.minute > endTimeMinus30.minute));
   }
 
-  void resetAvailability(DayModel day) {
+  Future<void> resetAvailability(DayModel day) async {
+    selectedDayStatus.value = {day.dayName: true};
     day.fromTime = null;
     day.toTime = null;
-    saveAvailability(day);
+    await saveAvailability(day);
+    selectedDayStatus.value = {day.dayName: false};
     days.refresh();
   }
 
   bool isSet(DayModel day) => day.fromTime != null && day.toTime != null;
+
+  bool isLoadingDay(DayModel day) {
+    return selectedDayStatus.value.containsKey(day.dayName) && selectedDayStatus.value[day.dayName]!;
+  }
 }

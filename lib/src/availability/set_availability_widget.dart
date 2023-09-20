@@ -15,9 +15,7 @@ class SetAvailabilityWidget extends GetView<AvailabilityController> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => controller.isLoading.value ? _buildLoadingState() : _buildContentState(context),
-    );
+    return _buildContentState(context);
   }
 
   Column _buildContentState(BuildContext context) {
@@ -31,7 +29,7 @@ class SetAvailabilityWidget extends GetView<AvailabilityController> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildTimezoneDropDown(context),
+                Obx(() => _buildTimezoneDropDown(context)),
                 xxSpace,
                 const Align(
                   alignment: Alignment.centerLeft,
@@ -46,7 +44,7 @@ class SetAvailabilityWidget extends GetView<AvailabilityController> {
                   ),
                 ),
                 halfSpace,
-                _buildDaysList(context),
+                Obx(() => _buildDaysList(context)),
               ],
             ),
           ),
@@ -94,12 +92,7 @@ class SetAvailabilityWidget extends GetView<AvailabilityController> {
             dense: true,
             title: Text(day.dayName.toUpperCase(), style: bodySemiBold),
             subtitle: controller.isSet(day) ? Text('From ${day.fromTime!.format(context)} to ${day.toTime!.format(context)}') : null,
-            trailing: controller.isSet(day)
-                ? CloseBtn(
-                    onPressed: () => controller.resetAvailability(day),
-                    iconState: IconState.defaultState,
-                  )
-                : null,
+            trailing: _buildTrailingWidget(day),
             onTap: () => _handleDayTap(context, day),
           ),
         );
@@ -107,14 +100,31 @@ class SetAvailabilityWidget extends GetView<AvailabilityController> {
     );
   }
 
-  Center _buildLoadingState() {
-    return const Center(
-      child: CircularProgressIndicator(),
-    );
+  Widget? _buildTrailingWidget(DayModel day) {
+    if (controller.isLoadingDay(day)!) {
+      return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          double desiredSize = constraints.maxHeight * 0.7; // Adjust as needed
+          return SizedBox(
+            height: desiredSize,
+            width: desiredSize,
+            child: const CircularProgressIndicator(strokeWidth: 3.0),
+          );
+        },
+      );
+    }
+    if (controller.isSet(day)) {
+      return CloseBtn(
+        onPressed: () async => await controller.resetAvailability(day),
+        iconState: IconState.defaultState,
+      );
+    }
+    return null;
   }
 
   Future<void> _handleDayTap(BuildContext context, DayModel day) async {
     BuildContext ctx = context;
+    controller.selectedDayStatus.value = {day.dayName: true};
 
     Future<TimeOfDay?> pickTime(TimeOfDay? initialTime, String helpText) {
       return showTimePicker(
@@ -126,15 +136,22 @@ class SetAvailabilityWidget extends GetView<AvailabilityController> {
     }
 
     final fromTime = await pickTime(day.fromTime, 'From:');
-    if (fromTime == null) return;
+    if (fromTime == null) {
+      controller.selectedDayStatus.value = {day.dayName: false};
+      return;
+    }
 
     final toTime = await pickTime(day.toTime, 'To:');
-    if (toTime == null) return;
+    if (toTime == null) {
+      controller.selectedDayStatus.value = {day.dayName: false};
+      return;
+    }
 
     final fromDuration = Duration(hours: fromTime.hour, minutes: fromTime.minute);
     final toDuration = Duration(hours: toTime.hour, minutes: toTime.minute);
 
     if (fromDuration.compareTo(toDuration) >= 0) {
+      controller.selectedDayStatus.value = {day.dayName: false};
       showErrorSnackBar(message: 'End time should be greater than start time');
       return;
     }
@@ -144,12 +161,11 @@ class SetAvailabilityWidget extends GetView<AvailabilityController> {
 
     if (day.fromTime != null && day.toTime != null) {
       bool success = await controller.saveAvailability(day);
-      if (success) {
-        showSuccessSnackBar(message: "Availability updated for ${day.dayName}");
-      } else {
+      if (!success) {
         showErrorSnackBar(message: "There was an error saving your availability for ${day.dayName}. Please try again or refresh the page.");
       }
     }
+    controller.selectedDayStatus.value = {day.dayName: false};
 
     controller.days.refresh();
   }
