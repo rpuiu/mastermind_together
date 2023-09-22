@@ -5,10 +5,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mastermind_together/app.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:timezone/data/latest.dart' as tz;
+import 'package:url_strategy/url_strategy.dart';
 
 import 'src/get_bindings.dart';
 
 Future<void> main() async {
+  setPathUrlStrategy(); //Remove # from web
   await dotenv.load(fileName: ".env.prod");
   await GetBindings.init();
   tz.initializeTimeZones();

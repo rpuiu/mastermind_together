@@ -49,6 +49,7 @@ dependencies:
   flutter_svg: ^2.0.7
   image_picker: ^1.0.4
   cached_network_image: ^3.2.3
+  url_strategy: ^0.2.0
 
 dev_dependencies:
   flutter_test:
@@ -102,14 +103,14 @@ flutter:
         - asset: fonts/Inter/static/Inter-Regular.ttf
         - asset: fonts/Inter/static/Inter-Medium.ttf
         - asset: fonts/Inter/static/Inter-Bold.ttf
-#        - asset: fonts/Roboto/Roboto-Regular.ttf
-#        - asset: fonts/Roboto/Roboto-Medium.ttf
-#        - asset: fonts/Roboto/Roboto-Bold.ttf
-#    - family: Trajan Pro
-#      fonts:
-#        - asset: fonts/TrajanPro.ttf
-#        - asset: fonts/TrajanPro_Bold.ttf
-#          weight: 700
+  #        - asset: fonts/Roboto/Roboto-Regular.ttf
+  #        - asset: fonts/Roboto/Roboto-Medium.ttf
+  #        - asset: fonts/Roboto/Roboto-Bold.ttf
+  #    - family: Trajan Pro
+  #      fonts:
+  #        - asset: fonts/TrajanPro.ttf
+  #        - asset: fonts/TrajanPro_Bold.ttf
+  #          weight: 700
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
