@@ -7,6 +7,7 @@ import 'package:mastermind_together/src/services/mixpanel/analytics_service.dart
 import 'package:mastermind_together/src/services/sharedprefs/local_storage.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';
 import 'package:mastermind_together/src/services/supa/users_extended_service.dart';
+import 'package:mastermind_together/src/tenant/tenant_identifier.dart';
 import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -15,12 +16,28 @@ class LoginController extends GetxController {
   final UsersExtendedService _ueService = Get.find<UsersExtendedService>();
   final AnalyticsService _analytics = Get.find<AnalyticsService>();
   final LocalStorageService _localStorage = Get.find<LocalStorageService>();
+  final TenantIdentifier _tenantIdentifier = Get.find<TenantIdentifier>();
+
   final RxBool isLoading = false.obs;
+
+  final RxString tenantIdObs = ''.obs;
+
+  @override
+  onInit() async {
+    super.onInit();
+    tenantIdObs.value = await _tenantIdentifier.getTenantId();
+  }
 
   Future<void> login(String email, String password) async {
     isLoading.value = true;
     try {
       UserModel user = await _authService.signInWithPassword(email, password);
+      if (!_verifyTenant(user, tenantIdObs.value)) {
+        showErrorSnackBar(message: "You are not authorized to log in here.");
+        await _authService.signOut();
+        isLoading.value = false;
+        return;
+      }
       _analytics.identify(user.id);
       _analytics.track('USER_AUTHENTICATED', properties: {'user': '${user.toJson()}'});
 
@@ -65,5 +82,9 @@ class LoginController extends GetxController {
         }
       }
     }
+  }
+
+  bool _verifyTenant(UserModel user, String tenantId) {
+    return user.tenantId == tenantId;
   }
 }

@@ -34,6 +34,7 @@ import 'package:mastermind_together/src/services/supa/users_extended_service.dar
 import 'package:mastermind_together/src/services/timezone/timezone_service.dart';
 import 'package:mastermind_together/src/subscription/subscription_controller.dart';
 import 'package:mastermind_together/src/tenant/tenant_controller.dart';
+import 'package:mastermind_together/src/tenant/tenant_identifier.dart';
 import 'package:mastermind_together/src/tenant/terms/terms_controller.dart';
 import 'package:mastermind_together/src/ui/widgets/drawer/drawer_state_controller.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
@@ -98,5 +99,6 @@ class GetBindings {
     Get.lazyPut(() => MembersController(), fenix: true);
     Get.lazyPut(() => GroupOperationsController(), fenix: true);
     Get.lazyPut(() => HomeController(), fenix: true);
+    Get.lazyPut(() => TenantIdentifier(), fenix: true);
   }
 }

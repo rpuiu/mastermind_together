@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/tos/terms_and_conditions_widget.dart';
 import 'package:mastermind_together/src/routes.dart';
@@ -15,6 +14,7 @@ import 'package:mastermind_together/src/util/form_validators.dart';
 class TenantRegisterScreen extends GetView<TenantController> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController tenantNameController = TextEditingController();
+  final TextEditingController tenantHostController = TextEditingController();
   final TextEditingController adminEmailController = TextEditingController();
   final TextEditingController adminPasswordController = TextEditingController();
   final TextEditingController confirmAdminPasswordController = TextEditingController();
@@ -23,8 +23,7 @@ class TenantRegisterScreen extends GetView<TenantController> {
 
   @override
   Widget build(BuildContext context) {
-    String mmtTenantId = dotenv.env['MMT_TENANT_ID']!;
-    final TermsAndConditionsWidget termsOfService = TermsAndConditionsWidget(tenantId: mmtTenantId);
+    final TermsAndConditionsWidget termsOfService = TermsAndConditionsWidget();
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -47,6 +46,12 @@ class TenantRegisterScreen extends GetView<TenantController> {
                       label: 'Tenant Name',
                       hintText: "Enter your tenant name",
                       validator: FormValidators.validateUsername, // update this as per your requirements
+                    ),
+                    CustomTextFormField(
+                      controller: tenantHostController,
+                      label: 'Host',
+                      hintText: "E.g. app.mastermindtogether.com",
+                      validator: (value) => FormValidators.validateEmpty(value, 'Please enter the host name used to redirect to our app'),
                     ),
                     xxSpace,
                     CustomTextFormField(
@@ -80,12 +85,17 @@ class TenantRegisterScreen extends GetView<TenantController> {
                       () => CustomButton(
                         onPressed: () {
                           if (formKey.currentState?.validate() ?? false) {
-                            controller.registerTenant(tenantNameController.text, adminEmailController.text, adminPasswordController.text);
+                            controller.registerTenant(
+                              tenantNameController.text,
+                              adminEmailController.text,
+                              adminPasswordController.text,
+                              tenantHostController.text,
+                            );
                           }
                         },
                         isEnabled: termsOfService.isChecked.value,
                         label: 'Register Tenant',
-                        labelTextStyle: buttonTextStyle,
+                        labelTextStyle: termsOfService.isChecked.value ? buttonTextStyle : inactiveButtonTextStyle,
                         backgroundColor: buttonBackgroundColor,
                       ),
                     ),

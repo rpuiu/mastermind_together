@@ -35,7 +35,7 @@ class RegisterForm extends GetView<RegisterController> {
 
   @override
   Widget build(BuildContext context) {
-    final TermsAndConditionsWidget termsOfService = TermsAndConditionsWidget(tenantId: controller.getTenantId());
+    final TermsAndConditionsWidget termsOfService = TermsAndConditionsWidget();
 
     return FocusScope(
       child: ConstrainedBox(

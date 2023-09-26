@@ -6,10 +6,9 @@ import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/checkbox/checkbox.dart';
 
 class TermsAndConditionsWidget extends GetView {
-  final String tenantId;
   final RxBool isChecked = false.obs;
 
-  TermsAndConditionsWidget({Key? key, required this.tenantId}) : super(key: key);
+  TermsAndConditionsWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,19 +30,13 @@ class TermsAndConditionsWidget extends GetView {
                   TextSpan(
                     text: 'Terms of Service',
                     style: linkTextStyle.copyWith(fontWeight: FontWeight.w500),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () => Get.toNamed(
-                            Routes.termsOfServiceRoute(tenantId),
-                          ),
+                    recognizer: TapGestureRecognizer()..onTap = () => Get.toNamed(Routes.termsOfService),
                   ),
                   const TextSpan(text: ' and '),
                   TextSpan(
                     text: 'Privacy Policy',
                     style: linkTextStyle.copyWith(fontWeight: FontWeight.w500),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () => Get.toNamed(
-                            Routes.privacyPolicyRoute(tenantId),
-                          ),
+                    recognizer: TapGestureRecognizer()..onTap = () => Get.toNamed(Routes.privacyPolicy),
                   ),
                 ],
               ),

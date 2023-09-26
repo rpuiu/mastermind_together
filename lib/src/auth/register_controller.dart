@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/services/mixpanel/analytics_service.dart';
 import 'package:mastermind_together/src/services/sharedprefs/local_storage.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';
+import 'package:mastermind_together/src/tenant/tenant_identifier.dart';
 import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -14,23 +14,20 @@ class RegisterController extends GetxController {
   final AuthService _authService = Get.find<AuthService>();
   final AnalyticsService _analytics = Get.find<AnalyticsService>();
   final LocalStorageService _localStorage = Get.find<LocalStorageService>();
+  final TenantIdentifier _tenantIdentifier = Get.find<TenantIdentifier>();
   final RxBool isLoading = false.obs;
+  final RxString tenantIdObs = ''.obs;
 
-  String getTenantId() {
-    String? tenantIdParam = Get.parameters['tenantId'];
-    String tenantId;
-    if (tenantIdParam == ":tenantId" || tenantIdParam == null) {
-      tenantId = dotenv.env['MMT_TENANT_ID']!;
-    } else {
-      tenantId = tenantIdParam;
-    }
-    return tenantId;
+  @override
+  onInit() async {
+    super.onInit();
+    tenantIdObs.value = await _tenantIdentifier.getTenantId();
   }
 
   Future<void> register(String username, String email, String password) async {
     isLoading.value = true;
     try {
-      UserModel user = await _authService.signUp(getTenantId(), username, email, password);
+      UserModel user = await _authService.signUp(tenantIdObs.value, username, email, password);
       _analytics.track('USER_REGISTERED', properties: {'user': '${user.toJson()}'});
       _analytics.setUserProperties(user.id, "\$email", user.email);
       _analytics.setUserProperties(user.id, "\$name", user.username);

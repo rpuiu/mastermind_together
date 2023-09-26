@@ -26,7 +26,7 @@ import 'package:mastermind_together/src/ui/widgets/images/right_side_image_contr
 class Routes {
   static const String home = '/home';
   static const String login = '/login';
-  static const String register = '/:tenantId/register';
+  static const String register = '/register';
   static const String availability = '/set-availability';
   static const String createGroup = '/create-group';
   static const String allGroups = '/view-groups';
@@ -53,8 +53,8 @@ class Routes {
     GetPage(name: createGroup, page: () => CreateGroupScreen(), middlewares: [AuthMiddleware()]),
     GetPage(name: allGroups, page: () => AllGroupsScreen(), middlewares: [AuthMiddleware()]),
     GetPage(name: tenantRegister, page: () => TenantRegisterScreen()), //TODO secure!
-    GetPage(name: '/:tenantId/$termsOfService', page: () => TermsScreen(documentType: 'TOS')),
-    GetPage(name: '/:tenantId/$privacyPolicy', page: () => TermsScreen(documentType: 'Privacy')),
+    GetPage(name: termsOfService, page: () => const TermsScreen(documentType: 'TOS')),
+    GetPage(name: privacyPolicy, page: () => const TermsScreen(documentType: 'Privacy')),
     GetPage(name: userProfile, page: () => UserProfileScreen()),
     GetPage(name: feedback, page: () => FeedbackScreen()),
     GetPage(name: tenantDashboard, page: () => const TenantDashboardScreen()),
@@ -84,10 +84,6 @@ class Routes {
   ];
 
   static String groupRoute(String groupId) => '$group/$groupId';
-
-  static String termsOfServiceRoute(String tenantId) => '/$tenantId$termsOfService';
-
-  static String privacyPolicyRoute(String tenantId) => '/$tenantId$privacyPolicy';
 
   static String goalRoute(String goalId) => '$goal/$goalId';
 }

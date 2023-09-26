@@ -16,7 +16,7 @@ class TenantService extends GetxService {
   final SettingsService _settingsService = Get.find<SettingsService>();
   final SubscriptionService _subscriptionService = Get.find<SubscriptionService>();
 
-  Future<void> registerTenant(String tenantName, String adminEmail, String adminPassword) async {
+  Future<void> registerTenant(String tenantName, String adminEmail, String adminPassword, String hostName) async {
     try {
       final AuthResponse tenant = await _client.auth.signUp(
         email: adminEmail,
@@ -28,6 +28,7 @@ class TenantService extends GetxService {
       await _client.from('tenants').insert({
         'tenant_id': userId,
         'name': tenantName,
+        'hostname': hostName,
       });
 
       await _settingsService.createInitialSettings(userId, 'Initial Terms of Service', 'Initial Privacy Policy');
@@ -38,6 +39,16 @@ class TenantService extends GetxService {
       _localStorage.saveUser(userModel);
     } catch (e, s) {
       Log().e('Failed to create tenant: ', e, s);
+    }
+  }
+
+  Future<String> getTenantIdByHostName(String hostname) async {
+    try {
+      final response = await _client.from('tenants').select('tenant_id').eq('hostname', hostname).single();
+      return response['tenant_id'];
+    } catch (e, s) {
+      Log().e('Failed to get tenant id: ', e, s);
+      rethrow;
     }
   }
 }

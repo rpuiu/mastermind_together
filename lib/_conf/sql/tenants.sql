@@ -4,3 +4,5 @@ CREATE TABLE public.tenants
     name TEXT NOT NULL UNIQUE,
     PRIMARY KEY (tenant_id)
 );
+
+ALTER TABLE public.tenants ADD COLUMN hostname TEXT UNIQUE;
