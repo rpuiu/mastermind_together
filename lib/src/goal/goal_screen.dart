@@ -4,6 +4,7 @@ import 'package:mastermind_together/src/goal/actions/actions_controller.dart';
 import 'package:mastermind_together/src/goal/actions/add_actions_widget.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
+import 'package:mastermind_together/src/goal/goals_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/app_icons.dart';
 import 'package:mastermind_together/src/ui/theme/scaffold/scrollable_custom_scaffold.dart';
@@ -17,10 +18,11 @@ class GoalScreen extends GetView<GoalController> {
   final String goalId = Get.parameters['goalId']!;
 
   GoalScreen({Key? key}) : super(key: key);
+  final GoalsController _goalsController = Get.find<GoalsController>();
 
   @override
   Widget build(BuildContext context) {
-    controller.fetchGoalDetails(goalId);
+    controller.goalId = goalId;
     return ScrollableCustomScaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,43 +30,45 @@ class GoalScreen extends GetView<GoalController> {
           xHalfSpace,
           Row(
             children: [
-              Row(
-                children: [
-                  const Text("Goal", style: headingText),
-                  DeleteBtn(
-                    onPressed: () async {
-                      bool shouldDelete = await _showDeleteConfirmation();
-                      if (shouldDelete) {
-                        await controller.deleteGoal(goalId);
-                        showSuccessSnackBar(message: "Successfully deleted goal");
-                        Get.toNamed(Routes.home);
-                      }
-                    },
-                    iconState: IconState.fail,
-                  ),
-                ],
+              const Text("Goal", style: headingText),
+              DeleteBtn(
+                onPressed: () async {
+                  bool shouldDelete = await _showDeleteConfirmation();
+                  if (shouldDelete) {
+                    await controller.deleteGoal(goalId);
+                    showSuccessSnackBar(message: "Successfully deleted goal");
+                    _goalsController.fetchUserGoals();
+                    Get.toNamed(Routes.home);
+                  }
+                },
+                iconState: IconState.fail,
               ),
             ],
           ),
           xHalfSpace,
           Obx(() {
-            final goal = controller.goalDetails.value;
-            if (goal != null) {
-              return _buildGoalDetails(goal);
+            if (controller.isLoading.value) {
+              return const Center(child: CircularProgressIndicator());
             } else {
-              return const CircularProgressIndicator();
+              return _buildGoalDetails(controller.goalDetails.value!);
             }
           }),
           xxxSpace,
           const Text("Actions", style: headingText),
           xSpace,
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.8,
-            child: AddActionsWidget(
-              goalId: goalId,
-              actionController: ActionController(goalId),
-            ),
-          ),
+          Obx(() {
+            if (controller.isLoading.value) {
+              return const Center(child: CircularProgressIndicator());
+            } else {
+              return SizedBox(
+                height: MediaQuery.of(context).size.height * 0.8,
+                child: AddActionsWidget(
+                  goalId: goalId,
+                  actionController: ActionController(controller.goalDetails.value!),
+                ),
+              );
+            }
+          }),
         ],
       ),
     );

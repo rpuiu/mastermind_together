@@ -1,3 +1,5 @@
+import 'package:mastermind_together/src/goal/actions/action_model.dart';
+
 class GoalModel {
   final String id;
   final String userId;
@@ -9,19 +11,20 @@ class GoalModel {
   final DateTime createdAt;
   final DateTime updatedAt;
   int rank;
+  List<ActionModel>? actions = [];
 
-  GoalModel({
-    required this.id,
-    required this.userId,
-    required this.goal,
-    required this.category,
-    required this.status,
-    required this.dueDate,
-    required this.autoSelectGroup,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.rank,
-  });
+  GoalModel(
+      {required this.id,
+      required this.userId,
+      required this.goal,
+      required this.category,
+      required this.status,
+      required this.dueDate,
+      required this.autoSelectGroup,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.rank,
+      this.actions});
 
   Map<String, dynamic> toJson() {
     return {
@@ -50,6 +53,7 @@ class GoalModel {
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
       rank: json['rank'],
+      actions:  json['actions'] != null ? List<ActionModel>.from(json['actions']?.map((i) => ActionModel.fromJson(i)).toList()) : null,
     );
   }
 }

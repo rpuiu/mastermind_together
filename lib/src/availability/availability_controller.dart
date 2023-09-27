@@ -29,7 +29,7 @@ class AvailabilityController extends GetxController {
   final RxList<String> allTimezones = <String>[].obs;
 
   final RxBool isLoading = true.obs;
-  RxMap<String, bool> selectedDayStatus = <String, bool>{}.obs;
+  final RxMap<String, bool> selectedDayStatus = <String, bool>{}.obs;
   final RxBool availabilityChanged = false.obs;
 
   @override
@@ -40,7 +40,6 @@ class AvailabilityController extends GetxController {
     await _fetchAvailability();
     isLoading.value = false;
     availabilityChanged.value = false;
-
   }
 
   Future<bool> saveAvailability(DayModel dayToSave) async {
@@ -213,7 +212,7 @@ class AvailabilityController extends GetxController {
 
   bool isSet(DayModel day) => day.fromTime != null && day.toTime != null;
 
-  bool isLoadingDay(DayModel day) {
+  bool isLoadingAvailability(DayModel day) {
     return selectedDayStatus.value.containsKey(day.dayName) && selectedDayStatus.value[day.dayName]!;
   }
 }

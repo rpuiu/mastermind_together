@@ -6,15 +6,23 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class GoalService extends GetxService {
   final SupabaseClient _client = Get.find<SupabaseClient>();
   late RealtimeChannel insertGoalSubscription;
+  static const String _actionsTable = 'actions';
+  static const String _goalsTable = 'goals';
 
   Future<List<GoalModel>> readUserGoals(String userId) async {
-    final List<dynamic> data = await _client.from('goals').select().eq('user_id', userId).order('rank', ascending: true);
-    return data.map((e) => GoalModel.fromJson(e)).toList();
+    try {
+      final List<dynamic> data =
+          await _client.from(_goalsTable).select('*,$_actionsTable:$_actionsTable (*)').eq('user_id', userId).order('rank', ascending: true);
+      return data.map((e) => GoalModel.fromJson(e)).toList();
+    } catch (e, s) {
+      Log().e("Error while reading goals for $userId:", e, s, userId);
+      rethrow;
+    }
   }
 
   Future<GoalModel> createGoal(String userId, String goal, String category, bool autoSelectGroup, String tenantId, int rank) async {
     try {
-      List<Map<String, dynamic>> goalResponse = await _client.from('goals').insert({
+      List<Map<String, dynamic>> goalResponse = await _client.from(_goalsTable).insert({
         'user_id': userId,
         'goal': goal,
         'category': category,
@@ -35,9 +43,9 @@ class GoalService extends GetxService {
 
   void subscribeToGoalChanges(Function(GoalModel) onNewGoal) {
     try {
-      insertGoalSubscription = _client.channel('public:goals').on(
+      insertGoalSubscription = _client.channel('public:$_goalsTable').on(
         RealtimeListenTypes.postgresChanges,
-        ChannelFilter(event: 'INSERT', schema: 'public', table: 'goals'),
+        ChannelFilter(event: 'INSERT', schema: 'public', table: _goalsTable),
         (payload, [ref]) {
           Log().i('Goal change occurred: ${payload.toString()}');
           onNewGoal(GoalModel.fromJson(payload["new"]));
@@ -61,12 +69,12 @@ class GoalService extends GetxService {
   }
 
   Future<void> updateGoalRank(String goalId, int newRank) async {
-    await _client.from('goals').update({'rank': newRank}).eq('id', goalId);
+    await _client.from(_goalsTable).update({'rank': newRank}).eq('id', goalId);
   }
 
   Future<GoalModel?> getGoalDetails(String goalId) async {
     try {
-      final Map<String, dynamic> response = await _client.from('goals').select().eq('id', goalId).single();
+      final Map<String, dynamic> response = await _client.from(_goalsTable).select('*,$_actionsTable:$_actionsTable (*)').eq('id', goalId).single();
       return GoalModel.fromJson(response);
     } catch (e, s) {
       Log().e("Error while fetching goal details for $goalId:", e, s);
@@ -76,11 +84,10 @@ class GoalService extends GetxService {
 
   Future<void> deleteGoal(String goalId) async {
     try {
-      await _client.from('goals').delete().eq('id', goalId);
+      await _client.from(_goalsTable).delete().eq('id', goalId);
     } catch (e, s) {
       Log().e("Error while deleting goal with id $goalId:", e, s);
       rethrow;
     }
   }
-
 }

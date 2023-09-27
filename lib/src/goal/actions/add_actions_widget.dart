@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:mastermind_together/src/goal/actions/action_model.dart';
 import 'package:mastermind_together/src/goal/actions/actions_controller.dart';
 import 'package:mastermind_together/src/goal/actions/actions_editing_controller.dart';
+import 'package:mastermind_together/src/goal/goal_model.dart';
 import 'package:mastermind_together/src/ui/theme/app_icons.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
@@ -26,8 +27,6 @@ class AddActionsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    actionController.fetchActionsForGoal();
-
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -52,9 +51,9 @@ class AddActionsWidget extends StatelessWidget {
               hintText: 'New Action',
               emptyValidationMsg: 'Please add a new action',
             )),
-            AddBtn(onPressed: () {
+            AddBtn(onPressed: () async{
               if (_formKey.currentState!.validate()) {
-                actionController.createAction(goalId, textEditingController.text, 'pending');
+                await actionController.createAction(goalId, textEditingController.text, 'pending');
                 textEditingController.clear();
               }
             }),
@@ -70,16 +69,16 @@ class AddActionsWidget extends StatelessWidget {
       child: Obx(() {
         return ReorderableListView.builder(
           buildDefaultDragHandles: false,
-          itemCount: actionController.actions.length,
+          itemCount: actionController.getGoalActions().length,
           itemBuilder: (context, index) => _buildActionListItem(context, index),
-          onReorder: (oldIndex, newIndex) => actionController.reorderActions(oldIndex, newIndex),
+          onReorder: (oldIndex, newIndex) async => await actionController.reorderActions(oldIndex, newIndex),
         );
       }),
     );
   }
 
   Widget _buildActionListItem(BuildContext context, int index) {
-    final ActionModel action = actionController.actions[index];
+    final ActionModel action = actionController.getGoalActions()[index];
     final TextEditingController editController = TextEditingController(text: action.description);
 
     return KeyedSubtree(
@@ -90,7 +89,7 @@ class AddActionsWidget extends StatelessWidget {
           onTap: () => this.editController.toggleEditing(action.id),
           title: Obx(() => _buildEditableTitle(action, editController, index)),
           tileColor: index == 0 ? activeMenuIconColor.withOpacity(0.6) : null,
-          leading: ReorderBtn(index: actionController.actions.indexOf(action)),
+          leading: ReorderBtn(index: actionController.getGoalActions().indexOf(action)),
           trailing: _buildActionItemTrailing(context, action, editController),
         ),
       ),
@@ -101,8 +100,8 @@ class AddActionsWidget extends StatelessWidget {
     if (this.editController.isEditing(action.id)) {
       return CustomEditTextField(
         editController: editController,
-        onEditingComplete: () {
-          actionController.updateActionDescription(action.id, editController.text);
+        onEditingComplete: () async {
+          await actionController.updateActionDescription(action.id, editController.text);
           this.editController.toggleEditing(action.id);
         },
       );
@@ -121,9 +120,9 @@ class AddActionsWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             DoneBtn(
-              onPressed: () {
+              onPressed: () async {
                 actionController.updateListWithActionDescription(action.id, editController.text);
-                actionController.updateActionDescription(action.id, editController.text);
+                await actionController.updateActionDescription(action.id, editController.text);
                 this.editController.toggleEditing(action.id);
               },
             ),

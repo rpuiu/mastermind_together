@@ -1,88 +1,31 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/categories/category_controller.dart';
 import 'package:mastermind_together/src/goal/actions/actions_controller.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
-import 'package:mastermind_together/src/services/mixpanel/analytics_service.dart';
-import 'package:mastermind_together/src/services/supa/auth_service.dart';
+import 'package:mastermind_together/src/goal/goals_controller.dart';
 import 'package:mastermind_together/src/services/supa/goal_service.dart';
 import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 
 class GoalController extends GetxController {
-  final AuthService _authService = Get.find<AuthService>();
+  String? goalId;
+
   final GoalService _goalService = Get.find<GoalService>();
   final CategoryController categoryController = Get.find<CategoryController>();
-  final AnalyticsService _analytics = Get.find<AnalyticsService>();
+  final GoalsController goalsController = Get.find<GoalsController>();
   final isLoading = Rx<bool>(true);
 
-  RxString? selectedCategory = ''.obs;
-  RxBool autoSelectGroup = false.obs;
-
-  final RxList<GoalModel> goals = <GoalModel>[].obs;
-  final RxList<bool> expandedGoals = <bool>[].obs;
   final Map<String, ActionController> actionControllers = <String, ActionController>{}.obs;
   final Rx<GoalModel?> goalDetails = Rx<GoalModel?>(null);
 
   @override
-  void onInit() {
-    super.onInit();
-    fetchUserGoals();
-    _listenToCurrentUserGoalChanges();
-    categoryController.fetchCategories();
-  }
-
-  void fetchUserGoals() async {
-    final UserModel? user = _authService.getUser();
-    if (user != null) {
-      goals.value = await _goalService.readUserGoals(user.id);
-      expandedGoals.addAll(List.filled(goals.length, false));
-      for (var goal in goals) {
-        actionControllers[goal.id] = ActionController(goal.id);
-      }
+  void onReady() async {
+    super.onReady();
+    if (goalId != null) {
+      await fetchGoalDetails(goalId!);
     }
     isLoading.value = false;
-  }
-
-  void toggleGoalExpansion(int index) {
-    expandedGoals[index] = !expandedGoals[index];
-  }
-
-  Future<void> saveGoal(String goal) async {
-    try {
-      final UserModel? user = _authService.getUser();
-      if (user != null) {
-        int newRank = goals.length;
-        GoalModel createdGoal = await _goalService.createGoal(
-          user.id,
-          goal,
-          selectedCategory!.value,
-          autoSelectGroup.value,
-          user.tenantId,
-          newRank,
-        );
-        _analytics.track('GOAL_CREATED', properties: {'user': user.toJson(), 'goal': createdGoal.toJson()});
-
-        goals.add(createdGoal);
-        actionControllers[createdGoal.id] = ActionController(createdGoal.id);
-      }
-    } catch (e) {
-      showErrorSnackBar(message: "Unable to create goal");
-    }
-  }
-
-  void _listenToCurrentUserGoalChanges() {
-    try {
-      _goalService.subscribeToGoalChanges((newGoal) {
-        final UserModel? user = _authService.getUser();
-        if (user != null && newGoal.userId == user.id && !goals.any((g) => g.id == newGoal.id)) {
-          goals.add(newGoal);
-        }
-      });
-    } catch (e) {
-      showErrorSnackBar(message: "Unable to listen to any goal changes.");
-    }
   }
 
   @override
@@ -91,35 +34,23 @@ class GoalController extends GetxController {
     for (var actionController in actionControllers.values) {
       actionController.dispose();
     }
-    _goalService.unsubscribeFromGoalChanges();
-  }
-
-  reorderGoals(int oldIndex, int newIndex) {
-    if (oldIndex < newIndex) {
-      newIndex -= 1;
-    }
-    final GoalModel item = goals.removeAt(oldIndex);
-    goals.insert(newIndex, item);
-    _updateRanksAfterReorder();
-  }
-
-  Future<void> _updateRanksAfterReorder() async {
-    for (int i = 0; i < goals.length; i++) {
-      goals[i].rank = i;
-      await _goalService.updateGoalRank(goals[i].id, i);
-    }
   }
 
   Future<void> fetchGoalDetails(String goalId) async {
+    isLoading.value = true;
     goalDetails.value = await _goalService.getGoalDetails(goalId);
+    isLoading.value = false;
   }
 
   Future<void> deleteGoal(String goalId) async {
+    isLoading.value = true;
     try {
       await _goalService.deleteGoal(goalId);
-      goals.removeWhere((goal) => goal.id == goalId);
+      // todo oare e nevoie de asta????
+      goalsController.removeGoal(goalId);
     } catch (e) {
       showErrorSnackBar(message: "Unable to delete goal");
     }
+    isLoading.value = false;
   }
 }

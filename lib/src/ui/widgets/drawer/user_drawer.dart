@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/goal/goals_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/widgets/drawer/base_drawer.dart';
@@ -13,11 +14,20 @@ class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final LoginController loginController = Get.find<LoginController>();
+    final GoalsController goalsController = Get.find<GoalsController>();
+
     return BaseDrawer(
       onLogout: loginController.logout,
       children: [
         xSpace,
-        CustomDrawerButton(text: 'Home', iconName: 'home', onTap: () => Get.toNamed(Routes.home)),
+        CustomDrawerButton(
+          text: 'Home',
+          iconName: 'home',
+          onTap: () async {
+            await goalsController.fetchUserGoals();
+            Get.toNamed(Routes.home);
+          },
+        ),
         xSpace,
         CustomDrawerButton(text: 'Groups', iconName: 'profile2user', onTap: () => Get.toNamed(Routes.allGroups)),
         xSpace,

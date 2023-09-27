@@ -7,7 +7,7 @@ import 'package:mastermind_together/src/availability/availability_controller.dar
 import 'package:mastermind_together/src/categories/category_controller.dart';
 import 'package:mastermind_together/src/feedback/feedback_controller.dart';
 import 'package:mastermind_together/src/goal/actions/actions_editing_controller.dart';
-import 'package:mastermind_together/src/goal/goal_controller.dart';
+import 'package:mastermind_together/src/goal/goals_controller.dart';
 import 'package:mastermind_together/src/groups/all_groups_controller.dart';
 import 'package:mastermind_together/src/groups/group_operations_controller.dart';
 import 'package:mastermind_together/src/groups/members_controller.dart';
@@ -41,6 +41,7 @@ import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'goal/goal_controller.dart';
 import 'services/supa/availability_service.dart';
 
 class GetBindings {
@@ -62,6 +63,7 @@ class GetBindings {
     Get.lazyPut(() => supaClient, fenix: true);
     Get.lazyPut(() => LoginController(), fenix: true);
     Get.lazyPut(() => RegisterController(), fenix: true);
+    Get.lazyPut(() => GoalsController(), fenix: true);
     Get.lazyPut(() => GoalController(), fenix: true);
     Get.lazyPut(() => AvailabilityController(), fenix: true);
     Get.lazyPut(() => AvailabilityService(), fenix: true);

@@ -41,7 +41,7 @@ class CustomLoadingButton extends StatelessWidget {
           ),
         ),
       ),
-      child: const CircularProgressIndicator(),
+      child: const CircularProgressIndicator(strokeWidth: 3.0,),
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:mastermind_together/src/goal/actions/add_action_modal_widget.dar
 import 'package:mastermind_together/src/goal/add_goal_modal.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
+import 'package:mastermind_together/src/goal/goals_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/scaffold/custom_scaffold.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
@@ -12,8 +13,10 @@ import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/icon/add_button.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/icon/reorder_button.dart';
 
-class AllGoalsScreen extends GetView<GoalController> {
-  const AllGoalsScreen({super.key});
+class AllGoalsScreen extends GetView<GoalsController> {
+  AllGoalsScreen({super.key});
+
+  final GoalController _goalController = Get.find<GoalController>();
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +67,10 @@ class AllGoalsScreen extends GetView<GoalController> {
           key: ValueKey(goal.id),
           tileColor: index == 0 ? activeMenuIconColor.withOpacity(0.6) : null,
           leading: ReorderBtn(index: controller.goals.indexOf(goal)),
-          onTap: () => Get.toNamed(Routes.goalRoute(goal.id)),
+          onTap: () async {
+            await _goalController.fetchGoalDetails(goal.id);
+            Get.toNamed(Routes.goalRoute(goal.id));
+          },
           title: Text(goal.goal, style: bodySemiBold),
           subtitle: _buildActionExpansionTile(context, actionController!, goal.id),
           // Empty onLongPress callback is required for ReorderableListView

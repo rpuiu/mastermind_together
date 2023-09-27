@@ -14,12 +14,12 @@ class CategoryController extends GetxController {
   final RxList<String> categoryNames = <String>[].obs;
 
   @override
-  void onInit() {
+  void onInit() async{
     super.onInit();
-    fetchCategories();
+    await fetchCategories();
   }
 
-  void fetchCategories() async {
+  Future<void> fetchCategories() async {
     try {
       String tenantId = _authService.getUser()!.tenantId;
       final List<CategoryModel> allCategories = await _categoryService.getAllCategories(tenantId);

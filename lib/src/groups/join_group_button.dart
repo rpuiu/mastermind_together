@@ -8,6 +8,7 @@ import 'package:mastermind_together/src/subscription/limit_alert_widget.dart';
 import 'package:mastermind_together/src/subscription/subscription_controller.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
+import 'package:mastermind_together/src/ui/widgets/buttons/custom_loading_button.dart';
 
 class JoinGroupButton extends GetView<GroupOperationsController> {
   final GroupModel group;
@@ -19,11 +20,7 @@ class JoinGroupButton extends GetView<GroupOperationsController> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      if (controller.isLoading.value) {
-        return const Center(child: CircularProgressIndicator());
-      }
-
-      if (_membersController.isUserMemberOfGroup(group.id)) {
+      if (!controller.isLoading(group.id) && _membersController.isUserMemberOfGroup(group.id)) {
         return CustomButton(
           label: 'Joined',
           labelTextStyle: bodyMediumInactive,
@@ -37,6 +34,13 @@ class JoinGroupButton extends GetView<GroupOperationsController> {
             backgroundColor: buttonInactiveBackgroundColor,
             labelTextStyle: bodyMediumInactive,
             isEnabled: false,
+          );
+        }
+        if (controller.isLoading(group.id)) {
+          return const CustomLoadingButton(
+            labelTextStyle: buttonTextStyle,
+            backgroundColor: buttonActiveBackgroundColor,
+            onPressed: null,
           );
         }
         return CustomButton(

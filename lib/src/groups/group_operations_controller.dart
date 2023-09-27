@@ -23,10 +23,10 @@ class GroupOperationsController extends GetxController {
 
   final Rx<GroupModel> groupToCreate = GroupModel.empty().obs;
   final Rx<TextEditingController> meetingTimeController = TextEditingController().obs;
+  final RxMap<String, bool> selectedJoinButtonStatus = <String, bool>{}.obs;
 
   RxString? selectedCategory = ''.obs;
   RxString? selectedDay = ''.obs;
-  final RxBool isLoading = false.obs;
 
   Future<void> createGroup() async {
     try {
@@ -56,10 +56,13 @@ class GroupOperationsController extends GetxController {
   }
 
   Future<void> joinGroup(String groupId, {Function? onJoined}) async {
-    isLoading.value = true;
+    selectedJoinButtonStatus.value = {groupId: true};
 
     final UserModel? user = _authService.getUser();
-    if (user == null) return;
+    if (user == null) {
+      selectedJoinButtonStatus.value = {groupId: false};
+      return;
+    }
 
     try {
       final GroupModel joinedGroup = await _groupService.joinGroup(user, groupId);
@@ -68,8 +71,8 @@ class GroupOperationsController extends GetxController {
       showSuccessSnackBar(message: 'Successfully joined group');
 
       allGroupsController.userGroups.add(joinedGroup);
-      allGroupsController.userGroups.refresh();
-      await allGroupsController.fetchAvailableGroups(); // Refresh the matching groups
+      // allGroupsController.userGroups.refresh();
+     // await allGroupsController.fetchAvailableGroups(); // Refresh the matching groups
 
       _analytics.track('GROUP_JOINED', properties: {
         'user': user.toJson(),
@@ -81,7 +84,7 @@ class GroupOperationsController extends GetxController {
       Log().e("Error while joining group $groupId:", e, s, user.tenantId);
       showErrorSnackBar(message: 'Unable to join group: ${e.toString()}');
     } finally {
-      isLoading.value = false;
+      selectedJoinButtonStatus.value = {groupId: false};
     }
   }
 
@@ -104,7 +107,11 @@ class GroupOperationsController extends GetxController {
       Log().e("Error while leaving group $groupId:", e, s, user.tenantId);
       showErrorSnackBar(message: 'Unable to leave group: ${e.toString()}');
     }
-
+    selectedJoinButtonStatus.value = {groupId: false};
     _membersController.groupIdToMembershipStatus[groupId]?.value = false;
+  }
+
+  bool isLoading(String groupId) {
+    return selectedJoinButtonStatus.value.containsKey(groupId) && selectedJoinButtonStatus.value[groupId]!;
   }
 }

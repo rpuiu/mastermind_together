@@ -101,7 +101,7 @@ class SetAvailabilityWidget extends GetView<AvailabilityController> {
   }
 
   Widget? _buildTrailingWidget(DayModel day) {
-    if (controller.isLoadingDay(day)!) {
+    if (controller.isLoadingAvailability(day)!) {
       return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           double desiredSize = constraints.maxHeight * 0.7; // Adjust as needed

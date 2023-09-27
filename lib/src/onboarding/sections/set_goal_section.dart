@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
+import 'package:mastermind_together/src/goal/goals_controller.dart';
 import 'package:mastermind_together/src/goal/widgets/category_dropdown_widget.dart';
 import 'package:mastermind_together/src/goal/widgets/goal_input_field.dart';
 import 'package:mastermind_together/src/onboarding/onboarding_controller.dart';
@@ -18,7 +19,7 @@ class SetGoalSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final GoalController goalController = Get.find<GoalController>();
+    final GoalsController goalsController = Get.find<GoalsController>();
     final OnboardingController controller = Get.find<OnboardingController>();
 
     return Center(
@@ -48,14 +49,14 @@ class SetGoalSection extends StatelessWidget {
               GoalInput(controller: goalInputController),
               xxSpace,
               CategoryDropdown(
-                selectedCategory: goalController.selectedCategory,
-                onCategoryChanged: (String newValue) => goalController.selectedCategory!.value = newValue,
+                selectedCategory: goalsController.selectedCategory,
+                onCategoryChanged: (String newValue) => goalsController.selectedCategory!.value = newValue,
               ),
               xxSpace,
               CustomButton(
                 onPressed: () async {
                   if (formKey.currentState!.validate()) {
-                    await goalController.saveGoal(goalInputController.text);
+                    await goalsController.saveGoal(goalInputController.text);
                     await controller.updateOnboardingStatus(OnboardingStatus.goals);
                     controller.nextOnboardingStep.value = OnboardingStatus.availability;
                   }

@@ -28,7 +28,7 @@ class LoginForm extends GetView<LoginController> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  // final TextEditingController emailController = TextEditingController(text: 'test99@yahoo.com');
+  // final TextEditingController emailController = TextEditingController(text: 'test70@yahoo.com');
   // final TextEditingController passwordController = TextEditingController(text: 'Test_1234'); //TODO REMOVE
 
   @override

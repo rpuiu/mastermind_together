@@ -5,7 +5,6 @@ import 'package:mastermind_together/src/auth/register_screen.dart';
 import 'package:mastermind_together/src/auth/tos/terms_screen.dart';
 import 'package:mastermind_together/src/availability/availability_screen.dart';
 import 'package:mastermind_together/src/feedback/feedback_screen.dart';
-import 'package:mastermind_together/src/goal/actions/actions_controller.dart';
 import 'package:mastermind_together/src/goal/all_goals_screen.dart';
 import 'package:mastermind_together/src/goal/goal_screen.dart';
 import 'package:mastermind_together/src/groups/all_groups_screen.dart';
@@ -62,14 +61,7 @@ class Routes {
     GetPage(name: categories, page: () => CategoriesScreen()),
     GetPage(name: onboarding, page: () => OnboardingScreen()),
     GetPage(name: notifications, page: () => const NotificationScreen()),
-    GetPage(
-        name: '$goal/:goalId',
-        page: () => GoalScreen(),
-        binding: BindingsBuilder(() {
-          String goalId = Get.parameters['goalId']!;
-          Get.put(ActionController(goalId));
-        }),
-        middlewares: [AuthMiddleware()]),
+    GetPage(name: '$goal/:goalId', page: () => GoalScreen(), middlewares: [AuthMiddleware()]),
     GetPage(
       name: '$group/:groupId',
       page: () => GroupScreen(),

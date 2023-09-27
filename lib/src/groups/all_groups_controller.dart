@@ -30,19 +30,26 @@ class AllGroupsController extends GetxController {
   final RxList<GroupModel> filteredGroups = RxList<GroupModel>();
   final RxList<GroupModel> sameCategoryGroups = RxList<GroupModel>();
 
-  final isLoading = Rx<bool>(true);
+  final isLoading = Rx<bool>(false);
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
-    _fetchGroups();
-    _fetchUserGroups();
-    categoryController.fetchCategories();
-    fetchAvailableGroups();
+    await categoryController.fetchCategories();
     _listenToGroupChanges();
     filteredGroups.value = groups;
-    _updateSameCategoryGroupsFromUserGoal();
-    ever(_availabilityController.availabilityChanged, (_) => fetchAvailableGroups());
+    ever(_availabilityController.availabilityChanged, (_) async => await fetchAvailableGroups());
+  }
+
+  @override
+  void onReady() async {
+    super.onReady();
+    isLoading.value = true;
+    await _fetchGroups();
+    await _fetchUserGroups();
+    await fetchAvailableGroups();
+    await _updateSameCategoryGroupsFromUserGoal();
+    isLoading.value = false;
   }
 
   @override
@@ -59,7 +66,7 @@ class AllGroupsController extends GetxController {
     }
   }
 
-  void _fetchGroups() async {
+  Future<void> _fetchGroups() async {
     isLoading(true);
     try {
       final response = await _groupService.readAllGroups(_authService.getUser()!.tenantId);
@@ -73,7 +80,7 @@ class AllGroupsController extends GetxController {
     }
   }
 
-  void _fetchUserGroups() async {
+  Future<void> _fetchUserGroups() async {
     final UserModel? user = _authService.getUser();
     if (user == null) return;
 
@@ -119,7 +126,7 @@ class AllGroupsController extends GetxController {
     }
   }
 
-  void _updateSameCategoryGroupsFromUserGoal() async {
+  Future<void> _updateSameCategoryGroupsFromUserGoal() async {
     UserModel? user = _authService.getUser();
     if (user == null) return;
 

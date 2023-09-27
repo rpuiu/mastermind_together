@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/goal/actions/action_model.dart';
 import 'package:mastermind_together/src/goal/actions/actions_controller.dart';
 import 'package:mastermind_together/src/goal/actions/actions_modal.dart';
 import 'package:mastermind_together/src/goal/actions/add_action_modal_widget.dart';
+import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/app_icons.dart';
@@ -16,18 +18,22 @@ class GoalCard extends StatelessWidget {
   final int index;
 
   final ActionController _actionController;
+  final GoalController _goalController = Get.find<GoalController>();
 
   GoalCard({
     Key? key,
     required this.goal,
     required this.index,
-  })  : _actionController = ActionController(goal.id),
+  })  : _actionController = ActionController(goal),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Get.toNamed(Routes.goalRoute(goal.id)),
+      onTap: () async {
+        await _goalController.fetchGoalDetails(goal.id);
+        Get.toNamed(Routes.goalRoute(goal.id));
+      },
       customBorder: customBorder,
       child: Card(
         elevation: 1,
@@ -67,42 +73,59 @@ class GoalCard extends StatelessWidget {
                       child: Text(goal.goal, maxLines: 2, style: bodySemiBold, overflow: TextOverflow.ellipsis),
                     ),
                     xSpace,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Obx(() {
-                          // int allActions = _actionController.actions.length;
-                          // int completedActions = _actionController.actions.length;
-                          if (_actionController.actions.isNotEmpty) {
-                            final firstAction = _actionController.actions.first;
-                            return Flexible(
-                              child: CustomTooltip(
-                                message: firstAction.description,
-                                child: Text(
-                                  'Priority: ${firstAction.description}',
-                                  style: bodyRegular,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
+                    Obx(() {
+                      if (_actionController.isLoading(goal.id)) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Flexible(
+                              child: CircularProgressIndicator(),
+                            ),
+                            wHalfSpace,
+                            IconButton(
+                              icon: AppIcons.getIcon('note-2', IconState.hoverState),
+                              onPressed: () {
+                                ActionsModal.show(context, goal.id, _actionController);
+                              },
+                            ),
+                          ],
+                        );
+                      } else {
+                        ActionModel? action = _actionController.getLastAction();
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            if (action != null) ...[
+                              Flexible(
+                                child: CustomTooltip(
+                                  message: _actionController.actions!.first.description,
+                                  child: Text(
+                                    'Priority: ${_actionController.actions!.first.description}',
+                                    style: bodyRegular,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
-                              ),
-                            );
-                          }
-                          return TextButton(
-                            onPressed: () {
-                              AddActionModalWidget.show(context, _actionController, goal.id);
-                            },
-                            child: const Text('Add Action'),
-                          );
-                        }),
-                        wHalfSpace,
-                        IconButton(
-                          icon: AppIcons.getIcon('note-2', IconState.hoverState),
-                          onPressed: () {
-                            ActionsModal.show(context, goal.id, _actionController);
-                          },
-                        ),
-                      ],
-                    ),
+                              )
+                            ] else ...[
+                              TextButton(
+                                onPressed: () {
+                                  AddActionModalWidget.show(context, _actionController, goal.id);
+                                },
+                                child: const Text('Add Action'),
+                              )
+                            ],
+                            wHalfSpace,
+                            IconButton(
+                              icon: AppIcons.getIcon('note-2', IconState.hoverState),
+                              onPressed: () {
+                                ActionsModal.show(context, goal.id, _actionController);
+                              },
+                            ),
+                          ],
+                        );
+                      }
+                    }),
                     const Spacer(),
                     // const Text('10% Completed'), TODO MAIN-T-119 - Goal progress
                     // halfSpace,
