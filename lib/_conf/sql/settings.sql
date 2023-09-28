@@ -5,6 +5,11 @@ CREATE TABLE settings (
     PRIMARY KEY (tenant_id)
 );
 
+-- Add columns for the light and dark versions of the logo URL
+ALTER TABLE settings ADD COLUMN light_logo_url TEXT;
+ALTER TABLE settings ADD COLUMN dark_logo_url TEXT;
+ALTER TABLE settings ADD COLUMN favicon_url TEXT;
+
 CREATE POLICY "Settings are insertable by tenants who created them."
 ON settings
 FOR INSERT

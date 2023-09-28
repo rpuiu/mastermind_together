@@ -97,7 +97,7 @@ class UserProfileController extends GetxController {
         return;
       }
       String trimmedPath = avatarPath.substring('/avatars'.length);
-      String signedUrl = await _storageService.createSignedUrl(trimmedPath);
+      String signedUrl = await _storageService.createSignedUrl('avatars', trimmedPath);
       signedAvatarUrl.value = signedUrl;
     } catch (e, s) {
       handleException(e, s, "Unable to load avatar");

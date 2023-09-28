@@ -31,7 +31,7 @@ class SetAvailabilitySection extends StatelessWidget {
             const Text("Step 2/3", style: labelText),
             xSpace,
             Text(
-              "Set Your Availability for Mastermind Groups",
+              "Set Your Availability for Accountability Groups",
               style: welcomeTextStyle,
               textAlign: TextAlign.center,
             ),

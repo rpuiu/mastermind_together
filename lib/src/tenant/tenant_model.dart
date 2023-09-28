@@ -9,6 +9,11 @@ class Tenant {
     required this.hostname,
   });
 
+  Tenant.empty()
+      : tenantId = '',
+        name = '',
+        hostname = '';
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['tenant_id'] = tenantId;

@@ -19,12 +19,38 @@ class StorageService extends GetxService {
     return path;
   }
 
-  Future<String> createSignedUrl(String path, {int expiryTime = 60}) async {
-    final signedUrlResponse = await _client.storage.from('avatars').createSignedUrl(
+  Future<String> createSignedUrl(String bucket, String path, {int expiryTime = 60}) async {
+    final signedUrlResponse = await _client.storage.from(bucket).createSignedUrl(
           path,
           expiryTime,
         );
 
     return signedUrlResponse;
   }
+
+  Future<String> upsertLogo(String tenantId, Uint8List logoFile, bool isLight) async {
+    final String suffix = isLight ? 'light' : 'dark';
+    final String path = await _client.storage.from('logos').uploadBinary(
+          '$tenantId-logo-$suffix.png',
+          logoFile,
+          fileOptions: const FileOptions(
+            cacheControl: '3600',
+            upsert: true,
+          ),
+        );
+    return path;
+  }
+
+  Future<String> upsertFavicon(String tenantId, Uint8List faviconFile) async {
+    final String path = await _client.storage.from('logos').uploadBinary(
+      '$tenantId-favicon.ico',
+      faviconFile,
+      fileOptions: const FileOptions(
+        cacheControl: '3600',
+        upsert: true,
+      ),
+    );
+    return path;
+  }
+
 }

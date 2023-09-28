@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/drawer/custom_drawer_button.dart';
 import 'package:mastermind_together/src/ui/widgets/drawer/user_info_widget.dart';
+import 'package:mastermind_together/src/ui/widgets/logo/logo_controller.dart';
+import 'package:mastermind_together/src/ui/widgets/logo/tenant_logo.dart';
 
 class BaseDrawer extends StatelessWidget {
   final List<Widget> children;
@@ -19,6 +20,8 @@ class BaseDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final LogoController logoController = Get.find<LogoController>();
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(fontSize / 2, fontSize, fontSize / 2, fontSize),
       child: ConstrainedBox(
@@ -35,36 +38,54 @@ class BaseDrawer extends StatelessWidget {
                 borderRadius: borderRadius,
                 border: Border.all(color: drawerBorderColor, width: 1),
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  DrawerHeader(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final double availableHeight = constraints.maxHeight;
+                  return Obx(() {
+                    final double aspectRatio = logoController.aspectRatio.value;
+                    double headerHeight;
+                    if (aspectRatio > 1.2) {
+                      headerHeight = availableHeight * 0.3; // 30% of available height for rectangular logos
+                    } else {
+                      headerHeight = availableHeight * 0.35; // 35% of available height for square logos
+                    }
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        xxSpace,
-                        SvgPicture.asset(width: 212, height: 18, 'assets/images/logo/logo-small-white.svg'),
-                        xSpace,
-                        InkWell(
-                          onTap: () => Get.toNamed(Routes.userProfile),
-                          child: const UserInfoWidget(),
+                        SizedBox(
+                          height: headerHeight,
+                          child: DrawerHeader(
+                            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                xxSpace,
+                                const TenantLogo(width: 212, height: 18, squareHeight: 100, isLight: true),
+                                xSpace,
+                                InkWell(
+                                  onTap: () => Get.toNamed(Routes.userProfile),
+                                  child: const UserInfoWidget(),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: children,
+                            ),
+                          ),
+                        ),
+                        xxSpace,
+                        CustomDrawerButton(text: 'Logout', iconName: 'logout', onTap: onLogout),
+                        xxSpace,
                       ],
-                    ),
-                  ),
-                  Expanded(
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: children,
-                    ),
-                  ),
-                  xxSpace,
-                  CustomDrawerButton(text: 'Logout', iconName: 'logout', onTap: onLogout),
-                  xxSpace,
-                ],
+                    );
+                  });
+                },
               ),
             ),
           ),

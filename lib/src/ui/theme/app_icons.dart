@@ -37,7 +37,7 @@ class AppIcons {
 
   static Widget profile2user([IconState state = IconState.defaultState]) => _icon('assets/icons/profile-2user.svg', state);
 
-  static Widget settings2([IconState state = IconState.defaultState]) => _icon('assets/icons/settings-2.svg', state);
+  static Widget settings([IconState state = IconState.defaultState]) => _icon('assets/icons/settings-2.svg', state);
 
   static Widget menu([IconState state = IconState.activeState]) => _icon('assets/icons/menu.svg', state);
 
@@ -89,8 +89,8 @@ class AppIcons {
         return notification(state);
       case 'message':
         return message(state);
-      case 'settings2':
-        return settings2(state);
+      case 'settings':
+        return settings(state);
       case 'logout':
         return logout(state);
       case 'menu':

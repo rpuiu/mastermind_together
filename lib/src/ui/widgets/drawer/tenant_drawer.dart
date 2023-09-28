@@ -19,18 +19,22 @@ class TenantDrawer extends StatelessWidget {
         CustomDrawerButton(text: 'Home', iconName: 'home', onTap: () => Get.toNamed(Routes.tenantDashboard)),
         xSpace,
         CustomDrawerButton(
-          text: 'Terms of Service & Privacy Policy',
+          text: 'Terms',
           iconName: 'privacy-policy',
           onTap: () => Get.toNamed(Routes.editTerms),
         ),
         xSpace,
         CustomDrawerButton(
-          text: 'Goal & Group Categories',
+          text: 'Categories',
           iconName: 'categories',
           onTap: () => Get.toNamed(Routes.categories),
         ),
-        // xSpace,
-        // DrawerButton(text: 'Logo & Colors', icon: const Icon(Icons.color_lens), onTap: () => {}), //TODO
+        xSpace,
+        CustomDrawerButton(
+          text: 'Settings',
+          iconName: 'settings',
+          onTap: () => Get.toNamed(Routes.tenantSettings),
+        ),
       ],
     );
   }

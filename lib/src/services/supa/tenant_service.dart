@@ -6,6 +6,7 @@ import 'package:mastermind_together/src/services/supa/settings_service.dart';
 import 'package:mastermind_together/src/services/supa/subscription_service.dart';
 import 'package:mastermind_together/src/services/supa/users_extended_service.dart';
 import 'package:mastermind_together/src/services/timezone/timezone_service.dart';
+import 'package:mastermind_together/src/tenant/tenant_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class TenantService extends GetxService {
@@ -42,10 +43,10 @@ class TenantService extends GetxService {
     }
   }
 
-  Future<String> getTenantIdByHostName(String hostname) async {
+  Future<Tenant> getTenantByHostName(String hostname) async {
     try {
-      final response = await _client.from('tenants').select('tenant_id').eq('hostname', hostname).single();
-      return response['tenant_id'];
+      final response = await _client.from('tenants').select().eq('hostname', hostname).single();
+      return Tenant.fromJson(response);
     } catch (e, s) {
       Log().e('Failed to get tenant id: ', e, s);
       rethrow;

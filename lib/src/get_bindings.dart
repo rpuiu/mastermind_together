@@ -33,10 +33,13 @@ import 'package:mastermind_together/src/services/supa/user_group_service.dart';
 import 'package:mastermind_together/src/services/supa/users_extended_service.dart';
 import 'package:mastermind_together/src/services/timezone/timezone_service.dart';
 import 'package:mastermind_together/src/subscription/subscription_controller.dart';
+import 'package:mastermind_together/src/tenant/settings/logo_service.dart';
+import 'package:mastermind_together/src/tenant/settings/tenant_settings_controller.dart';
 import 'package:mastermind_together/src/tenant/tenant_controller.dart';
 import 'package:mastermind_together/src/tenant/tenant_identifier.dart';
 import 'package:mastermind_together/src/tenant/terms/terms_controller.dart';
 import 'package:mastermind_together/src/ui/widgets/drawer/drawer_state_controller.dart';
+import 'package:mastermind_together/src/ui/widgets/logo/logo_controller.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -102,5 +105,8 @@ class GetBindings {
     Get.lazyPut(() => GroupOperationsController(), fenix: true);
     Get.lazyPut(() => HomeController(), fenix: true);
     Get.lazyPut(() => TenantIdentifier(), fenix: true);
+    Get.lazyPut(() => TenantSettingsController(), fenix: true);
+    Get.lazyPut(() => LogoController(), fenix: true);
+    Get.lazyPut(() => LogoService(), fenix: true);
   }
 }

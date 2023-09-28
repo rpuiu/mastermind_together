@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/theme.dart';
 import 'package:mastermind_together/src/ui/widgets/drawer/custom_navigation_observer.dart';
+import 'package:mastermind_together/src/ui/widgets/favicon_manager.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -16,6 +17,11 @@ class MyApp extends StatelessWidget {
       getPages: Routes.routes,
       theme: AppTheme.lightTheme,
       navigatorObservers: [CustomNavigatorObserver()],
+      home: const Stack(
+        children: [
+          FaviconManager(),
+        ],
+      ),
     );
   }
 }
