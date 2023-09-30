@@ -10,17 +10,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      defaultTransition: Transition.noTransition,
-      initialRoute: Routes.login,
-      getPages: Routes.routes,
-      theme: AppTheme.lightTheme,
-      navigatorObservers: [CustomNavigatorObserver()],
-      home: const Stack(
-        children: [
-          FaviconManager(),
-        ],
+    return Directionality(
+      textDirection: TextDirection.ltr, // Choose your text direction
+      child: Builder(
+        builder: (context) {
+          return Stack(
+            children: [
+              GetMaterialApp(
+                debugShowCheckedModeBanner: false,
+                defaultTransition: Transition.noTransition,
+                initialRoute: Routes.login,
+                getPages: Routes.routes,
+                theme: AppTheme.lightTheme,
+                navigatorObservers: [CustomNavigatorObserver()],
+              ),
+              const FaviconManager(),
+            ],
+          );
+        },
       ),
     );
   }
