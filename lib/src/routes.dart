@@ -19,6 +19,7 @@ import 'package:mastermind_together/src/profile/user_profile_screen.dart';
 import 'package:mastermind_together/src/tenant/categories/categories_screen.dart';
 import 'package:mastermind_together/src/tenant/settings/tenant_settings_screen.dart';
 import 'package:mastermind_together/src/tenant/tenant_dashboard_screen.dart';
+import 'package:mastermind_together/src/tenant/tenant_middleware.dart';
 import 'package:mastermind_together/src/tenant/tenant_register_screen.dart';
 import 'package:mastermind_together/src/tenant/terms/edit_terms_screen.dart';
 import 'package:mastermind_together/src/ui/widgets/images/right_side_image_controller.dart';
@@ -58,13 +59,13 @@ class Routes {
     GetPage(name: privacyPolicy, page: () => const TermsScreen(documentType: 'Privacy')),
     GetPage(name: userProfile, page: () => UserProfileScreen()),
     GetPage(name: feedback, page: () => FeedbackScreen()),
-    GetPage(name: tenantDashboard, page: () => const TenantDashboardScreen()),
-    GetPage(name: editTerms, page: () => EditTermsScreen()),
-    GetPage(name: categories, page: () => CategoriesScreen()),
+    GetPage(name: tenantDashboard, page: () => const TenantDashboardScreen(), middlewares: [AuthMiddleware(), TenantMiddleware()]),
+    GetPage(name: editTerms, page: () => const EditTermsScreen(), middlewares: [AuthMiddleware(), TenantMiddleware()]),
+    GetPage(name: categories, page: () => CategoriesScreen(), middlewares: [AuthMiddleware(), TenantMiddleware()]),
     GetPage(name: onboarding, page: () => OnboardingScreen()),
     GetPage(name: notifications, page: () => const NotificationScreen()),
     GetPage(name: '$goal/:goalId', page: () => GoalScreen(), middlewares: [AuthMiddleware()]),
-    GetPage(name: tenantSettings, page: () => const TenantSettingsScreen()),
+    GetPage(name: tenantSettings, page: () => const TenantSettingsScreen(), middlewares: [AuthMiddleware(), TenantMiddleware()]),
     GetPage(
       name: '$group/:groupId',
       page: () => GroupScreen(),
