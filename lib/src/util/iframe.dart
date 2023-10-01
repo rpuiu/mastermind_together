@@ -26,6 +26,7 @@ class Iframe extends StatelessWidget {
       ..width = width.toInt().toString()
       ..height = height.toInt().toString()
       ..src = src
+      ..allowFullscreen = true
       ..style.border = 'none';
 
     // ignore: undefined_prefixed_name

@@ -15,46 +15,44 @@ class SetAvailabilitySection extends StatelessWidget {
   Widget build(BuildContext context) {
     final OnboardingController controller = Get.find<OnboardingController>();
 
-    return Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: oneColContentWidth),
-        child: Column(
-          children: [
-            // Image.asset(width: 156, height: 162, 'assets/images/onboarding/onboard-2-nobg.png'),
-            const Iframe(
-              src:
-              'https://embed.voomly.com/embed/assets/embed.html?videoId=1ZTW8VyCH&videoRatio=1.5139949109414759&type=f&skinColor=%23008EFF',
-              width: 560,
-              height: 369,
-            ),
-            xxSpace,
-            const Text("Step 2/3", style: labelText),
-            xSpace,
-            Text(
-              "Set Your Availability for Accountability Groups",
-              style: welcomeTextStyle,
-              textAlign: TextAlign.center,
-            ),
-            xxSpace,
-            const Text(
-              "Choose your timezone and select times when you're free for group calls.",
-              style: labelText,
-            ),
-            xHalfSpace,
-            const SetAvailabilityWidget(),
-            xxSpace,
-            CustomButton(
-              onPressed: () async {
-                await controller.updateOnboardingStatus(OnboardingStatus.done);
-                controller.nextOnboardingStep.value = OnboardingStatus.groups;
-              },
-              label: "Confirm and Find Groups",
-              labelTextStyle: buttonTextStyle,
-              backgroundColor: buttonBackgroundColor,
-            ),
-          ],
+    return Column(
+      children: [
+        Container(
+          alignment: Alignment.center,
+          width: 350,
+          height: 200,
+          child: const Iframe(
+            src: 'https://embed.voomly.com/embed/assets/embed.html?videoId=1ZTW8VyCH&videoRatio=1.5139949109414759&type=f&skinColor=%23008EFF',
+            width: 350,
+            height: 200,
+          ),
         ),
-      ),
+        xxSpace,
+        const Text("Step 2/3", style: labelText),
+        xSpace,
+        Text(
+          "Set Your Availability for Accountability Groups",
+          style: welcomeTextStyle,
+          textAlign: TextAlign.center,
+        ),
+        xxSpace,
+        const Text(
+          "Choose your timezone and select times when you're free for group calls.",
+          style: labelText,
+        ),
+        xHalfSpace,
+        const SetAvailabilityWidget(),
+        xxSpace,
+        CustomButton(
+          onPressed: () async {
+            await controller.updateOnboardingStatus(OnboardingStatus.done);
+            controller.nextOnboardingStep.value = OnboardingStatus.groups;
+          },
+          label: "Confirm and Find Groups",
+          labelTextStyle: buttonTextStyle,
+          backgroundColor: buttonBackgroundColor,
+        ),
+      ],
     );
   }
 }
