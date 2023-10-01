@@ -154,42 +154,49 @@ class GroupInfoCard extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: CustomTooltip(
-            message: 'Description: ${controller.group.value.description ?? ''}',
-            child: Text(
-              'Description: ${controller.group.value.description ?? ''}',
-              style: bodyRegular,
-              softWrap: true,
-              overflow: TextOverflow.ellipsis,
-            ),
+          child: Row(
+            children: [
+              CustomTooltip(
+                message: 'Description: ${controller.group.value.description ?? ''}',
+                child: Text(
+                  'Description: ${controller.group.value.description ?? ''}',
+                  style: bodyRegular,
+                  softWrap: true,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              _conditionalEditButton(
+                isAdmin,
+                'Edit Group Description',
+                'Group Description',
+                'Enter the new description',
+                controller.group.value.description ?? '',
+                (newDescription) => controller.updateGroupDescription(controller.group.value.id, newDescription),
+              ),
+            ],
           ),
         ),
-        _conditionalEditButton(
-          isAdmin,
-          'Edit Group Description',
-          'Group Description',
-          'Enter the new description',
-          controller.group.value.description ?? '',
-          (newDescription) => controller.updateGroupDescription(controller.group.value.id, newDescription),
-        ),
-        const Spacer(),
-        Padding(
-          padding: const EdgeInsets.only(top: fontSize / 2),
-          child: TextButton(
-            onPressed: () async {
-              bool shouldLeave = await _showLeaveGroupConfirmation();
-              if (shouldLeave) {
-                _groupOperationsController.leaveGroup(group.id);
-                Get.toNamed(Routes.home);
-              }
-            },
-            child: Text(
-              "Leave Group",
-              style: linkTextStyle.copyWith(color: errorColor),
-            ),
-          ),
-        ),
+        if (!isAdmin) _buildLeaveGroupBtn()
       ],
+    );
+  }
+
+  Padding _buildLeaveGroupBtn() {
+    return Padding(
+      padding: const EdgeInsets.only(top: fontSize / 2),
+      child: TextButton(
+        onPressed: () async {
+          bool shouldLeave = await _showLeaveGroupConfirmation();
+          if (shouldLeave) {
+            _groupOperationsController.leaveGroup(group.id);
+            Get.toNamed(Routes.home);
+          }
+        },
+        child: Text(
+          "Leave Group",
+          style: linkTextStyle.copyWith(color: errorColor),
+        ),
+      ),
     );
   }
 
