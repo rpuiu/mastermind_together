@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/goal/widgets/category_dropdown_widget.dart';
 import 'package:mastermind_together/src/groups/group_operations_controller.dart';
-import 'package:mastermind_together/src/ui/theme/scaffold/scrollable_custom_scaffold.dart';
+import 'package:mastermind_together/src/ui/theme/layout/scrollable_layout.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
@@ -21,8 +21,8 @@ class CreateGroupScreen extends GetView<GroupOperationsController> {
     double screenWidth = MediaQuery.of(context).size.width;
     bool isMobile = screenWidth < 600;
 
-    return ScrollableCustomScaffold(
-      body: Form(
+    return ScrollableCustomLayout(
+      content: Form(
         key: _formKey,
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: isMobile ? screenWidth : screenWidth * 0.5),

@@ -7,7 +7,7 @@ import 'package:mastermind_together/src/groups/group_screen_controller.dart';
 import 'package:mastermind_together/src/groups/members_controller.dart';
 import 'package:mastermind_together/src/groups/shared_group_screen.dart';
 import 'package:mastermind_together/src/groups/widgets/group_info_widget.dart';
-import 'package:mastermind_together/src/ui/theme/scaffold/custom_scaffold.dart';
+import 'package:mastermind_together/src/ui/theme/layout/custom_layout.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 
@@ -23,8 +23,8 @@ class GroupScreen extends StatelessWidget {
     final GroupScreenController controller = Get.find(tag: groupId);
     final MembersController membersController = Get.find<MembersController>();
 
-    return CustomScaffold(
-      body: Obx(() {
+    return CustomLayout(
+      content: Obx(() {
         if (controller.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
         }

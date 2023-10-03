@@ -7,7 +7,7 @@ import 'package:mastermind_together/src/goal/goal_model.dart';
 import 'package:mastermind_together/src/goal/goals_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/app_icons.dart';
-import 'package:mastermind_together/src/ui/theme/scaffold/scrollable_custom_scaffold.dart';
+import 'package:mastermind_together/src/ui/theme/layout/scrollable_layout.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/icon/delete_button.dart';
@@ -23,8 +23,8 @@ class GoalScreen extends GetView<GoalController> {
   @override
   Widget build(BuildContext context) {
     controller.goalId = goalId;
-    return ScrollableCustomScaffold(
-      body: Column(
+    return ScrollableCustomLayout(
+      content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           xHalfSpace,

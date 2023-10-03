@@ -7,7 +7,7 @@ import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
 import 'package:mastermind_together/src/goal/goals_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
-import 'package:mastermind_together/src/ui/theme/scaffold/custom_scaffold.dart';
+import 'package:mastermind_together/src/ui/theme/layout/custom_layout.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/icon/add_button.dart';
@@ -20,8 +20,8 @@ class AllGoalsScreen extends GetView<GoalsController> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      body: Column(
+    return CustomLayout(
+      content: Column(
         children: <Widget>[
           xHalfSpace,
           _buildHeader(context),

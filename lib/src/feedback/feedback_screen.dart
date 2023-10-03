@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/feedback/feedback_controller.dart';
 import 'package:mastermind_together/src/notif/email/email_notif_controller.dart';
-import 'package:mastermind_together/src/ui/theme/scaffold/scrollable_custom_scaffold.dart';
+import 'package:mastermind_together/src/ui/theme/layout/scrollable_layout.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/custom_button.dart';
@@ -16,8 +16,8 @@ class FeedbackScreen extends GetView<FeedbackController> {
   @override
   Widget build(BuildContext context) {
     bool isDesktop = MediaQuery.of(context).size.width > 600;
-    return ScrollableCustomScaffold(
-      body: Obx(() {
+    return ScrollableCustomLayout(
+      content: Obx(() {
         if (emailController.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
         } else {

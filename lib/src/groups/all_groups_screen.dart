@@ -5,7 +5,7 @@ import 'package:mastermind_together/src/groups/group_card_widget.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/subscription/limit_alert_widget.dart';
 import 'package:mastermind_together/src/subscription/subscription_controller.dart';
-import 'package:mastermind_together/src/ui/theme/scaffold/custom_scaffold.dart';
+import 'package:mastermind_together/src/ui/theme/layout/custom_layout.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/filter_chip.dart';
@@ -19,8 +19,8 @@ class AllGroupsScreen extends GetView<AllGroupsController> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      body: Column(
+    return CustomLayout(
+      content: Column(
         children: <Widget>[
           xHalfSpace,
           Row(

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/availability/availability_controller.dart';
 import 'package:mastermind_together/src/availability/set_availability_widget.dart';
-import 'package:mastermind_together/src/ui/theme/scaffold/custom_scaffold.dart';
-import 'package:mastermind_together/src/ui/theme/scaffold/scrollable_custom_scaffold.dart';
+import 'package:mastermind_together/src/ui/theme/layout/custom_layout.dart';
+import 'package:mastermind_together/src/ui/theme/layout/scrollable_layout.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 
@@ -14,8 +14,8 @@ class SetAvailabilityScreen extends GetView<AvailabilityController> {
   Widget build(BuildContext context) {
     return Obx(
       () => controller.isLoading.value
-          ? CustomScaffold(body: _buildColumnWithContent(_buildLoadingState(context)))
-          : ScrollableCustomScaffold(body: _buildColumnWithContent(const SetAvailabilityWidget())),
+          ? CustomLayout(content: _buildColumnWithContent(_buildLoadingState(context)))
+          : ScrollableCustomLayout(content: _buildColumnWithContent(const SetAvailabilityWidget())),
     );
   }
 

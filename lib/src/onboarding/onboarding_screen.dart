@@ -6,7 +6,7 @@ import 'package:mastermind_together/src/onboarding/onboarding_controller.dart';
 import 'package:mastermind_together/src/onboarding/sections/groups_section.dart';
 import 'package:mastermind_together/src/onboarding/sections/set_availability_section.dart';
 import 'package:mastermind_together/src/onboarding/sections/set_goal_section.dart';
-import 'package:mastermind_together/src/ui/theme/scaffold/responsive_padding_wrapper.dart';
+import 'package:mastermind_together/src/ui/theme/layout/responsive_padding_wrapper.dart';
 
 class OnboardingScreen extends GetView<OnboardingController> {
   final GoalController goalController = Get.find<GoalController>();

@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/profile/profile_pic_widget.dart';
 import 'package:mastermind_together/src/profile/user_profile_controller.dart';
-import 'package:mastermind_together/src/ui/theme/scaffold/custom_scaffold.dart';
+import 'package:mastermind_together/src/ui/theme/layout/custom_layout.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/icon/edit_button.dart';
@@ -20,9 +20,8 @@ class UserProfileScreen extends GetView<UserProfileController> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      applyPadding: false,
-      body: Obx(() {
+    return CustomLayout(
+      content: Obx(() {
         if (controller.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
         }
