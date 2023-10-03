@@ -6,9 +6,11 @@ import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/icon/delete_button.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/icon/edit_button.dart';
 import 'package:mastermind_together/src/ui/widgets/drawer/tenant_drawer.dart';
+import 'package:mastermind_together/src/util/form_validators.dart';
 
 class CategoriesScreen extends GetView<CategoryController> {
   final TextEditingController _newCategoryController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   CategoriesScreen({Key? key}) : super(key: key);
 
@@ -24,62 +26,66 @@ class CategoriesScreen extends GetView<CategoryController> {
       body: Center(
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: maxWidth),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _newCategoryController,
-                        decoration: const InputDecoration(
-                          hintText: 'New Category',
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(fontSize / 2),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: _newCategoryController,
+                          decoration: const InputDecoration(hintText: 'New Category'),
+                          validator: (value) => FormValidators.validateEmpty(value, "Please specify a category"),
                         ),
                       ),
-                    ),
-                    IconButton(
-                      icon: AppIcons.getIcon('add', IconState.defaultState),
-                      onPressed: () {
-                        controller.addCategory(_newCategoryController.text);
-                        _newCategoryController.clear();
-                      },
-                    ),
-                  ],
+                      IconButton(
+                        icon: AppIcons.getIcon('add', IconState.defaultState),
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            controller.addCategory(_newCategoryController.text.trim());
+                            _newCategoryController.clear();
+                          }
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              xxSpace,
-              Expanded(
-                child: Obx(() {
-                  return ListView.builder(
-                    itemCount: controller.categories.length,
-                    itemBuilder: (context, index) {
-                      final category = controller.categories[index];
-                      return ListTile(
-                        title: Text(category.name),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            EditBtn(
-                              onPressed: () async {
-                                final newName = await showDialog<String>(
-                                  context: context,
-                                  builder: (context) => _editCategoryDialog(category.name, context),
-                                );
-                                if (newName != null) {
-                                  controller.updateCategory(category.id, newName);
-                                }
-                              },
-                            ),
-                            DeleteBtn(onPressed: () => controller.deleteCategory(category.id)),
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                }),
-              )
-            ],
+                xxSpace,
+                Expanded(
+                  child: Obx(() {
+                    return ListView.builder(
+                      itemCount: controller.categories.length,
+                      itemBuilder: (context, index) {
+                        final category = controller.categories[index];
+                        return ListTile(
+                          title: Text(category.name),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              EditBtn(
+                                onPressed: () async {
+                                  final newName = await showDialog<String>(
+                                    context: context,
+                                    builder: (context) => _editCategoryDialog(category.name, context),
+                                  );
+                                  if (newName != null) {
+                                    controller.updateCategory(category.id, newName);
+                                  }
+                                },
+                              ),
+                              DeleteBtn(onPressed: () => controller.deleteCategory(category.id)),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  }),
+                )
+              ],
+            ),
           ),
         ),
       ),
