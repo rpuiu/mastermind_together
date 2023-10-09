@@ -28,6 +28,7 @@ import 'package:mastermind_together/src/services/supa/notif_service.dart';
 import 'package:mastermind_together/src/services/supa/settings_service.dart';
 import 'package:mastermind_together/src/services/supa/storage_service.dart';
 import 'package:mastermind_together/src/services/supa/subscription_service.dart';
+import 'package:mastermind_together/src/services/supa/tenant_id_service.dart';
 import 'package:mastermind_together/src/services/supa/tenant_service.dart';
 import 'package:mastermind_together/src/services/supa/user_group_service.dart';
 import 'package:mastermind_together/src/services/supa/users_extended_service.dart';
@@ -108,5 +109,6 @@ class GetBindings {
     Get.lazyPut(() => TenantSettingsController(), fenix: true);
     Get.lazyPut(() => LogoController(), fenix: true);
     Get.lazyPut(() => LogoService(), fenix: true);
+    Get.lazyPut(() => TenantIdService(), fenix: true);
   }
 }

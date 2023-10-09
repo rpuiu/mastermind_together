@@ -47,6 +47,7 @@ class TenantRegisterScreen extends GetView<TenantController> {
                       hintText: "Enter your tenant name",
                       validator: FormValidators.validateUsername, // update this as per your requirements
                     ),
+                    xxSpace,
                     CustomTextFormField(
                       controller: tenantHostController,
                       label: 'Host',

@@ -22,14 +22,15 @@ class AppTheme {
     // canvasColor: lightThemeColors.surface,
   );
 
-  static TabBarTheme tabBarTheme = const TabBarTheme(
-    unselectedLabelColor: bodyButtonInactiveTextColor, // Unselected tab color
-    labelColor: bodyButtonActiveTextColor, // Selected tab color
-    indicator: BoxDecoration(
-      border: Border(
-        bottom: BorderSide(color: bodyButtonActiveTextColor, width: 0.8),
-      ),
+  static TabBarTheme tabBarTheme = TabBarTheme(
+    unselectedLabelColor: defaultMenuIconColor,
+    labelColor: hoverMenuIconColor,
+    indicator: UnderlineTabIndicator(
+      borderRadius: borderRadius,
+      borderSide: const BorderSide(color: hoverMenuIconColor, width: 1.5),
     ),
+    labelStyle: bodyMedium,
+    unselectedLabelStyle: bodyMediumInactive,
   );
 
   // static TextTheme textTheme = const TextTheme(

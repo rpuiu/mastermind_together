@@ -1,12 +1,12 @@
 import 'dart:html' as html;
 
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/services/supa/tenant_service.dart';
+import 'package:mastermind_together/src/services/supa/tenant_id_service.dart';
 import 'package:mastermind_together/src/tenant/tenant_model.dart';
 import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 
 class TenantIdentifier extends GetxService {
-  final TenantService _tenantService = Get.find<TenantService>();
+  final TenantIdService _tenantService = Get.find<TenantIdService>();
 
   Rx<Tenant> tenant = Tenant.empty().obs;
 

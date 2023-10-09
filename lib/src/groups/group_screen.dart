@@ -9,7 +9,8 @@ import 'package:mastermind_together/src/groups/shared_group_screen.dart';
 import 'package:mastermind_together/src/groups/widgets/group_info_widget.dart';
 import 'package:mastermind_together/src/ui/theme/layout/custom_layout.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
-import 'package:mastermind_together/src/ui/theme/text_styles.dart';
+import 'package:mastermind_together/src/ui/widgets/tabs/custom_tab.dart';
+import 'package:mastermind_together/src/ui/widgets/tabs/tab_controller.dart';
 
 import 'widgets/member_list_widget.dart';
 
@@ -22,6 +23,7 @@ class GroupScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final GroupScreenController controller = Get.find(tag: groupId);
     final MembersController membersController = Get.find<MembersController>();
+    final TabsController tabController = Get.put(TabsController());
 
     return CustomLayout(
       content: Obx(() {
@@ -39,102 +41,39 @@ class GroupScreen extends StatelessWidget {
         if (!isMember) {
           return SharedGroupScreen(group: group);
         } else {
-          return LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-              if (constraints.maxWidth < 600) {
-                return _buildMobileView(context, controller, group, members);
-              } else {
-                return Column(
-                  children: [
-                    xxSpace,
-                    GroupInfoCard(group: group, controller: controller),
-                    xxxSpace,
-                    Expanded(
-                      child: Row(
-                        children: [
-                          _buildMembersWidget(group, members),
-                          _buildChatWidget(groupId),
-                        ],
+          return Column(
+            children: [
+              GroupInfoCard(group: group, controller: controller),
+              xxSpace,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomTab(0, 'Members: (${group.currentMembers} / ${group.maxMembers})'),
+                  wHalfSpace,
+                  const CustomTab(1, 'Chat'),
+                ],
+              ),
+              Expanded(
+                child: Obx(() {
+                  return IndexedStack(
+                    index: tabController.tabIndex.value,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(fontSize),
+                        child: MemberList(members: members, adminId: group.admin),
                       ),
-                    ),
-                  ],
-                );
-              }
-            },
+                      Padding(
+                        padding: const EdgeInsets.all(fontSize),
+                        child: ChatWidget(groupId: groupId),
+                      ),
+                    ],
+                  );
+                }),
+              ),
+            ],
           );
         }
       }),
-    );
-  }
-
-  DefaultTabController _buildMobileView(BuildContext context, GroupScreenController controller, GroupModel group, List<UserModel> members) {
-    return DefaultTabController(
-      length: 2,
-      child: Column(
-        children: [
-          GroupInfoCard(group: group, controller: controller),
-          xxSpace,
-          const TabBar(
-            tabs: [
-              Tab(text: 'Members'),
-              Tab(text: 'Chat'),
-            ],
-          ),
-          Expanded(
-            child: TabBarView(
-              children: [
-                MemberList(members: members, adminId: group.admin),
-                ChatWidget(groupId: groupId),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMembersWidget(GroupModel group, List<UserModel> members) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: fontSize),
-            child: Text(
-              'Members: ${group.currentMembers} / ${group.maxMembers}',
-              style: labelText.copyWith(fontWeight: FontWeight.bold),
-            ),
-          ),
-          Expanded(
-            child: Card(
-              color: hoverMenuTextColor,
-              shape: customBorder,
-              child: Padding(
-                padding: const EdgeInsets.all(fontSize),
-                child: MemberList(members: members, adminId: group.admin),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Expanded _buildChatWidget(String groupId) {
-    return Expanded(
-      flex: 3,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Chat',
-            style: labelText.copyWith(fontWeight: FontWeight.bold),
-          ),
-          Expanded(
-            child: ChatWidget(groupId: groupId),
-          ),
-        ],
-      ),
     );
   }
 }

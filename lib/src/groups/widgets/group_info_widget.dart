@@ -10,6 +10,7 @@ import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/icon/edit_button.dart';
+import 'package:mastermind_together/src/ui/widgets/custom_expansion_tile.dart';
 import 'package:mastermind_together/src/ui/widgets/custom_tooltip.dart';
 import 'package:mastermind_together/src/ui/widgets/dropdown/dropdown_widget.dart';
 import 'package:mastermind_together/src/util/date_time_util.dart';
@@ -26,25 +27,38 @@ class GroupInfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isAdmin = _membersController.isUserAdmin(group);
+    final double screenHeight = MediaQuery.of(context).size.height;
+
     return Card(
       elevation: 1.0,
       shape: customBorder,
-      child: Padding(
-        padding: const EdgeInsets.all(fontSize),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildGroupNameAndCategory(isAdmin),
-            xSpace,
-            _buildMeetingDetails(isAdmin),
-            xSpace,
-            _buildMeetingUrl(isAdmin),
-            xSpace,
-            _buildGroupDescription(isAdmin),
-          ],
-        ),
+      child: CustomExpansionTile(
+        initiallyExpanded: screenHeight * 0.2 > 200,
+        title: _buildTitle(context, isAdmin),
+        children: _buildExpandedContent(isAdmin),
       ),
     );
+  }
+
+  Widget _buildTitle(BuildContext context, bool isAdmin) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildGroupNameAndCategory(isAdmin),
+      ],
+    );
+  }
+
+  List<Widget> _buildExpandedContent(bool isAdmin) {
+    return [
+      _buildMeetingDetails(isAdmin),
+      xSpace,
+      _buildMeetingUrl(isAdmin),
+      xSpace,
+      _buildGroupDescription(isAdmin),
+      xSpace,
+      _buildLocation(isAdmin),
+    ];
   }
 
   Widget _buildGroupNameAndCategory(bool isAdmin) {
@@ -54,7 +68,6 @@ class GroupInfoCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text(controller.group.value.name, style: headingText),
               _conditionalEditButton(
                 isAdmin,
                 'Edit Group Name',
@@ -63,6 +76,7 @@ class GroupInfoCard extends StatelessWidget {
                 controller.group.value.name,
                 (newName) => controller.updateGroupName(controller.group.value.id, newName),
               ),
+              Text(controller.group.value.name, style: headingText),
             ],
           ),
           _buildCategory(),
@@ -88,14 +102,13 @@ class GroupInfoCard extends StatelessWidget {
       children: [
         Row(
           children: [
+            if (isAdmin) EditBtn(onPressed: _showDayAndTimePicker),
             Text(
               '${controller.group.value.meetingDay}: ${formatTimeOfDay(controller.group.value.meetingTimeLocal)}',
               style: bodyRegular,
             ),
-            if (isAdmin) EditBtn(onPressed: _showDayAndTimePicker),
           ],
         ),
-        _buildLocation(isAdmin),
       ],
     );
   }
@@ -103,7 +116,6 @@ class GroupInfoCard extends StatelessWidget {
   Widget _buildLocation(bool isAdmin) {
     return Row(
       children: [
-        Text('Location: ${controller.group.value.location ?? ''}', style: bodyRegular),
         _conditionalEditButton(
           isAdmin,
           'Edit Group Location',
@@ -112,6 +124,7 @@ class GroupInfoCard extends StatelessWidget {
           controller.group.value.location ?? '',
           (newLocation) => controller.updateGroupLocation(controller.group.value.id, newLocation),
         ),
+        Text('Location: ${controller.group.value.location ?? ''}', style: bodyRegular),
       ],
     );
   }
@@ -119,7 +132,6 @@ class GroupInfoCard extends StatelessWidget {
   Widget _buildMeetingUrl(bool isAdmin) {
     return Row(
       children: [
-        _buildRichTextMeetingUrl(),
         _conditionalEditButton(
           isAdmin,
           'Edit Meeting URL',
@@ -128,6 +140,7 @@ class GroupInfoCard extends StatelessWidget {
           controller.group.value.meetingUrl ?? '',
           (newMeetingUrl) => controller.updateMeetingUrl(controller.group.value.id, newMeetingUrl),
         ),
+        _buildRichTextMeetingUrl(),
       ],
     );
   }
@@ -156,6 +169,14 @@ class GroupInfoCard extends StatelessWidget {
         Expanded(
           child: Row(
             children: [
+              _conditionalEditButton(
+                isAdmin,
+                'Edit Group Description',
+                'Group Description',
+                'Enter the new description',
+                controller.group.value.description ?? '',
+                (newDescription) => controller.updateGroupDescription(controller.group.value.id, newDescription),
+              ),
               CustomTooltip(
                 message: 'Description: ${controller.group.value.description ?? ''}',
                 child: Text(
@@ -164,14 +185,6 @@ class GroupInfoCard extends StatelessWidget {
                   softWrap: true,
                   overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              _conditionalEditButton(
-                isAdmin,
-                'Edit Group Description',
-                'Group Description',
-                'Enter the new description',
-                controller.group.value.description ?? '',
-                (newDescription) => controller.updateGroupDescription(controller.group.value.id, newDescription),
               ),
             ],
           ),

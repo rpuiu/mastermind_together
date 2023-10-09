@@ -42,14 +42,4 @@ class TenantService extends GetxService {
       Log().e('Failed to create tenant: ', e, s);
     }
   }
-
-  Future<Tenant> getTenantByHostName(String hostname) async {
-    try {
-      final response = await _client.from('tenants').select().eq('hostname', hostname).single();
-      return Tenant.fromJson(response);
-    } catch (e, s) {
-      Log().e('Failed to get tenant id: ', e, s);
-      rethrow;
-    }
-  }
 }
