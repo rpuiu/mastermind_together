@@ -53,4 +53,7 @@ class StorageService extends GetxService {
     return path;
   }
 
+  String getPublicUrl(String bucket, String trimmedPath) {
+    return _client.storage.from(bucket).getPublicUrl(trimmedPath);
+  }
 }

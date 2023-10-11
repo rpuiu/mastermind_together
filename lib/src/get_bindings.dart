@@ -33,6 +33,8 @@ import 'package:mastermind_together/src/services/supa/tenant_service.dart';
 import 'package:mastermind_together/src/services/supa/user_group_service.dart';
 import 'package:mastermind_together/src/services/supa/users_extended_service.dart';
 import 'package:mastermind_together/src/services/timezone/timezone_service.dart';
+import 'package:mastermind_together/src/splash/img_precache_controller.dart';
+import 'package:mastermind_together/src/splash/splash_controller.dart';
 import 'package:mastermind_together/src/subscription/subscription_controller.dart';
 import 'package:mastermind_together/src/tenant/settings/logo_service.dart';
 import 'package:mastermind_together/src/tenant/settings/tenant_settings_controller.dart';
@@ -110,5 +112,7 @@ class GetBindings {
     Get.lazyPut(() => LogoController(), fenix: true);
     Get.lazyPut(() => LogoService(), fenix: true);
     Get.lazyPut(() => TenantIdService(), fenix: true);
+    Get.lazyPut(() => ImagePrecacheController(), fenix: true);
+    Get.lazyPut(() => SplashController(), fenix: true);
   }
 }

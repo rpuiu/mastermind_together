@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
               GetMaterialApp(
                 debugShowCheckedModeBanner: false,
                 defaultTransition: Transition.noTransition,
-                initialRoute: Routes.login,
+                initialRoute: Routes.splash,
                 getPages: Routes.routes,
                 theme: AppTheme.lightTheme,
                 navigatorObservers: [CustomNavigatorObserver()],

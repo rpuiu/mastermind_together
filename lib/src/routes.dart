@@ -16,13 +16,13 @@ import 'package:mastermind_together/src/home/home_screen.dart';
 import 'package:mastermind_together/src/notif/notif_screen.dart';
 import 'package:mastermind_together/src/onboarding/onboarding_screen.dart';
 import 'package:mastermind_together/src/profile/user_profile_screen.dart';
+import 'package:mastermind_together/src/splash/splash_screen.dart';
 import 'package:mastermind_together/src/tenant/categories/categories_screen.dart';
 import 'package:mastermind_together/src/tenant/settings/tenant_settings_screen.dart';
 import 'package:mastermind_together/src/tenant/tenant_dashboard_screen.dart';
 import 'package:mastermind_together/src/tenant/tenant_middleware.dart';
 import 'package:mastermind_together/src/tenant/tenant_register_screen.dart';
 import 'package:mastermind_together/src/tenant/terms/edit_terms_screen.dart';
-import 'package:mastermind_together/src/ui/widgets/images/right_side_image_controller.dart';
 
 class Routes {
   static const String home = '/home';
@@ -45,11 +45,12 @@ class Routes {
   static const String goals = '/goals';
   static const String notifications = '/notifications';
   static const String tenantSettings = '/tenant-settings';
+  static const String splash = '/splash';
 
   static List<GetPage> routes = [
     GetPage(name: home, page: () => HomeScreen(), middlewares: [AuthMiddleware()]),
-    GetPage(name: login, page: () => const LoginScreen(), binding: RightSideImageBinding()),
-    GetPage(name: register, page: () => const RegisterScreen(), binding: RightSideImageBinding()),
+    GetPage(name: login, page: () => const LoginScreen()),
+    GetPage(name: register, page: () => const RegisterScreen()),
     GetPage(name: goals, page: () => AllGoalsScreen(), middlewares: [AuthMiddleware()]),
     GetPage(name: availability, page: () => SetAvailabilityScreen(), middlewares: [AuthMiddleware()]),
     GetPage(name: createGroup, page: () => CreateGroupScreen(), middlewares: [AuthMiddleware()]),
@@ -66,6 +67,7 @@ class Routes {
     GetPage(name: notifications, page: () => const NotificationScreen()),
     GetPage(name: '$goal/:goalId', page: () => GoalScreen(), middlewares: [AuthMiddleware()]),
     GetPage(name: tenantSettings, page: () => const TenantSettingsScreen(), middlewares: [AuthMiddleware(), TenantMiddleware()]),
+    GetPage(name: splash, page: () => const SplashScreen()),
     GetPage(
       name: '$group/:groupId',
       page: () => GroupScreen(),

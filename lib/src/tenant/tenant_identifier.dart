@@ -1,25 +1,28 @@
+import 'dart:convert';
 import 'dart:html' as html;
 
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/services/sharedprefs/local_storage.dart';
 import 'package:mastermind_together/src/services/supa/tenant_id_service.dart';
 import 'package:mastermind_together/src/tenant/tenant_model.dart';
 import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 
 class TenantIdentifier extends GetxService {
   final TenantIdService _tenantService = Get.find<TenantIdService>();
+  final LocalStorageService _localStorageService = Get.find<LocalStorageService>();
 
   Rx<Tenant> tenant = Tenant.empty().obs;
-
-  @override
-  onInit() async {
-    super.onInit();
-    tenant.value = await _getTenantByHostName();
-  }
 
   Future<String> getTenantId() async {
     try {
       if (tenant.value.tenantId.isEmpty) {
-        tenant.value = await _getTenantByHostName();
+        String? cachedTenantJson = _localStorageService.getTenant();
+        if (cachedTenantJson != null) {
+          tenant.value = Tenant.fromJson(jsonDecode(cachedTenantJson));
+        } else {
+          tenant.value = await _getTenantByHostName();
+          await _localStorageService.setTenant(jsonEncode(tenant.value.toJson()));
+        }
       }
       return tenant.value.tenantId;
     } catch (e) {
@@ -31,10 +34,14 @@ class TenantIdentifier extends GetxService {
   Future<Tenant> _getTenantByHostName() async {
     try {
       final hostname = html.window.location.hostname;
-      Tenant tenant = await _tenantService.getTenantByHostName(hostname!);
-      return tenant;
+      tenant.value = await _tenantService.getTenantByHostName(hostname!);
+      return tenant.value;
     } catch (e) {
       throw Exception("Unable to identify tenant");
     }
+  }
+
+  Future<void> initialize() async {
+    await getTenantId();
   }
 }

@@ -6,7 +6,7 @@ import 'package:mastermind_together/src/services/supa/auth_service.dart';
 import 'package:mastermind_together/src/tenant/settings/logo_service.dart';
 import 'package:mastermind_together/src/tenant/tenant_identifier.dart';
 
-class LogoController extends GetxController {
+class LogoController extends GetxService {
   final TenantIdentifier _tenantIdentifier = Get.find<TenantIdentifier>();
   final LogoService _logoService = Get.find<LogoService>();
   final AuthService _authService = Get.find<AuthService>();
@@ -18,33 +18,43 @@ class LogoController extends GetxController {
   RxDouble aspectRatio = 1.0.obs;
 
   @override
-  Future<void> onInit() async {
+  void onInit() async {
     super.onInit();
-    await fetchLogo();
-    await fetchFavicon();
+    await initializeLogosAndFavicon();
   }
 
-  Future<void> fetchLogo() async {
-    String tenantId;
-    if (_authService.getUser() == null) {
-      tenantId = await _tenantIdentifier.getTenantId();
-    } else {
-      tenantId = _authService.getUser()!.tenantId;
-    }
-    lightLogoUrl.value = await _logoService.initializeLogo(tenantId, true);
-    darkLogoUrl.value = await _logoService.initializeLogo(tenantId, false);
-    _updateAspectRatio(lightLogoUrl.value);
-    _updateAspectRatio(darkLogoUrl.value);
+  Future<void> initializeLogosAndFavicon() async {
+    final String tenantId = await _getTenantId();
+    await setLogo(tenantId);
+    await setFavicon(tenantId);
   }
 
-  Future<void> fetchFavicon() async {
-    String tenantId;
+  Future<String> _getTenantId() async {
     if (_authService.getUser() == null) {
-      tenantId = await _tenantIdentifier.getTenantId();
+      return await _tenantIdentifier.getTenantId();
     } else {
-      tenantId = _authService.getUser()!.tenantId;
+      return _authService.getUser()!.tenantId;
     }
+  }
 
+  Future<void> setLogo(String tenantId) async {
+    String? cachedLightLogoUrl = _logoService.getLogoUrl(true);
+    String? cachedDarkLogoUrl = _logoService.getLogoUrl(false);
+
+    if (cachedLightLogoUrl != null && cachedDarkLogoUrl != null) {
+      lightLogoUrl.value = cachedLightLogoUrl;
+      darkLogoUrl.value = cachedDarkLogoUrl;
+    } else {
+      lightLogoUrl.value = await _logoService.initializeLogo(tenantId, true);
+      darkLogoUrl.value = await _logoService.initializeLogo(tenantId, false);
+
+      // Cache the URLs for future use
+      _logoService.saveLogoUrl(true, lightLogoUrl.value);
+      _logoService.saveLogoUrl(false, darkLogoUrl.value);
+    }
+  }
+
+  Future<void> setFavicon(String tenantId) async {
     faviconUrl.value = await _logoService.initializeFavicon(tenantId);
   }
 

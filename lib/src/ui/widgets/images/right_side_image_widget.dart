@@ -1,24 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/splash/img_precache_controller.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
-import 'package:mastermind_together/src/ui/widgets/images/right_side_image_controller.dart';
 
-class RightSideImage extends GetView<RightSideImageController> {
-  const RightSideImage({super.key});
+class RightSideImage extends StatelessWidget {
+  const RightSideImage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // List of image paths
-    final List<String> images = [
-      'assets/images/login/login-1.png',
-      'assets/images/login/login-2.png',
-      'assets/images/login/login-3.png',
-      'assets/images/login/login-4.png',
-      'assets/images/login/login-5.png',
-    ];
-
-    int randomIndex = controller.randomImageIndex.value;
-    String randomImagePath = images[randomIndex];
+    final ImagePrecacheController controller = Get.find();
 
     return Padding(
       padding: const EdgeInsets.all(2 * fontSize),
@@ -27,7 +17,7 @@ class RightSideImage extends GetView<RightSideImageController> {
         decoration: BoxDecoration(
           borderRadius: borderRadius,
           image: DecorationImage(
-            image: AssetImage(randomImagePath),
+            image: AssetImage(controller.randomImagePath),
             fit: BoxFit.cover,
           ),
         ),
