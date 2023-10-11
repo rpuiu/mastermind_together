@@ -58,6 +58,69 @@
   <script src="flutter.js" defer></script>
 </head>
 <body>
+<style>
+  /* Container for the loader */
+  .loader-container {
+    margin: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #FDFEFF;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Bullseye loader */
+  .loader {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    position: relative;
+    animation: rotate 2s infinite linear;
+  }
+
+  .loader:before,
+  .loader:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 8px solid transparent;
+    border-top-color: #22B2CF;
+  }
+
+  .loader:before {
+    animation: spin 1.5s infinite ease-in-out;
+  }
+
+  .loader:after {
+    animation: spin 3s infinite ease-in-out;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+</style>
   <script>
     window.addEventListener('load', function(ev) {
       // Download main.dart.js
@@ -66,12 +129,18 @@
           serviceWorkerVersion: serviceWorkerVersion,
         },
         onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine().then(function(appRunner) {
-            appRunner.runApp();
+          engineInitializer.initializeEngine().then(async function(appRunner) {
+            await appRunner.runApp();
+            var loaderContent = document.querySelector('#loader-content');
+            loaderContent.style.display = 'none'; // Hide the loader
           });
         }
       });
     });
   </script>
+
+<div class="loader-container" id="loader-content">
+  <div class="loader"></div>
+</div>
 </body>
 </html>
