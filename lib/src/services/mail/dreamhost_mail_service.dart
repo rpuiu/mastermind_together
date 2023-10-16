@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
-class MailgunService {
-  final String baseUrl = dotenv.env['MAILGUN_EDGE_FUNCTION']!;
+class DreamHostMailService {
+  final String baseUrl = dotenv.env['DREAMHOST_EDGE_FUNCTION']!;
   final String token = dotenv.env['SUPABASE_ANON_KEY']!;
 
-  MailgunService();
+  DreamHostMailService();
 
   Future<bool> sendMail(Map<String, dynamic> data) async {
     final Uri url = Uri.parse(baseUrl);
@@ -20,8 +20,7 @@ class MailgunService {
     );
 
     if (response.statusCode == 200) {
-      final Map<String, dynamic> responseBody = jsonDecode(response.body);
-      return responseBody['success'] == true;
+      return true;  // Adjust as necessary based on the response from your server
     } else {
       throw Exception('Failed to send email. StatusCode: ${response.statusCode}');
     }

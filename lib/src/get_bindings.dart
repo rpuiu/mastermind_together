@@ -16,7 +16,7 @@ import 'package:mastermind_together/src/notif/email/email_notif_controller.dart'
 import 'package:mastermind_together/src/notif/notif_controller.dart';
 import 'package:mastermind_together/src/onboarding/onboarding_controller.dart';
 import 'package:mastermind_together/src/profile/user_profile_controller.dart';
-import 'package:mastermind_together/src/services/mailgun/mailgun_service.dart';
+import 'package:mastermind_together/src/services/mail/dreamhost_mail_service.dart';
 import 'package:mastermind_together/src/services/mixpanel/analytics_service.dart';
 import 'package:mastermind_together/src/services/sharedprefs/local_storage.dart';
 import 'package:mastermind_together/src/services/supa/action_service.dart';
@@ -100,7 +100,7 @@ class GetBindings {
     Get.lazyPut(() => ActionEditController(), fenix: true);
     Get.lazyPut(() => NotificationController(), fenix: true);
     Get.lazyPut(() => NotificationService(), fenix: true);
-    Get.lazyPut(() => MailgunService(), fenix: true);
+    Get.lazyPut(() => DreamHostMailService(), fenix: true);
     Get.lazyPut(() => EmailController(), fenix: true);
     Get.lazyPut(() => DrawerStateController(), fenix: true);
     Get.lazyPut(() => StorageService(), fenix: true);

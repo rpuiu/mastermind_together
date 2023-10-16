@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
-import 'package:mastermind_together/src/services/mailgun/mailgun_service.dart';
+import 'package:mastermind_together/src/services/mail/dreamhost_mail_service.dart';
 
 class EmailController extends GetxController {
-  final MailgunService _mailgunService = Get.find<MailgunService>();
+  final DreamHostMailService _mailService = Get.find<DreamHostMailService>();
   final isLoading = false.obs;
   final error = ''.obs;
 
@@ -10,7 +10,7 @@ class EmailController extends GetxController {
     try {
       isLoading(true);
 
-      final bool success = await _mailgunService.sendMail(emailData);
+      final bool success = await _mailService.sendMail(emailData);
 
       if (success) {
         // Do something on success, maybe navigate to another screen or show a success message

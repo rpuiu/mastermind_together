@@ -20,7 +20,7 @@ class FeedbackController extends GetxController {
 
     final emailData = {
       'to': 'mastermindtogether@gmail.com',
-      'from': 'support@mastermindtogether.com',
+      'from': 'no-reply@apeacefultomorrow.us',
       'subject': subject,
       'body': issueTextFieldController.value.text,
       // add other fields as needed
