@@ -15,9 +15,16 @@ class SplashController extends GetxController {
 
   BuildContext? _context;
 
-  void setContext(BuildContext context) {
+  @override
+  void onReady() async {
+    super.onReady();
+    await initializeData();
+    dataLoaded.value = true;
+  }
+
+  Future<void> setContext(BuildContext context) async {
     _context = context;
-    initializeData();
+    await initializeData();
   }
 
   Future<void> initializeData() async {

@@ -8,10 +8,6 @@ class SplashScreen extends GetView<SplashController> {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      controller.setContext(context);
-    });
-
     return Obx(() {
       if (controller.dataLoaded.value) {
         Future.microtask(() => Get.offNamed(Routes.login));
