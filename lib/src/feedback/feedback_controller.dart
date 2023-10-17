@@ -17,16 +17,7 @@ class FeedbackController extends GetxController {
   sendEmail() async {
     String userEmail = _localStorage.getUser()!.email;
     String subject = 'Feedback from: $userEmail';
-
-    final emailData = {
-      'to': 'mastermindtogether@gmail.com',
-      'from': 'no-reply@apeacefultomorrow.us',
-      'subject': subject,
-      'body': issueTextFieldController.value.text,
-      // add other fields as needed
-    };
-
-    await _emailController.sendEmail(emailData);
+    await _emailController.sendEmail('mastermindtogether@gmail.com', subject,issueTextFieldController.value.text );
   }
 
   requestFeature() {

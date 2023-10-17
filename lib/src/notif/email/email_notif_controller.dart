@@ -6,7 +6,19 @@ class EmailController extends GetxController {
   final isLoading = false.obs;
   final error = ''.obs;
 
-  Future<void> sendEmail(Map<String, dynamic> emailData) async {
+  Future<void> sendEmail(String to, String subject, String body) async {
+    final emailData = {
+      'to': to,
+      'from': 'no-reply@apeacefultomorrow.us',
+      'subject': subject,
+      'body': body,
+      // add other fields as needed
+    };
+
+    await sendEmailData(emailData);
+  }
+
+  Future<void> sendEmailData(Map<String, dynamic> emailData) async {
     try {
       isLoading(true);
 

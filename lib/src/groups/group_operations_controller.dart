@@ -4,11 +4,13 @@ import 'package:mastermind_together/src/auth/user_model.dart';
 import 'package:mastermind_together/src/groups/all_groups_controller.dart';
 import 'package:mastermind_together/src/groups/group_model.dart';
 import 'package:mastermind_together/src/groups/members_controller.dart';
+import 'package:mastermind_together/src/notif/email/email_notif_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/services/log/logger_service.dart';
 import 'package:mastermind_together/src/services/mixpanel/analytics_service.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';
 import 'package:mastermind_together/src/services/supa/user_group_service.dart';
+import 'package:mastermind_together/src/services/supa/users_extended_service.dart';
 import 'package:mastermind_together/src/services/timezone/timezone_service.dart';
 import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 
@@ -17,6 +19,8 @@ class GroupOperationsController extends GetxController {
   final TimezoneService _tzService = Get.find<TimezoneService>();
   final AnalyticsService _analytics = Get.find<AnalyticsService>();
   final UserGroupService _groupService = Get.find<UserGroupService>();
+  final EmailController _emailController = Get.find<EmailController>();
+  final UsersExtendedService _usersExtendedService = Get.find<UsersExtendedService>();
 
   final AllGroupsController allGroupsController = Get.find<AllGroupsController>();
   final MembersController _membersController = Get.find<MembersController>();
@@ -71,8 +75,10 @@ class GroupOperationsController extends GetxController {
       showSuccessSnackBar(message: 'Successfully joined group');
 
       allGroupsController.userGroups.add(joinedGroup);
-      // allGroupsController.userGroups.refresh();
-     // await allGroupsController.fetchAvailableGroups(); // Refresh the matching groups
+
+      if (joinedGroup.admin != user.id) {
+        notifyAdmin(joinedGroup, user);
+      }
 
       _analytics.track('GROUP_JOINED', properties: {
         'user': user.toJson(),
@@ -86,6 +92,16 @@ class GroupOperationsController extends GetxController {
     } finally {
       selectedJoinButtonStatus.value = {groupId: false};
     }
+  }
+
+  Future<void> notifyAdmin(GroupModel joinedGroup, UserModel user) async {
+    String admin = joinedGroup.admin!;
+    String userEmail = user.email;
+    UserModel adminUser = await _usersExtendedService.readUserExtended(admin);
+    String subject = 'User $userEmail has joined your group.';
+    String body = 'User $userEmail has joined your group. ';
+
+    await _emailController.sendEmail(adminUser.email, subject, body);
   }
 
   void leaveGroup(String groupId) async {
