@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/auth_middleware.dart';
 import 'package:mastermind_together/src/auth/login_screen.dart';
+import 'package:mastermind_together/src/auth/password/forgot_pass_screen.dart';
+import 'package:mastermind_together/src/auth/password/reset_pass_screen.dart';
 import 'package:mastermind_together/src/auth/register_screen.dart';
 import 'package:mastermind_together/src/auth/tos/terms_screen.dart';
 import 'package:mastermind_together/src/availability/availability_screen.dart';
@@ -46,13 +48,15 @@ class Routes {
   static const String notifications = '/notifications';
   static const String tenantSettings = '/tenant-settings';
   static const String splash = '/splash';
+  static const String forgotPass = '/forgot-password';
+  static const String resetPass = '/reset-password';
 
   static List<GetPage> routes = [
-    GetPage(name: home, page: () => HomeScreen(), middlewares: [AuthMiddleware()]),
+    GetPage(name: home, page: () => const HomeScreen(), middlewares: [AuthMiddleware()]),
     GetPage(name: login, page: () => const LoginScreen()),
     GetPage(name: register, page: () => const RegisterScreen()),
     GetPage(name: goals, page: () => AllGoalsScreen(), middlewares: [AuthMiddleware()]),
-    GetPage(name: availability, page: () => SetAvailabilityScreen(), middlewares: [AuthMiddleware()]),
+    GetPage(name: availability, page: () => const SetAvailabilityScreen(), middlewares: [AuthMiddleware()]),
     GetPage(name: createGroup, page: () => CreateGroupScreen(), middlewares: [AuthMiddleware()]),
     GetPage(name: allGroups, page: () => AllGroupsScreen(), middlewares: [AuthMiddleware()]),
     GetPage(name: tenantRegister, page: () => TenantRegisterScreen()), //TODO secure!
@@ -65,15 +69,17 @@ class Routes {
     GetPage(name: categories, page: () => CategoriesScreen(), middlewares: [AuthMiddleware(), TenantMiddleware()]),
     GetPage(name: onboarding, page: () => OnboardingScreen()),
     GetPage(name: notifications, page: () => const NotificationScreen()),
-    GetPage(name: '$goal/:goalId', page: () => GoalScreen(), middlewares: [AuthMiddleware()]),
     GetPage(name: tenantSettings, page: () => const TenantSettingsScreen(), middlewares: [AuthMiddleware(), TenantMiddleware()]),
     GetPage(name: splash, page: () => const SplashScreen()),
+    GetPage(name: goal, page: () => GoalScreen(), middlewares: [AuthMiddleware()]),
+    GetPage(name: forgotPass, page: () => const ForgotPasswordScreen()),
+    GetPage(name: resetPass, page: () => const ResetPassScreen()),
     GetPage(
-      name: '$group/:groupId',
+      name: group,
       page: () => GroupScreen(),
       binding: BindingsBuilder(() {
-        String groupId = Get.parameters['groupId']!;
-        if (!Get.isRegistered<GroupScreenController>(tag: groupId)) {
+        String? groupId = Get.parameters['id'];
+        if (groupId != null && !Get.isRegistered<GroupScreenController>(tag: groupId)) {
           Get.put(GroupScreenController(groupId: groupId), tag: groupId);
         }
       }),
@@ -81,7 +87,7 @@ class Routes {
     ),
   ];
 
-  static String groupRoute(String groupId) => '$group/$groupId';
+  static String groupRoute(String groupId) => '$group?id=$groupId';
 
-  static String goalRoute(String goalId) => '$goal/$goalId';
+  static String goalRoute(String goalId) => '$goal?id=$goalId';
 }

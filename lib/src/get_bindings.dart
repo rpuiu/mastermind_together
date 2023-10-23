@@ -2,6 +2,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:mastermind_together/src/auth/login_controller.dart';
+import 'package:mastermind_together/src/auth/password/forgot_pass_controller.dart';
+import 'package:mastermind_together/src/auth/password/password_controller.dart';
 import 'package:mastermind_together/src/auth/register_controller.dart';
 import 'package:mastermind_together/src/availability/availability_controller.dart';
 import 'package:mastermind_together/src/categories/category_controller.dart';
@@ -55,6 +57,7 @@ class GetBindings {
     Supabase supabase = await Supabase.initialize(
       url: dotenv.env['SUPABASE_URL']!,
       anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+      debug: true,
     );
 
     SupabaseClient supaClient = Supabase.instance.client;
@@ -114,5 +117,7 @@ class GetBindings {
     Get.lazyPut(() => TenantIdService(), fenix: true);
     Get.lazyPut(() => ImagePrecacheController(), fenix: true);
     Get.lazyPut(() => SplashController(), fenix: true);
+    Get.lazyPut(() => ForgotPassController(), fenix: true);
+    Get.lazyPut(() => PasswordController(), fenix: true);
   }
 }

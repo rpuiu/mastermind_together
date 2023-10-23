@@ -15,13 +15,17 @@ import 'package:mastermind_together/src/ui/widgets/tabs/tab_controller.dart';
 import 'widgets/member_list_widget.dart';
 
 class GroupScreen extends StatelessWidget {
-  final String groupId = Get.parameters['groupId']!;
+  final String? groupId = Get.parameters['id'];
 
   GroupScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final GroupScreenController controller = Get.find(tag: groupId);
+    if (groupId == null) {
+      return const Scaffold(body: Center(child: Text("Invalid group ID")));
+    }
+    final GroupScreenController controller = Get.find(tag: groupId!);
+
     final MembersController membersController = Get.find<MembersController>();
     final TabsController tabController = Get.put(TabsController());
 
@@ -64,7 +68,7 @@ class GroupScreen extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(fontSize),
-                        child: ChatWidget(groupId: groupId),
+                        child: ChatWidget(groupId: groupId!),
                       ),
                     ],
                   );

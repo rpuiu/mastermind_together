@@ -25,7 +25,7 @@ class FeedbackScreen extends GetView<FeedbackController> {
               ? Row(
                   children: [
                     Expanded(
-                      child: buildDesktopContent(context),
+                      child: buildAllContent(context),
                     ),
                     wXSpace,
                     Expanded(
@@ -33,29 +33,13 @@ class FeedbackScreen extends GetView<FeedbackController> {
                     ),
                   ],
                 )
-              : buildMobileContent(context);
+              : buildAllContent(context);
         }
       }),
     );
   }
 
-  Widget buildDesktopContent(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          "We would love to hear your thoughts, so we can improve!",
-          style: headingText,
-        ),
-        xHalfSpace,
-        buildContent(context),
-        xHalfSpace,
-        buildFeatureSection(context),
-      ],
-    );
-  }
-
-  Widget buildMobileContent(BuildContext context) {
+  Widget buildAllContent(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -64,9 +48,9 @@ class FeedbackScreen extends GetView<FeedbackController> {
           "We would love to hear your thoughts, so we can improve!",
           style: headingText,
         ),
-        xHalfSpace,
+        xxSpace,
         buildContent(context),
-        xHalfSpace,
+        xxSpace,
         buildFeatureSection(context),
       ],
     );

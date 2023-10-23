@@ -72,7 +72,10 @@ class LoginForm extends GetView<LoginController> {
               xHalfSpace,
               Align(
                 alignment: Alignment.centerRight,
-                child: Text('Forgot Password?', style: linkTextStyle), //TODO MAIN-T-49
+                child: TextButton(
+                  onPressed: () => Get.toNamed(Routes.forgotPass),
+                  child: Text('Forgot Password?', style: linkTextStyle),
+                ),
               ),
               xHalfSpace,
               Obx(() {

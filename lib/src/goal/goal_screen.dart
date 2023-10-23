@@ -15,13 +15,17 @@ import 'package:mastermind_together/src/ui/widgets/label_categ_widget.dart';
 import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 
 class GoalScreen extends GetView<GoalController> {
-  final String goalId = Get.parameters['goalId']!;
+  final String? goalId = Get.parameters['id'];
 
   GoalScreen({Key? key}) : super(key: key);
   final GoalsController _goalsController = Get.find<GoalsController>();
 
   @override
   Widget build(BuildContext context) {
+    if (goalId == null) {
+      return const Scaffold(body: Center(child: Text("Invalid goal ID")));
+    }
+
     controller.goalId = goalId;
     return ScrollableCustomLayout(
       content: Column(
@@ -35,7 +39,7 @@ class GoalScreen extends GetView<GoalController> {
                 onPressed: () async {
                   bool shouldDelete = await _showDeleteConfirmation();
                   if (shouldDelete) {
-                    await controller.deleteGoal(goalId);
+                    await controller.deleteGoal(goalId!);
                     showSuccessSnackBar(message: "Successfully deleted goal");
                     _goalsController.fetchUserGoals();
                     Get.toNamed(Routes.home);
@@ -63,7 +67,7 @@ class GoalScreen extends GetView<GoalController> {
               return SizedBox(
                 height: MediaQuery.of(context).size.height * 0.8,
                 child: AddActionsWidget(
-                  goalId: goalId,
+                  goalId: goalId!,
                   actionController: ActionController(controller.goalDetails.value!),
                 ),
               );

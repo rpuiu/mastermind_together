@@ -8,6 +8,7 @@ import 'package:mastermind_together/src/services/sharedprefs/local_storage.dart'
 import 'package:mastermind_together/src/services/supa/subscription_service.dart';
 import 'package:mastermind_together/src/services/supa/users_extended_service.dart';
 import 'package:mastermind_together/src/services/timezone/timezone_service.dart';
+import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService extends GetxService {
@@ -49,6 +50,10 @@ class AuthService extends GetxService {
     } else {
       return null;
     }
+  }
+
+  bool isAuthenticated() {
+    return _client.auth.currentUser != null;
   }
 
   Future<UserModel> signUp(String tenantId, String username, String email, String password) async {
@@ -131,8 +136,7 @@ class AuthService extends GetxService {
       }
 
       await _client.auth.signInWithPassword(email: currentUser!.email, password: oldPassword);
-      final UserAttributes userAttributes = UserAttributes(password: newPassword);
-      await _client.auth.updateUser(userAttributes);
+      await updatePassword(newPassword);
     } on AuthException catch (e) {
       if (e.message == "Invalid login credentials") {
         throw const AuthException("Incorrect old password");
@@ -143,8 +147,33 @@ class AuthService extends GetxService {
     }
   }
 
+  Future<void> updatePassword(String newPassword) async {
+    final UserAttributes userAttributes = UserAttributes(
+      password: newPassword,
+    );
+    try {
+      await _client.auth.updateUser(userAttributes);
+    } on AuthException catch (e) {
+      showErrorSnackBar(message: e.message);
+      rethrow;
+    } catch (e, s) {
+      Log().e("An error occurred while updating the password for user ${currentUser!.id}:", e, s, currentUser!.tenantId);
+      rethrow;
+    }
+  }
+
   bool isTenant() {
     return role == 'tenant';
+  }
+
+  Future<void> resetPassword(String email) async {
+    try {
+      final uri = Uri.base.replace(path: '/reset-password'); //Get the tenant's URL dynamically. The URL should be added in Supa's Redirect URLs
+      var response = await _client.auth.resetPasswordForEmail(email, redirectTo: '$uri');
+    } catch (e, s) {
+      Log().e("An error occurred while resetting the password for user ${currentUser!.id}:", e, s, currentUser!.tenantId);
+      rethrow;
+    }
   }
 
   void _setRole(User user) {
