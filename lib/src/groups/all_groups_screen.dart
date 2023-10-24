@@ -19,28 +19,68 @@ class AllGroupsScreen extends GetView<AllGroupsController> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isMobile = MediaQuery.of(context).size.width <= 600;
+
     return CustomLayout(
       content: Column(
         children: <Widget>[
           xHalfSpace,
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text("Groups", style: headingText),
-              wHalfSpace,
-              AddBtn(
-                onPressed: () => _checkSubscriptionAndNavigate(context),
-              )
+              Row(children: [
+                if (isMobile)
+                  IconButton(
+                    icon: const Icon(Icons.filter_list), //TODO change icon
+                    onPressed: () => _showFiltersDialog(context),
+                  ),
+                AddBtn(
+                  onPressed: () => _checkSubscriptionAndNavigate(context),
+                )
+              ])
             ],
           ),
           xHalfSpace,
-          _buildSpecialFilterChips(),
-          xHalfSpace,
-          _buildFilterChips(),
+          if (!isMobile) ...[
+            _buildSpecialFilterChips(),
+            xSpace,
+            _buildFilterChips(),
+          ],
           xHalfSpace,
           _buildCardGrid(context),
         ],
       ),
+    );
+  }
+
+  void _showFiltersDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Filters'),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildSpecialFilterChips(),
+                const Divider(),
+                xSpace,
+                _buildFilterChips(),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Apply'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
