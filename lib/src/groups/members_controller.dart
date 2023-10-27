@@ -33,4 +33,8 @@ class MembersController extends GetxController {
   bool isUserMemberOfGroup(String groupId) {
     return groupIdToMembershipStatus[groupId]?.value ?? false;
   }
+
+  String getCurrentUserTimezone(){
+   return _authService.getUser()!.timezone;
+  }
 }

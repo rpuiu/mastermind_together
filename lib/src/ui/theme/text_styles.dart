@@ -41,8 +41,8 @@ TextStyle linkTextStyle = const TextStyle(
   fontSize: 16,
   fontFamily: fontFamily,
   fontWeight: FontWeight.w400,
-  height: 1,
-  letterSpacing: 0.16,
+  height: 1.40,
+  // letterSpacing: 0.16,
 );
 
 TextStyle subtitleTextStyle = const TextStyle(

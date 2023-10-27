@@ -5,6 +5,7 @@ import 'package:mastermind_together/src/groups/group_model.dart';
 import 'package:mastermind_together/src/groups/group_operations_controller.dart';
 import 'package:mastermind_together/src/groups/group_screen_controller.dart';
 import 'package:mastermind_together/src/groups/members_controller.dart';
+import 'package:mastermind_together/src/groups/widgets/calendar_actions.dart';
 import 'package:mastermind_together/src/groups/widgets/conditional_edit_button.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
@@ -14,6 +15,7 @@ import 'package:mastermind_together/src/ui/widgets/custom_expansion_tile.dart';
 import 'package:mastermind_together/src/ui/widgets/custom_tooltip.dart';
 import 'package:mastermind_together/src/ui/widgets/dropdown/dropdown_widget.dart';
 import 'package:mastermind_together/src/util/date_time_util.dart';
+import 'package:mastermind_together/src/util/url_launcher.dart';
 
 class GroupInfoCard extends StatelessWidget {
   final GroupScreenController controller;
@@ -97,15 +99,42 @@ class GroupInfoCard extends StatelessWidget {
   }
 
   Widget _buildMeetingDetails(bool isAdmin) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    CalendarActions calendarIcsGenerator = CalendarActions();
+    String googleCalendarLink = calendarIcsGenerator.generateGoogleCalendarLink(controller.group.value);
+
+    return Column(
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            if (isAdmin) EditBtn(onPressed: _showDayAndTimePicker),
-            Text(
-              '${controller.group.value.meetingDay}: ${formatTimeOfDay(controller.group.value.meetingTimeLocal)}',
-              style: bodyRegular,
+            Row(
+              children: [
+                if (isAdmin) EditBtn(onPressed: _showDayAndTimePicker),
+                Text(
+                  '${controller.group.value.meetingDay}: ${formatTimeOfDay(controller.group.value.meetingTimeLocal)}',
+                  style: bodyRegular,
+                ),
+              ],
+            ),
+            PopupMenuButton<String>(
+              onSelected: (String result) {
+                if (result == 'Google Calendar') {
+                  launchURL(googleCalendarLink);
+                } else if (result == 'ICS File') {
+                  calendarIcsGenerator.generateIcsFile(controller.group.value);
+                }
+              },
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                const PopupMenuItem<String>(
+                  value: 'Google Calendar',
+                  child: Text('Google Calendar'),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'ICS File',
+                  child: Text('Download ICS File'),
+                ),
+              ],
+              child: Text('Add to Calendar', style: linkTextStyle),
             ),
           ],
         ),
@@ -152,10 +181,7 @@ class GroupInfoCard extends StatelessWidget {
           const TextSpan(text: 'Meeting URL: ', style: bodyRegular),
           TextSpan(
             text: controller.group.value.meetingUrl,
-            style: bodyRegular.copyWith(
-              color: Colors.blue,
-              decoration: TextDecoration.underline,
-            ),
+            style: linkTextStyle.copyWith(decoration: TextDecoration.underline),
             recognizer: TapGestureRecognizer()..onTap = () => controller.launchMeetingUrl(controller.group.value),
           ),
         ],
@@ -194,21 +220,18 @@ class GroupInfoCard extends StatelessWidget {
     );
   }
 
-  Padding _buildLeaveGroupBtn() {
-    return Padding(
-      padding: const EdgeInsets.only(top: fontSize / 2),
-      child: TextButton(
-        onPressed: () async {
-          bool shouldLeave = await _showLeaveGroupConfirmation();
-          if (shouldLeave) {
-            _groupOperationsController.leaveGroup(group.id);
-            Get.toNamed(Routes.home);
-          }
-        },
-        child: Text(
-          "Leave Group",
-          style: linkTextStyle.copyWith(color: errorColor),
-        ),
+  Widget _buildLeaveGroupBtn() {
+    return TextButton(
+      onPressed: () async {
+        bool shouldLeave = await _showLeaveGroupConfirmation();
+        if (shouldLeave) {
+          _groupOperationsController.leaveGroup(group.id);
+          Get.toNamed(Routes.home);
+        }
+      },
+      child: Text(
+        "Leave Group",
+        style: linkTextStyle.copyWith(color: errorColor),
       ),
     );
   }
