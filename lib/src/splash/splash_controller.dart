@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/routes.dart';
+import 'package:mastermind_together/src/services/supa/auth_service.dart';
 import 'package:mastermind_together/src/splash/image_service.dart';
 import 'package:mastermind_together/src/splash/img_precache_controller.dart';
 import 'package:mastermind_together/src/tenant/tenant_identifier.dart';
@@ -10,21 +12,16 @@ class SplashController extends GetxController {
   final ImagePrecacheController imagePrecacheController = Get.find<ImagePrecacheController>();
   final LogoController logoController = Get.find<LogoController>();
   final ImageService _imageService = Get.put(ImageService());
+  final AuthService _authService = Get.find<AuthService>();
 
   final RxBool dataLoaded = false.obs;
 
   BuildContext? _context;
 
-  @override
-  void onReady() async {
-    super.onReady();
-    await initializeData();
-    dataLoaded.value = true;
-  }
-
   Future<void> setContext(BuildContext context) async {
     _context = context;
     await initializeData();
+    dataLoaded.value = true;
   }
 
   Future<void> initializeData() async {
@@ -43,6 +40,15 @@ class SplashController extends GetxController {
       dataLoaded.value = true;
     } catch (e) {
       print('Error during initialization: $e');
+    }
+  }
+
+  void redirect() {
+    final session = _authService.currentSession;
+    if (session != null) {
+      Get.offNamed(Routes.home);
+    } else {
+      Get.offNamed(Routes.login);
     }
   }
 }

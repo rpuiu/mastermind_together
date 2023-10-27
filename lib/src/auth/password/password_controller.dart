@@ -22,7 +22,7 @@ class PasswordController extends GetxController {
     try {
       await _authService.updatePassword(newPasswordController.text);
       showSuccessSnackBar(message: "Password changed successfully! Please log in with the new password.");
-      Get.toNamed(Routes.home);
+      Get.toNamed(Routes.login);
     } catch (e, s) {
       newPasswordController.clear();
       confirmPasswordController.clear();

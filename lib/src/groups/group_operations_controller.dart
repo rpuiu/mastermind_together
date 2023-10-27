@@ -96,10 +96,10 @@ class GroupOperationsController extends GetxController {
 
   Future<void> notifyAdmin(GroupModel joinedGroup, UserModel user) async {
     String admin = joinedGroup.admin!;
-    String userEmail = user.email;
+    String username = user.username;
     UserModel adminUser = await _usersExtendedService.readUserExtended(admin);
-    String subject = 'User $userEmail has joined your group.';
-    String body = 'User $userEmail has joined your group. ';
+    String subject = 'User $username has joined your group.';
+    String body = 'User $username has joined your group. ';
 
     await _emailController.sendEmail(adminUser.email, subject, body);
   }

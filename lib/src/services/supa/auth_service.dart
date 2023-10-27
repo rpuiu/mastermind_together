@@ -22,6 +22,8 @@ class AuthService extends GetxService {
 
   UserModel? get currentUser => _currentUser.value;
 
+  Session? get currentSession => _client.auth.currentSession;
+
   set currentUser(UserModel? user) => _currentUser.value = user;
 
   late final StreamSubscription<AuthState> _authStateSubscription;

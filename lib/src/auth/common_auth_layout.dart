@@ -36,7 +36,7 @@ class CommonAuthLayout extends GetView<LogoController> {
                           const TenantLogo(width: 308, height: 30, squareHeight: 160, isLight: false),
                           xxxSpace,
                           form,
-                          xxxSpace,
+                          xSpace,
                           Obx(() {
                             return Text(
                               '© 2023 ALL RIGHTS RESERVED ${_tenantIdentifier.tenant.value.name.toUpperCase()}',

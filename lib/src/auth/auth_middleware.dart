@@ -10,12 +10,12 @@ class AuthMiddleware extends GetMiddleware {
   @override
   RouteSettings? redirect(String? route) {
     final AuthService authService = Get.find<AuthService>();
-    final user = authService.getUser();
 
-    if (user == null) {
-      return const RouteSettings(name: Routes.login);
+    final session = authService.currentSession;
+    if (session != null) {
+      return null; // continue routing normally if session is not null
     } else {
-      return null; // continue routing normally if user is not null
+      return const RouteSettings(name: Routes.login);
     }
   }
 }
