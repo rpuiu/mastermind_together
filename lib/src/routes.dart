@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:mastermind_together/src/assistants/assistant_chat_screen.dart';
 import 'package:mastermind_together/src/auth/auth_middleware.dart';
 import 'package:mastermind_together/src/auth/login_screen.dart';
 import 'package:mastermind_together/src/auth/password/forgot_pass_screen.dart';
@@ -50,6 +51,7 @@ class Routes {
   static const String splash = '/splash';
   static const String forgotPass = '/forgot-password';
   static const String resetPass = '/reset-password';
+  static const String assistantChatScreen = '/assistant';
 
   static List<GetPage> routes = [
     GetPage(name: home, page: () => const HomeScreen(), middlewares: [AuthMiddleware()]),
@@ -74,6 +76,7 @@ class Routes {
     GetPage(name: goal, page: () => GoalScreen(), middlewares: [AuthMiddleware()]),
     GetPage(name: forgotPass, page: () => const ForgotPasswordScreen()),
     GetPage(name: resetPass, page: () => const ResetPassScreen()),
+    GetPage(name: assistantChatScreen, page: () => AssistantChatScreen()),
     GetPage(
       name: group,
       page: () => GroupScreen(),
@@ -90,4 +93,6 @@ class Routes {
   static String groupRoute(String groupId) => '$group?id=$groupId';
 
   static String goalRoute(String goalId) => '$goal?id=$goalId';
+
+  static String aiChatRoute(String userThreadId) => '$assistantChatScreen?id=$userThreadId';
 }

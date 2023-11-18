@@ -3,6 +3,7 @@ import 'package:mastermind_together/src/ui/theme/sizes.dart';
 
 class CustomButton extends StatelessWidget {
   final String label;
+  final Widget? icon;
   final Color backgroundColor;
   final bool isEnabled;
   final VoidCallback? onPressed;
@@ -12,6 +13,7 @@ class CustomButton extends StatelessWidget {
   const CustomButton({
     Key? key,
     required this.label,
+    this.icon,
     required this.backgroundColor,
     this.isEnabled = true,
     this.onPressed,
@@ -29,8 +31,10 @@ class CustomButton extends StatelessWidget {
     double buttonHeightMobile = mobileLabelTextStyle.fontSize! + (2 * fontSize);
     double buttonHeightDesktop = labelTextStyle.fontSize! + (2 * fontSize);
 
-    return ElevatedButton(
+    return ElevatedButton.icon(
       onPressed: isEnabled ? onPressed : null,
+      icon: icon != null ? icon! : const SizedBox.shrink(),
+      label: Text(label, style: isMobile ? mobileLabelTextStyle : labelTextStyle),
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(backgroundColor),
         elevation: MaterialStateProperty.all(0),
@@ -43,7 +47,6 @@ class CustomButton extends StatelessWidget {
           ),
         ),
       ),
-      child: Text(label, style: isMobile ? mobileLabelTextStyle : labelTextStyle),
     );
   }
 }

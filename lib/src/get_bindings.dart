@@ -1,6 +1,9 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
+import 'package:mastermind_together/src/assistants/ai_guide_msg_controller.dart';
+import 'package:mastermind_together/src/assistants/assistant_chat_controller.dart';
+import 'package:mastermind_together/src/assistants/assistant_chat_screen.dart';
 import 'package:mastermind_together/src/auth/login_controller.dart';
 import 'package:mastermind_together/src/auth/password/forgot_pass_controller.dart';
 import 'package:mastermind_together/src/auth/password/password_controller.dart';
@@ -18,10 +21,12 @@ import 'package:mastermind_together/src/notif/email/email_notif_controller.dart'
 import 'package:mastermind_together/src/notif/notif_controller.dart';
 import 'package:mastermind_together/src/onboarding/onboarding_controller.dart';
 import 'package:mastermind_together/src/profile/user_profile_controller.dart';
+import 'package:mastermind_together/src/services/ai/ai_service.dart';
 import 'package:mastermind_together/src/services/mail/dreamhost_mail_service.dart';
 import 'package:mastermind_together/src/services/mixpanel/analytics_service.dart';
 import 'package:mastermind_together/src/services/sharedprefs/local_storage.dart';
 import 'package:mastermind_together/src/services/supa/action_service.dart';
+import 'package:mastermind_together/src/services/supa/ai_messages_service.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';
 import 'package:mastermind_together/src/services/supa/category_service.dart';
 import 'package:mastermind_together/src/services/supa/goal_service.dart';
@@ -33,6 +38,7 @@ import 'package:mastermind_together/src/services/supa/subscription_service.dart'
 import 'package:mastermind_together/src/services/supa/tenant_id_service.dart';
 import 'package:mastermind_together/src/services/supa/tenant_service.dart';
 import 'package:mastermind_together/src/services/supa/user_group_service.dart';
+import 'package:mastermind_together/src/services/supa/user_thread_service.dart';
 import 'package:mastermind_together/src/services/supa/users_extended_service.dart';
 import 'package:mastermind_together/src/services/timezone/timezone_service.dart';
 import 'package:mastermind_together/src/splash/img_precache_controller.dart';
@@ -119,5 +125,11 @@ class GetBindings {
     Get.lazyPut(() => SplashController(), fenix: true);
     Get.lazyPut(() => ForgotPassController(), fenix: true);
     Get.lazyPut(() => PasswordController(), fenix: true);
+    Get.lazyPut(() => AssistantChatScreen(), fenix: true);
+    Get.lazyPut(() => AIThreadMessageController(), fenix: true);
+    Get.lazyPut(() => UserThreadService(), fenix: true);
+    Get.lazyPut(() => AIService(), fenix: true);
+    Get.lazyPut(() => AIMessageService(), fenix: true);
+    Get.lazyPut(() => AssistantChatController(), fenix: true);
   }
 }

@@ -8,7 +8,15 @@ class ChatInputField extends StatelessWidget {
   final VoidCallback onSendPressed;
   final FocusNode focusNode;
 
-  const ChatInputField({super.key, required this.controller, required this.onSendPressed, required this.focusNode});
+  final bool enabled;
+
+  const ChatInputField({
+    super.key,
+    required this.controller,
+    required this.onSendPressed,
+    required this.focusNode,
+    this.enabled = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +36,7 @@ class ChatInputField extends StatelessWidget {
         ],
       ),
       child: TextField(
+        enabled: enabled,
         focusNode: focusNode,
         controller: controller,
         onSubmitted: (_) {

@@ -18,7 +18,7 @@ class HomeScreen extends GetView<HomeController> {
     return Column(
       children: [
         xxxxSpace,
-        const GoalsSection(),
+         GoalsSection(),
         xxxxSpace,
         const MyGroupsSection(),
         xxxxSpace,
