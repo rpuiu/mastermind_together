@@ -6,6 +6,7 @@ class AppTheme {
   AppTheme._();
 
   static ThemeData lightTheme = ThemeData(
+    useMaterial3: false, //The UI gets broken with M3
     scaffoldBackgroundColor: backgroundColor,
     tabBarTheme: tabBarTheme,
     scrollbarTheme: scrollBarTheme,
