@@ -10,6 +10,7 @@ import 'package:mastermind_together/src/availability/availability_screen.dart';
 import 'package:mastermind_together/src/feedback/feedback_screen.dart';
 import 'package:mastermind_together/src/goal/all_goals_screen.dart';
 import 'package:mastermind_together/src/goal/goal_screen.dart';
+import 'package:mastermind_together/src/goal/other_user_goal_screen.dart';
 import 'package:mastermind_together/src/groups/all_groups_screen.dart';
 import 'package:mastermind_together/src/groups/create_group_screen.dart';
 import 'package:mastermind_together/src/groups/group_membership_middleware.dart';
@@ -52,6 +53,7 @@ class Routes {
   static const String forgotPass = '/forgot-password';
   static const String resetPass = '/reset-password';
   static const String assistantChatScreen = '/assistant';
+  static const String otherUserGoal = '/other-user-goal';
 
   static List<GetPage> routes = [
     GetPage(name: home, page: () => const HomeScreen(), middlewares: [AuthMiddleware()]),
@@ -77,6 +79,7 @@ class Routes {
     GetPage(name: forgotPass, page: () => const ForgotPasswordScreen()),
     GetPage(name: resetPass, page: () => const ResetPassScreen()),
     GetPage(name: assistantChatScreen, page: () => AssistantChatScreen()),
+    GetPage(name: otherUserGoal, page: () => OtherUserGoalScreen(), middlewares: [AuthMiddleware()]),
     GetPage(
       name: group,
       page: () => GroupScreen(),
@@ -95,4 +98,6 @@ class Routes {
   static String goalRoute(String goalId) => '$goal?id=$goalId';
 
   static String aiChatRoute(String userThreadId) => '$assistantChatScreen?id=$userThreadId';
+
+  static String otherUserGoalRoute(String goalId, String username) => '$otherUserGoal?id=$goalId&username=$username';
 }

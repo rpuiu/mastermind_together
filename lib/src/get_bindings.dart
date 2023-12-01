@@ -29,6 +29,7 @@ import 'package:mastermind_together/src/services/supa/action_service.dart';
 import 'package:mastermind_together/src/services/supa/ai_messages_service.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';
 import 'package:mastermind_together/src/services/supa/category_service.dart';
+import 'package:mastermind_together/src/services/supa/goal_message_service.dart';
 import 'package:mastermind_together/src/services/supa/goal_service.dart';
 import 'package:mastermind_together/src/services/supa/message_service.dart';
 import 'package:mastermind_together/src/services/supa/notif_service.dart';
@@ -131,5 +132,6 @@ class GetBindings {
     Get.lazyPut(() => AIService(), fenix: true);
     Get.lazyPut(() => AIMessageService(), fenix: true);
     Get.lazyPut(() => AssistantChatController(), fenix: true);
+    Get.lazyPut(() => GoalMessageService(), fenix: true);
   }
 }

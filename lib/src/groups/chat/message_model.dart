@@ -2,7 +2,8 @@ import 'package:intl/intl.dart';
 
 class MessageModel {
   final String id;
-  final String groupId;
+  final String? groupId;
+  final String? goalId;
   final String userId;
   final String sender;
   final String content;
@@ -12,7 +13,8 @@ class MessageModel {
 
   MessageModel({
     required this.id,
-    required this.groupId,
+    this.groupId,
+    this.goalId,
     required this.userId,
     required this.sender,
     required this.content,
@@ -21,12 +23,13 @@ class MessageModel {
 
   factory MessageModel.fromJson(Map<String, dynamic> json) {
     return MessageModel(
-      id: json['id'],
+      id: json['id'] ?? '',
       groupId: json['group_id'],
-      userId: json['user_id'],
-      sender: json['sender'],
-      content: json['content'],
-      timestamp: DateTime.parse(json['timestamp']),
+      goalId: json['goal_id'],
+      userId: json['user_id'] ?? '',
+      sender: json['sender'] ?? '',
+      content: json['content'] ?? '',
+      timestamp: json['timestamp'] != null ? DateTime.parse(json['timestamp']) : DateTime.now(),
     );
   }
 
@@ -34,6 +37,7 @@ class MessageModel {
     return {
       'id': id,
       'group_id': groupId,
+      'goal_id': goalId,
       'user_id': userId,
       'sender': sender,
       'content': content,

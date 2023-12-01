@@ -12,6 +12,8 @@ import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/icon/add_button.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/icon/reorder_button.dart';
+import 'package:mastermind_together/src/ui/widgets/tabs/custom_tab.dart';
+import 'package:mastermind_together/src/ui/widgets/tabs/tab_controller.dart';
 
 class AllGoalsScreen extends GetView<GoalsController> {
   AllGoalsScreen({super.key});
@@ -20,14 +22,92 @@ class AllGoalsScreen extends GetView<GoalsController> {
 
   @override
   Widget build(BuildContext context) {
+    final TabsController tabController = Get.put(TabsController());
+
     return CustomLayout(
       content: Column(
         children: <Widget>[
-          xHalfSpace,
-          _buildHeader(context),
-          xHalfSpace,
-          _buildGoalList(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const CustomTab(0, 'My Goals'),
+              wHalfSpace,
+              const CustomTab(1, 'All Goals'),
+            ],
+          ),
+          Expanded(
+            child: Obx(() {
+              if (tabController.tabIndex.value == 0) {
+                return _buildMyGoals(context);
+              } else {
+                return _buildAllGoals();
+              }
+            }),
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildMyGoals(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        xHalfSpace,
+        _buildHeader(context),
+        xHalfSpace,
+        _buildGoalList(),
+      ],
+    );
+  }
+
+  Widget _buildAllGoals() {
+    return Column(
+      children: <Widget>[
+        xHalfSpace,
+        _buildAllGoalsHeader(),
+        xHalfSpace,
+        _buildAllGoalList(),
+      ],
+    );
+  }
+
+  Widget _buildAllGoalList() {
+    return Expanded(
+      child: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (controller.allUserGoals.isEmpty) {
+          return const Center(child: Text("No goals available"));
+        } else {
+          return ListView.builder(
+            itemCount: controller.allUserGoals.length,
+            itemBuilder: (context, index) => _buildAllGoalsGoalTile(
+              context,
+              controller.allUserGoals.value.entries.elementAt(index),
+              index,
+            ),
+          );
+        }
+      }),
+    );
+  }
+
+  Widget _buildAllGoalsGoalTile(BuildContext context, MapEntry<String, GoalModel> userGoal, int index) {
+    return KeyedSubtree(
+      key: ValueKey(userGoal.value.id),
+      child: Card(
+        elevation: 2,
+        child: ListTile(
+          key: ValueKey(userGoal.value.id),
+          onTap: () async {
+            await _goalController.fetchGoalDetails(userGoal.value.id);
+            Get.toNamed(Routes.otherUserGoalRoute(userGoal.value.id, userGoal.key));
+          },
+          title: Text(userGoal.value.goal, style: bodySemiBold),
+          subtitle: Text(userGoal.key),
+          // Empty onLongPress callback is required for ReorderableListView
+          onLongPress: () {},
+        ),
       ),
     );
   }
@@ -36,9 +116,21 @@ class AllGoalsScreen extends GetView<GoalsController> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        const Text("All Goals", style: headingText),
+        const Text("My Goals", style: headingText),
         wHalfSpace,
         AddBtn(onPressed: () => AddGoalModal.show(context, controller)),
+      ],
+    );
+  }
+
+  Widget _buildAllGoalsHeader() {
+    return const Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: fontSize / 2),
+          child: Text("All Goals", style: headingText),
+        ),
       ],
     );
   }

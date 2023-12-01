@@ -90,4 +90,18 @@ class GoalService extends GetxService {
       rethrow;
     }
   }
+
+  Future<List<GoalModel>> readAllGoalsOrderedByCreatedAt(String tenantId) async {
+    try {
+      final List<dynamic> data = await _client.from(_goalsTable)
+          .select('*')
+          .eq('tenant_id', tenantId)
+          .eq('rank', 0)
+          .order('created_at', ascending: true);
+      return data.map((e) => GoalModel.fromJson(e)).toList();
+    } catch (e, s) {
+      Log().e("Error while reading all goals:", e, s);
+      rethrow;
+    }
+  }
 }
