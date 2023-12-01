@@ -4,6 +4,7 @@ import 'package:mastermind_together/src/assistants/ai_guide_msg_controller.dart'
 import 'package:mastermind_together/src/goal/goal_card.dart';
 import 'package:mastermind_together/src/goal/goals_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
+import 'package:mastermind_together/src/tenant/tenant_identifier.dart';
 import 'package:mastermind_together/src/ui/theme/app_icons.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
@@ -14,6 +15,7 @@ class GoalsSection extends GetView<GoalsController> {
   GoalsSection({Key? key}) : super(key: key);
 
   final AIThreadMessageController aiThreadController = Get.find<AIThreadMessageController>();
+  final TenantIdentifier tenantIdentifier = Get.find<TenantIdentifier>();
 
   @override
   Widget build(BuildContext context) {
@@ -35,24 +37,12 @@ class GoalsSection extends GetView<GoalsController> {
                   if (aiThreadController.isLoading.value) {
                     return const CircularProgressIndicator();
                   } else {
-                    return Container(
-                      width: 200,
-                      height: 50,
-                      child: CustomButton(
-                        icon: AppIcons.serenityGuide(),
-                         onPressed: () async {
-                          String? userThreadId = await aiThreadController.createNewThread();
-                          if (userThreadId != null) {
-                            Get.toNamed(Routes.aiChatRoute(userThreadId));
-                          } else {
-                            showErrorSnackBar(message: "Unable to start conversation. Please try again");
-                          }
-                        },
-                        label: 'Serenity Guide',
-                        labelTextStyle: bodyMediumInactive.copyWith(color: bodyButtonActiveTextColor),
-                        backgroundColor: buttonActiveBackgroundColor,
-                      ),
-                    );
+                    final String tenantName = tenantIdentifier.tenant.value.name;
+                    if (tenantName == "A Peaceful Tomorrow") {
+                      return _buildSerenityGuideButton();
+                    } else {
+                      return const SizedBox.shrink(); // Render nothing if the tenant is not "A Peaceful Tomorrow"
+                    }
                   }
                 },
               ),
@@ -75,6 +65,27 @@ class GoalsSection extends GetView<GoalsController> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSerenityGuideButton() {
+    return SizedBox(
+      width: 200,
+      height: 50,
+      child: CustomButton(
+        icon: AppIcons.serenityGuide(),
+        onPressed: () async {
+          String? userThreadId = await aiThreadController.createNewThread();
+          if (userThreadId != null) {
+            Get.toNamed(Routes.aiChatRoute(userThreadId));
+          } else {
+            showErrorSnackBar(message: "Unable to start conversation. Please try again");
+          }
+        },
+        label: 'Serenity Guide',
+        labelTextStyle: bodyMediumInactive.copyWith(color: bodyButtonActiveTextColor),
+        backgroundColor: buttonActiveBackgroundColor,
       ),
     );
   }
