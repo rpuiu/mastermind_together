@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/auth/user_model.dart';
+import 'package:mastermind_together/src/notif/email/email_notif_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/services/mixpanel/analytics_service.dart';
 import 'package:mastermind_together/src/services/sharedprefs/local_storage.dart';
@@ -15,6 +16,8 @@ class RegisterController extends GetxController {
   final AnalyticsService _analytics = Get.find<AnalyticsService>();
   final LocalStorageService _localStorage = Get.find<LocalStorageService>();
   final TenantIdentifier _tenantIdentifier = Get.find<TenantIdentifier>();
+  final EmailController _emailController = Get.find<EmailController>();
+
   final RxBool isLoading = false.obs;
   final RxString tenantIdObs = ''.obs;
 
@@ -31,6 +34,8 @@ class RegisterController extends GetxController {
       _analytics.track('USER_REGISTERED', properties: {'user': '${user.toJson()}'});
       _analytics.setUserProperties(user.id, "\$email", user.email);
       _analytics.setUserProperties(user.id, "\$name", user.username);
+
+      notifyMMTOnNewRegister(user.username);
 
       showSuccessSnackBar(message: 'Congratulations, your account has been successfully created');
       //todo add confirmation email message
@@ -62,5 +67,12 @@ class RegisterController extends GetxController {
         Get.offAllNamed(Routes.onboarding);
       }
     }
+  }
+
+  Future<void> notifyMMTOnNewRegister(String username) async {
+    String subject = 'New user has registered: [ $username ]';
+    String body = 'User $username has registered. ';
+
+    await _emailController.sendEmail('mastermindtogether@gmail.com', subject, body);
   }
 }
