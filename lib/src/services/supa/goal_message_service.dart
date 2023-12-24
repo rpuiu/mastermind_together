@@ -58,4 +58,20 @@ class GoalMessageService {
       rethrow;
     }
   }
+
+  Future<int> countGoalMessages(String goalId) async {
+    try {
+      final response = await _client
+          .from('goal_messages')
+          .select(
+            'id',
+            const FetchOptions(count: CountOption.exact),
+          )
+          .eq('goal_id', goalId);
+      return response.count;
+    } catch (e, s) {
+      Log().e("Error while counting messages for goal $goalId:", e, s);
+      rethrow;
+    }
+  }
 }

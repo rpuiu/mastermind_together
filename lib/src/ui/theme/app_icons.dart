@@ -77,6 +77,8 @@ class AppIcons {
 
   static Widget serenityGuide([IconState state = IconState.defaultState]) => _icon('assets/icons/serenity-guide.svg', state);
 
+  static Widget comments([IconState state = IconState.defaultState]) => _icon('assets/icons/comments.svg', state);
+
   static Widget getIcon(String iconName, IconState state) {
     switch (iconName) {
       case 'home':
@@ -135,6 +137,8 @@ class AppIcons {
         return arrowDownSquare(state);
       case 'serenityGuide':
         return serenityGuide(state);
+      case 'comments':
+        return comments(state);
       default:
         return home(state);
     }

@@ -4,9 +4,11 @@ import 'package:mastermind_together/src/goal/actions/actions_controller.dart';
 import 'package:mastermind_together/src/goal/actions/add_action_modal_widget.dart';
 import 'package:mastermind_together/src/goal/add_goal_modal.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
+import 'package:mastermind_together/src/goal/goal_message_controller.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
 import 'package:mastermind_together/src/goal/goals_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
+import 'package:mastermind_together/src/ui/theme/app_icons.dart';
 import 'package:mastermind_together/src/ui/theme/layout/custom_layout.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
@@ -93,6 +95,8 @@ class AllGoalsScreen extends GetView<GoalsController> {
   }
 
   Widget _buildAllGoalsGoalTile(BuildContext context, MapEntry<String, GoalModel> userGoal, int index) {
+    GoalMessageController messageController = Get.put(GoalMessageController(goalId: userGoal.value.id), tag: userGoal.value.id);
+
     return KeyedSubtree(
       key: ValueKey(userGoal.value.id),
       child: Card(
@@ -105,7 +109,16 @@ class AllGoalsScreen extends GetView<GoalsController> {
           },
           title: Text(userGoal.value.goal, style: bodySemiBold),
           subtitle: Text(userGoal.key),
-          // Empty onLongPress callback is required for ReorderableListView
+          trailing: Obx(() {
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AppIcons.comments(messageController.messageCount > 0 ? IconState.hoverState : IconState.defaultState),
+                const SizedBox(width: 4),
+                Text("${messageController.messageCount}", style: bodyRegular),
+              ],
+            );
+          }),
           onLongPress: () {},
         ),
       ),

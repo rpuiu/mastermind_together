@@ -24,8 +24,7 @@ class GoalChatWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final GoalMessageController controller = Get.find(tag: goalId);
-    final ScrollController scrollController = ScrollController();
-    controller.subscribeToNewMessages(scrollController);
+    final ScrollController scrollController = controller.scrollController;
 
     scrollController.addListener(() {
       if (scrollController.hasClients) {
