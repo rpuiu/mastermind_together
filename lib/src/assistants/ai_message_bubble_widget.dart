@@ -5,6 +5,7 @@ import 'package:mastermind_together/src/assistants/ai_message_model.dart';
 import 'package:mastermind_together/src/services/timezone/timezone_service.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/util/color_util.dart';
+import 'package:mastermind_together/src/util/link_text.dart';
 
 class AIMessageBubble extends StatelessWidget {
   final TimezoneService _tzService = Get.find<TimezoneService>();
@@ -55,15 +56,10 @@ class AIMessageBubble extends StatelessWidget {
                     color: getColorFromUsername('Serenity Guide'),
                   ),
                 ),
-              Text(
-                message.content,
-                style: TextStyle(
-                  color: isMe ? Colors.white : Colors.black,
-                ),
-              ),
+              LinkText(context, isMe ? Colors.white : Colors.black).buildTextWithLinks(message.content),
               const SizedBox(height: 5.0),
               Text(
-                DateFormat('h:mm a').format(localTime),
+                DateFormat('dd/MM/yyyy, h:mm a').format(localTime),
                 style: TextStyle(
                   fontSize: 10,
                   color: isMe ? Colors.white.withOpacity(0.7) : Colors.black.withOpacity(0.7),
