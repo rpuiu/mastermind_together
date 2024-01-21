@@ -9,11 +9,12 @@ import 'package:mastermind_together/src/auth/tos/terms_screen.dart';
 import 'package:mastermind_together/src/availability/availability_screen.dart';
 import 'package:mastermind_together/src/feedback/feedback_screen.dart';
 import 'package:mastermind_together/src/goal/all_goals_screen.dart';
+import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:mastermind_together/src/goal/goal_screen.dart';
 import 'package:mastermind_together/src/goal/other_user_goal_screen.dart';
 import 'package:mastermind_together/src/groups/all_groups_screen.dart';
 import 'package:mastermind_together/src/groups/create_group_screen.dart';
-import 'package:mastermind_together/src/groups/group_membership_middleware.dart';
+import 'package:mastermind_together/src/groups/redirect_membership_middleware.dart';
 import 'package:mastermind_together/src/groups/group_screen.dart';
 import 'package:mastermind_together/src/groups/group_screen_controller.dart';
 import 'package:mastermind_together/src/home/home_screen.dart';
@@ -75,11 +76,23 @@ class Routes {
     GetPage(name: notifications, page: () => const NotificationScreen(), middlewares: [AuthMiddleware()]),
     GetPage(name: tenantSettings, page: () => const TenantSettingsScreen(), middlewares: [AuthMiddleware(), TenantMiddleware()]),
     GetPage(name: splash, page: () => const SplashScreen(), middlewares: [AuthMiddleware()]),
-    GetPage(name: goal, page: () => GoalScreen(), middlewares: [AuthMiddleware()]),
     GetPage(name: forgotPass, page: () => const ForgotPasswordScreen()),
     GetPage(name: resetPass, page: () => const ResetPassScreen()),
-    GetPage(name: assistantChatScreen, page: () => AssistantChatScreen()),
+    GetPage(name: assistantChatScreen, page: () => const AssistantChatScreen()),
     GetPage(name: otherUserGoal, page: () => OtherUserGoalScreen(), middlewares: [AuthMiddleware()]),
+    GetPage(
+      name: goal,
+      page: () => GoalScreen(),
+      binding: BindingsBuilder(() {
+        String? goalId = Get.parameters['id'];
+        if (goalId != null && !Get.isRegistered<GoalController>(tag: goalId)) {
+          GoalController controller = GoalController();
+          controller.goalId = goalId;
+          Get.put(controller, tag: goalId);
+        }
+      }),
+      middlewares: [AuthMiddleware(), RedirectMembershipMiddleware()],
+    ),
     GetPage(
       name: group,
       page: () => GroupScreen(),
@@ -89,7 +102,7 @@ class Routes {
           Get.put(GroupScreenController(groupId: groupId), tag: groupId);
         }
       }),
-      middlewares: [AuthMiddleware(), GroupMembershipMiddleware()],
+      middlewares: [AuthMiddleware(), RedirectMembershipMiddleware()],
     ),
   ];
 
