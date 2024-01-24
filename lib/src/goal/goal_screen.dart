@@ -2,23 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mastermind_together/src/goal/actions/actions_controller.dart';
 import 'package:mastermind_together/src/goal/actions/add_actions_widget.dart';
+import 'package:mastermind_together/src/goal/goal_chat_widget.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
 import 'package:mastermind_together/src/goal/goals_controller.dart';
 import 'package:mastermind_together/src/routes.dart';
 import 'package:mastermind_together/src/ui/theme/app_icons.dart';
-import 'package:mastermind_together/src/ui/theme/layout/scrollable_layout.dart';
+import 'package:mastermind_together/src/ui/theme/layout/custom_layout.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
 import 'package:mastermind_together/src/ui/widgets/buttons/icon/delete_button.dart';
 import 'package:mastermind_together/src/ui/widgets/label_categ_widget.dart';
 import 'package:mastermind_together/src/ui/widgets/snackbar.dart';
+import 'package:mastermind_together/src/ui/widgets/tabs/custom_tab.dart';
+import 'package:mastermind_together/src/ui/widgets/tabs/tab_controller.dart';
 
 class GoalScreen extends GetView<GoalController> {
   final String? goalId = Get.parameters['id'];
 
   GoalScreen({Key? key}) : super(key: key);
   final GoalsController _goalsController = Get.find<GoalsController>();
+  final TabsController tabController = Get.put(TabsController());
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +31,8 @@ class GoalScreen extends GetView<GoalController> {
     }
 
     controller.goalId = goalId;
-    return ScrollableCustomLayout(
+
+    return CustomLayout(
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -58,21 +63,40 @@ class GoalScreen extends GetView<GoalController> {
             }
           }),
           xxxSpace,
-          const Text("Actions", style: headingText),
-          xSpace,
-          Obx(() {
-            if (controller.isLoading.value) {
-              return const Center(child: CircularProgressIndicator());
-            } else {
-              return SizedBox(
-                height: MediaQuery.of(context).size.height * 0.8,
-                child: AddActionsWidget(
-                  goalId: goalId!,
-                  actionController: ActionController(controller.goalDetails.value!),
-                ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const CustomTab(0, 'Actions'),
+              wHalfSpace,
+              const CustomTab(1, 'Chat'),
+            ],
+          ),
+          Expanded(
+            child: Obx(() {
+              return IndexedStack(
+                index: tabController.tabIndex.value,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(fontSize),
+                    child: Obx(() {
+                      if (controller.isLoading.value) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else {
+                        return SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.8,
+                          child: AddActionsWidget(
+                            goalId: goalId!,
+                            actionController: ActionController(controller.goalDetails.value!),
+                          ),
+                        );
+                      }
+                    }),
+                  ),
+                  GoalChatWidget(goalId: controller.goalId!),
+                ],
               );
-            }
-          }),
+            }),
+          ),
         ],
       ),
     );

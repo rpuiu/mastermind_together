@@ -18,13 +18,17 @@ class GoalChatWidget extends StatelessWidget {
   final RxBool showScrollButton = false.obs;
 
   GoalChatWidget({super.key, required this.goalId}) {
-    Get.put(GoalMessageController(goalId: goalId), tag: goalId);
+    if (!Get.isRegistered<GoalMessageController>(tag: goalId)) {
+      Get.put(GoalMessageController(goalId: goalId), tag: goalId);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final GoalMessageController controller = Get.find(tag: goalId);
-    final ScrollController scrollController = controller.scrollController;
+    final ScrollController scrollController = ScrollController();
+
+    controller.subscribeToNewMessages();
 
     scrollController.addListener(() {
       if (scrollController.hasClients) {
@@ -53,6 +57,8 @@ class GoalChatWidget extends StatelessWidget {
                     scrollController.jumpTo(scrollController.position.maxScrollExtent);
                     controller.isFirstLoad = false;
                   });
+                } else {
+                  SchedulerBinding.instance.addPostFrameCallback((_) => _scrollToEnd(scrollController));
                 }
 
                 return ListView.builder(
@@ -67,7 +73,7 @@ class GoalChatWidget extends StatelessWidget {
               }
             }),
           ),
-          Obx(() => showScrollButton.value ? _buildScrollToBottomButton(scrollController) : SizedBox.shrink()),
+          Obx(() => showScrollButton.value ? _buildScrollToBottomButton(scrollController) : const SizedBox.shrink()),
           Container(
             padding: const EdgeInsets.all(fontSize / 2),
             child: Row(
@@ -117,6 +123,16 @@ class GoalChatWidget extends StatelessWidget {
       }
     } else {
       showErrorSnackBar(message: 'You are not logged in. Please log in to send a message.');
+    }
+  }
+
+  void _scrollToEnd(ScrollController scrollController) {
+    if (scrollController.hasClients) {
+      scrollController.animateTo(
+        scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
     }
   }
 }

@@ -7,8 +7,8 @@ import 'package:mastermind_together/src/goal/goal_controller.dart';
 import 'package:mastermind_together/src/goal/goal_message_controller.dart';
 import 'package:mastermind_together/src/goal/goal_model.dart';
 import 'package:mastermind_together/src/goal/goals_controller.dart';
+import 'package:mastermind_together/src/goal/widgets/goal_messages_counter_widget.dart';
 import 'package:mastermind_together/src/routes.dart';
-import 'package:mastermind_together/src/ui/theme/app_icons.dart';
 import 'package:mastermind_together/src/ui/theme/layout/custom_layout.dart';
 import 'package:mastermind_together/src/ui/theme/sizes.dart';
 import 'package:mastermind_together/src/ui/theme/text_styles.dart';
@@ -85,7 +85,7 @@ class AllGoalsScreen extends GetView<GoalsController> {
             itemCount: controller.allUserGoals.length,
             itemBuilder: (context, index) => _buildAllGoalsGoalTile(
               context,
-              controller.allUserGoals.value.entries.elementAt(index),
+              controller.allUserGoals.entries.elementAt(index),
               index,
             ),
           );
@@ -95,7 +95,9 @@ class AllGoalsScreen extends GetView<GoalsController> {
   }
 
   Widget _buildAllGoalsGoalTile(BuildContext context, MapEntry<String, GoalModel> userGoal, int index) {
-    GoalMessageController messageController = Get.put(GoalMessageController(goalId: userGoal.value.id), tag: userGoal.value.id);
+    if (!Get.isRegistered<GoalMessageController>(tag: userGoal.value.id)) {
+      Get.put(GoalMessageController(goalId: userGoal.value.id), tag: userGoal.value.id);
+    }
 
     return KeyedSubtree(
       key: ValueKey(userGoal.value.id),
@@ -109,16 +111,7 @@ class AllGoalsScreen extends GetView<GoalsController> {
           },
           title: Text(userGoal.value.goal, style: bodySemiBold),
           subtitle: Text(userGoal.key),
-          trailing: Obx(() {
-            return Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                AppIcons.comments(messageController.messageCount > 0 ? IconState.hoverState : IconState.defaultState),
-                const SizedBox(width: 4),
-                Text("${messageController.messageCount}", style: bodyRegular),
-              ],
-            );
-          }),
+          trailing: GoalMessagesCounterWidget(userGoal.value.id),
           onLongPress: () {},
         ),
       ),
@@ -164,6 +157,9 @@ class AllGoalsScreen extends GetView<GoalsController> {
   Widget _buildGoalTile(BuildContext context, GoalModel goal, int index) {
     final actionController = controller.actionControllers[goal.id];
 
+    if (!Get.isRegistered<GoalMessageController>(tag: goal.id)) {
+      Get.put(GoalMessageController(goalId: goal.id), tag: goal.id);
+    }
     return KeyedSubtree(
       key: ValueKey(goal.id),
       child: Card(
@@ -179,6 +175,7 @@ class AllGoalsScreen extends GetView<GoalsController> {
           title: Text(goal.goal, style: bodySemiBold),
           subtitle: _buildActionExpansionTile(context, actionController!, goal.id),
           // Empty onLongPress callback is required for ReorderableListView
+          trailing: GoalMessagesCounterWidget(goal.id),
           onLongPress: () {},
         ),
       ),

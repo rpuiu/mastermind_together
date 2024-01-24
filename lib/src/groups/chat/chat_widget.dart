@@ -54,6 +54,8 @@ class ChatWidget extends StatelessWidget {
                     scrollController.jumpTo(scrollController.position.maxScrollExtent);
                     controller.isFirstLoad = false;
                   });
+                } else {
+                   _scrollToEnd(scrollController);
                 }
 
                 return ListView.builder(
@@ -68,7 +70,7 @@ class ChatWidget extends StatelessWidget {
               }
             }),
           ),
-          Obx(() => showScrollButton.value ? _buildScrollToBottomButton(scrollController) : SizedBox.shrink()),
+          Obx(() => showScrollButton.value ? _buildScrollToBottomButton(scrollController) : const SizedBox.shrink()),
           Container(
             padding: const EdgeInsets.all(fontSize / 2),
             child: Row(
@@ -118,6 +120,16 @@ class ChatWidget extends StatelessWidget {
       }
     } else {
       showErrorSnackBar(message: 'You are not logged in. Please log in to send a message.');
+    }
+  }
+
+  void _scrollToEnd(ScrollController scrollController) {
+    if (scrollController.hasClients) {
+      scrollController.animateTo(
+        scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
     }
   }
 }

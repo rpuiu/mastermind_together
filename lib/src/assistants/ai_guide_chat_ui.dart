@@ -51,6 +51,8 @@ class AIGuideChatWidget extends GetView<AssistantChatController> {
                     scrollController.jumpTo(scrollController.position.maxScrollExtent);
                     controller.isLoading.value = false;
                   });
+                } else {
+                  _scrollToEnd(scrollController);
                 }
 
                 return ListView.builder(
@@ -129,6 +131,16 @@ class AIGuideChatWidget extends GetView<AssistantChatController> {
       }
     } else {
       showErrorSnackBar(message: 'You are not logged in. Please log in to send a message.');
+    }
+  }
+
+  void _scrollToEnd(ScrollController scrollController) {
+    if (scrollController.hasClients) {
+      scrollController.animateTo(
+        scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
     }
   }
 }
