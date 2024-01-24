@@ -10,6 +10,7 @@ import 'package:mastermind_together/src/auth/password/password_controller.dart';
 import 'package:mastermind_together/src/auth/register_controller.dart';
 import 'package:mastermind_together/src/availability/availability_controller.dart';
 import 'package:mastermind_together/src/categories/category_controller.dart';
+import 'package:mastermind_together/src/checkout/checkout_controller.dart';
 import 'package:mastermind_together/src/feedback/feedback_controller.dart';
 import 'package:mastermind_together/src/goal/actions/actions_editing_controller.dart';
 import 'package:mastermind_together/src/goal/goals_controller.dart';
@@ -25,6 +26,7 @@ import 'package:mastermind_together/src/services/ai/ai_service.dart';
 import 'package:mastermind_together/src/services/mail/dreamhost_mail_service.dart';
 import 'package:mastermind_together/src/services/mixpanel/analytics_service.dart';
 import 'package:mastermind_together/src/services/sharedprefs/local_storage.dart';
+import 'package:mastermind_together/src/services/stripe/stripe_service.dart';
 import 'package:mastermind_together/src/services/supa/action_service.dart';
 import 'package:mastermind_together/src/services/supa/ai_messages_service.dart';
 import 'package:mastermind_together/src/services/supa/auth_service.dart';
@@ -133,5 +135,7 @@ class GetBindings {
     Get.lazyPut(() => AIMessageService(), fenix: true);
     Get.lazyPut(() => AssistantChatController(), fenix: true);
     Get.lazyPut(() => GoalMessageService(), fenix: true);
+    Get.lazyPut(() => StripeService(), fenix: true);
+    Get.lazyPut(() => CheckoutController(), fenix: true);
   }
 }

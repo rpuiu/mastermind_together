@@ -7,6 +7,7 @@ import 'package:mastermind_together/src/auth/password/reset_pass_screen.dart';
 import 'package:mastermind_together/src/auth/register_screen.dart';
 import 'package:mastermind_together/src/auth/tos/terms_screen.dart';
 import 'package:mastermind_together/src/availability/availability_screen.dart';
+import 'package:mastermind_together/src/checkout/checkout_screen.dart';
 import 'package:mastermind_together/src/feedback/feedback_screen.dart';
 import 'package:mastermind_together/src/goal/all_goals_screen.dart';
 import 'package:mastermind_together/src/goal/goal_controller.dart';
@@ -14,9 +15,9 @@ import 'package:mastermind_together/src/goal/goal_screen.dart';
 import 'package:mastermind_together/src/goal/other_user_goal_screen.dart';
 import 'package:mastermind_together/src/groups/all_groups_screen.dart';
 import 'package:mastermind_together/src/groups/create_group_screen.dart';
-import 'package:mastermind_together/src/groups/redirect_membership_middleware.dart';
 import 'package:mastermind_together/src/groups/group_screen.dart';
 import 'package:mastermind_together/src/groups/group_screen_controller.dart';
+import 'package:mastermind_together/src/groups/redirect_membership_middleware.dart';
 import 'package:mastermind_together/src/home/home_screen.dart';
 import 'package:mastermind_together/src/notif/notif_screen.dart';
 import 'package:mastermind_together/src/onboarding/onboarding_screen.dart';
@@ -55,6 +56,7 @@ class Routes {
   static const String resetPass = '/reset-password';
   static const String assistantChatScreen = '/assistant';
   static const String otherUserGoal = '/other-user-goal';
+  static const String checkout = '/checkout';
 
   static List<GetPage> routes = [
     GetPage(name: home, page: () => const HomeScreen(), middlewares: [AuthMiddleware()]),
@@ -104,6 +106,7 @@ class Routes {
       }),
       middlewares: [AuthMiddleware(), RedirectMembershipMiddleware()],
     ),
+    GetPage(name: checkout, page: () => CheckoutScreen(), middlewares: [AuthMiddleware()]),
   ];
 
   static String groupRoute(String groupId) => '$group?id=$groupId';

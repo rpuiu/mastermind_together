@@ -21,3 +21,7 @@ INSERT INTO public.subscription_features (subscription_id, max_groups_create, ma
 VALUES ('YOUR_SUBSCRIPTION_ID', 1, 2);
 
 UPDATE users_extended SET subscription_id = 'YOUR_SUBSCRIPTION_ID' WHERE subscription_id IS NULL;
+
+ALTER TABLE public.subscription ADD COLUMN stripe_price_id VARCHAR(255);
+
+INSERT INTO public.subscription (name, price, stripe_price_id) VALUES ('Pro Plan', 9.99, 'price_XXXXXXXXXXXX');
