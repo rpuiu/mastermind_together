@@ -21,11 +21,18 @@ https://supabase.com/docs/guides/functions/quickstart
 `supabase functions deploy FUNCTION_NAME --project-ref <PROJECT_REF=the first part of the supabase url>`
 The functions are stored under: `supabase/functions/` in the root of the project.
 
-Please make sure that the production project is linked using `supabase link --project-ref <PROJECT_REF>`. Please make sure that the necessary secrets are set for that specific with `supabase secrets list`. For example, the mailgun function needs MAILGUN_API_KEY and MAILGUN_DOMAIN.
+Please make sure that the production project is linked using `supabase link --project-ref <PROJECT_REF>`. 
+Please make sure that the necessary secrets are set for that specific with `supabase secrets list`. 
+For example, the mailgun function needs MAILGUN_API_KEY and MAILGUN_DOMAIN.
 
 To set the secrets from an .env file you can use:
 `supabase secrets set --env-file ./supabase/functions/stripe-checkout/.env --project-ref <PROJECT_REF>`
 Please make sure to update with the prod values, create the stripe endpoint and update the secrets as necessary
+
+## Stripe Payments:
+- Create an endpoint for the webhooks and pass the supabase function url
+- Reveal the signing secret and add it as `STRIPE_WEBHOOK_SIGNING_SECRET` in `supabase/functions/stripe-webhook/.env-prod`
+- Update the secrets using `supabase secrets set --env-file ./supabase/functions/stripe-webhook/.env-prod --project-ref <PROJECT_REF>`
 
 ## Deployment:
 

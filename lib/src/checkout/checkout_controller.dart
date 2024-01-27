@@ -10,14 +10,13 @@ class CheckoutController extends GetxController {
   bool isInitiated = false;
   // http://localhost:8203/checkout?priceId=price_1OYucUHPkeaXjgQcVbNepMBd
 
-  Future<void> initiateCheckout({required String priceId}) async {
+  Future<void> initiateCheckout({required String priceId, required String successURL}) async {
     if (!isInitiated) {
       print("Initiate Checkout called");
       try {
         isLoading.value = true;
 
         // Construct the data required for the Stripe checkout
-        var successURL = "https://app.mastermindtogether.com/";
         var cancelURL = "https://yourdomain.com/cancel";
 
         final data = {

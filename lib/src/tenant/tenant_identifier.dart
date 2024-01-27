@@ -14,6 +14,7 @@ class TenantIdentifier extends GetxService {
   Rx<Tenant> tenant = Tenant.empty().obs;
 
   Future<String> getTenantId() async {
+    // tenant.value.tenantId = "7e8a7b50-d86b-453d-8601-e51868add06f"; //For debugging in prod
     try {
       if (tenant.value.tenantId.isEmpty) {
         String? cachedTenantJson = _localStorageService.getTenant();

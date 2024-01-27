@@ -17,7 +17,6 @@ import 'package:mastermind_together/src/groups/all_groups_screen.dart';
 import 'package:mastermind_together/src/groups/create_group_screen.dart';
 import 'package:mastermind_together/src/groups/group_screen.dart';
 import 'package:mastermind_together/src/groups/group_screen_controller.dart';
-import 'package:mastermind_together/src/groups/redirect_membership_middleware.dart';
 import 'package:mastermind_together/src/home/home_screen.dart';
 import 'package:mastermind_together/src/notif/notif_screen.dart';
 import 'package:mastermind_together/src/onboarding/onboarding_screen.dart';
@@ -93,7 +92,7 @@ class Routes {
           Get.put(controller, tag: goalId);
         }
       }),
-      middlewares: [AuthMiddleware(), RedirectMembershipMiddleware()],
+      middlewares: [AuthMiddleware()],
     ),
     GetPage(
       name: group,
@@ -104,7 +103,7 @@ class Routes {
           Get.put(GroupScreenController(groupId: groupId), tag: groupId);
         }
       }),
-      middlewares: [AuthMiddleware(), RedirectMembershipMiddleware()],
+      middlewares: [AuthMiddleware()],
     ),
     GetPage(name: checkout, page: () => CheckoutScreen(), middlewares: [AuthMiddleware()]),
   ];

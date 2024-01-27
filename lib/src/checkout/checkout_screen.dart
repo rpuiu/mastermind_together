@@ -6,12 +6,13 @@ class CheckoutScreen extends GetView<CheckoutController> {
   CheckoutScreen({super.key});
 
   final String? priceId = Get.parameters['priceId'];
+  final String successURL = "https://app.mastermindtogether.com/";
 
   @override
   Widget build(BuildContext context) {
-    if(!controller.isLoading.value) {
+    if (!controller.isLoading.value) {
       return FutureBuilder(
-        future: controller.initiateCheckout(priceId: priceId!),
+        future: controller.initiateCheckout(priceId: priceId!, successURL: successURL),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Scaffold(
@@ -27,7 +28,8 @@ class CheckoutScreen extends GetView<CheckoutController> {
           );
         },
       );
+    } else {
+      return Container();
     }
-    else return Container();
   }
 }

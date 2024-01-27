@@ -5,7 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class SubscriptionService {
   final SupabaseClient _client = Get.find<SupabaseClient>();
 
-  static const freeTier = 'Free Tier';
+  static const freeTier = 'Starter Plan';
 
   static const String subscriptionTable = 'subscription';
   static const String subscriptionFeaturesTable = 'subscription_features';
@@ -43,7 +43,11 @@ class SubscriptionService {
 
   Future<String> getFreeTierSubscriptionId() async {
     return _runQuery(() async {
-      final Map<String, dynamic> freeTierResponse = await _client.from(subscriptionTable).select(idField).eq(nameField, freeTier).single();
+      final Map<String, dynamic> freeTierResponse =
+      await _client.from(subscriptionTable)
+          .select(idField)
+          .eq(nameField, freeTier)
+          .single();
       return freeTierResponse[idField] as String;
     });
   }

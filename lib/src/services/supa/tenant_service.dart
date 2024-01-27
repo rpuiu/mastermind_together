@@ -35,7 +35,7 @@ class TenantService extends GetxService {
       await _settingsService.createInitialSettings(userId, 'Initial Terms of Service', 'Initial Privacy Policy');
 
       String timezone = await _timezoneService.getCurrentTimezoneWithOffset();
-      String freeTierSubscription = await _subscriptionService.getFreeTierSubscriptionId(); //TODO Create tenant subscription
+      String freeTierSubscription = await _subscriptionService.getFreeTierSubscriptionId();
       UserModel userModel = await _userExtendedService.createUserExtended(userId, tenantName, adminEmail, timezone, userId, freeTierSubscription);
       _localStorage.saveUser(userModel);
     } catch (e, s) {

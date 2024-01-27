@@ -1,5 +1,5 @@
 class Tenant {
-  final String tenantId;
+  String tenantId;
   final String name;
   final String hostname;
 
