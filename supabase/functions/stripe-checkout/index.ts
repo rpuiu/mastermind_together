@@ -46,13 +46,13 @@ async function createStripeCheckoutSession(request) {
 // Serve the function
 Deno.serve(async (request) => {
   if (request.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return new Response(null, { status: 204, headers: corsHeaders });
   }
 
   if (request.method === 'POST') {
     return createStripeCheckoutSession(request);
   }
-  return new Response('Method Not Allowed', { status: 405 });
+  return new Response('Method Not Allowed', { status: 405, headers: corsHeaders });
 });
 
 

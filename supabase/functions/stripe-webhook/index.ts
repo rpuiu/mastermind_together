@@ -54,10 +54,15 @@ async function handleStripeEvent(request) {
         .object as Stripe.Checkout.Session;
 
       const session = await findCheckoutSession(stripeObject.id);
+      console.log(`Session: ${session}`);
       const customerId = session?.customer;
+      console.log(`customerId: ${customerId}`);
       const priceId = session?.line_items?.data[0]?.price.id;
+      console.log(`priceId: ${priceId}`);
       const userId = stripeObject.client_reference_id;
+      console.log(`userId: ${userId}`);
       const plan = session?.line_items?.data[0]?.description;
+      console.log(`plan: ${plan}`);
 
       if (!plan) break;
       // Step 1: Retrieve the subscription_id
@@ -67,7 +72,12 @@ async function handleStripeEvent(request) {
         .eq('stripe_price_id', priceId)
         .single();
 
-      const subscriptionId = subscriptionQuery.data.id;
+        if(subscriptionQuery.data === null){
+            console.log(`No pricingId for subscription. Please check DB!`);
+        }
+
+        const subscriptionId = subscriptionQuery.data.id;
+        console.log(`subscriptionId: ${subscriptionId}`);
 
       // Step 2: Update the users_extended table
       const {data, error} = await supabase

@@ -33,9 +33,10 @@ Please make sure to update with the prod values, create the stripe endpoint and 
 - Create an endpoint for the webhooks and pass the supabase function url
 - Reveal the signing secret and add it as `STRIPE_WEBHOOK_SIGNING_SECRET` in `supabase/functions/stripe-webhook/.env-prod`
 - Update the secrets using `supabase secrets set --env-file ./supabase/functions/stripe-webhook/.env-prod --project-ref <PROJECT_REF>`
+- **Do not forget to update the priceID in the DB `subscription` table**.
 
 ## Deployment:
-
+- `lib/_conf/nginx/etc/nginx/sitesavailable/mmt/mmt.conf` contains the nginx.conf
 The `deploy.sh` script is used for deployment on web. `.env.dev` and `.env.prod` are used to store environment variables for production and development, and 2 instances of Supabase are created accordingly. 
 
 ## Other:
